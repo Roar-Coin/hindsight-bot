@@ -1,0 +1,2 @@
+py-clob-client-v2
+requests
