@@ -1,6 +1,25 @@
 {
-  "positions": [],
+  "positions": [
+    {
+      "token_id": "97561598506543847913790264815779581261767279839387613390857633810226412398258",
+      "market_id": "3082125",
+      "question": "Will the price of Bitcoin be above $62,000 on July 31?",
+      "asset": "BTC",
+      "outcome": "Yes",
+      "resolution_day": "2026-07-31",
+      "entered_at": "2026-07-31T08:26:47.539021+00:00",
+      "price": 0.983,
+      "midpoint": 0.981,
+      "cost_cents": 0.20000000000000018,
+      "shares": 25.4323499491353,
+      "notional": 25.0,
+      "dry_run": true,
+      "resolved": false,
+      "won": null,
+      "pnl": 0.0
+    }
+  ],
   "halted": false,
   "halt_reason": "",
-  "updated": "2026-07-31T08:21:30.108491+00:00"
+  "updated": "2026-07-31T08:26:47.539321+00:00"
 }
