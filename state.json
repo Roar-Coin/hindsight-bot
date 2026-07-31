@@ -17,9 +17,27 @@
       "resolved": false,
       "won": null,
       "pnl": 0.0
+    },
+    {
+      "token_id": "91331639106219609029667862957830876900944362858015315165657168189385002805810",
+      "market_id": "3081980",
+      "question": "Will the price of Bitcoin be between $60,000 and $62,000 on July 31?",
+      "asset": "BTC",
+      "outcome": "No",
+      "resolution_day": "2026-07-31",
+      "entered_at": "2026-07-31T08:44:40.381808+00:00",
+      "price": 0.989,
+      "midpoint": 0.9844999999999999,
+      "cost_cents": 0.45000000000000595,
+      "shares": 25.278058645096056,
+      "notional": 25.0,
+      "dry_run": true,
+      "resolved": false,
+      "won": null,
+      "pnl": 0.0
     }
   ],
   "halted": false,
   "halt_reason": "",
-  "updated": "2026-07-31T08:26:47.539321+00:00"
+  "updated": "2026-07-31T08:44:40.382039+00:00"
 }
