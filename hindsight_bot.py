@@ -346,6 +346,36 @@ def walk_asks(asks: list[tuple[float, float]], notional: float) -> tuple[float, 
     return vwap, spent, shares
 
 
+_BOOK_SHAPE_LOGGED = False
+
+
+def extract_levels(book: Any, side: str) -> list[tuple[float, float]]:
+    """Les ut prisnivåer fra en ordrebok.
+
+    Klientbiblioteket kan gi oss dict, objekt eller pydantic-modell, og nivåene
+    kan hete size eller amount. Vi prøver alt i stedet for å anta.
+    """
+    raw = book.get(side) if isinstance(book, dict) else getattr(book, side, None)
+    if not raw:
+        return []
+
+    out: list[tuple[float, float]] = []
+    for lvl in raw:
+        if isinstance(lvl, dict):
+            price = lvl.get("price")
+            size = lvl.get("size", lvl.get("amount"))
+        else:
+            price = getattr(lvl, "price", None)
+            size = getattr(lvl, "size", getattr(lvl, "amount", None))
+        if price is None or size is None:
+            continue
+        try:
+            out.append((float(price), float(size)))
+        except (TypeError, ValueError):
+            continue
+    return out
+
+
 class PolymarketExecution:
     """Tynt lag rundt CLOB-klienten. All SDK-avhengighet ligger her."""
 
@@ -384,9 +414,19 @@ class PolymarketExecution:
             log.debug("ordrebok feilet for %s: %s", token_id, exc)
             return None
 
-        asks = [(float(l.price), float(l.size)) for l in (getattr(book, "asks", None) or [])]
-        bids = [(float(l.price), float(l.size)) for l in (getattr(book, "bids", None) or [])]
+        asks = extract_levels(book, "asks")
+        bids = extract_levels(book, "bids")
         if not asks or not bids:
+            global _BOOK_SHAPE_LOGGED
+            if not _BOOK_SHAPE_LOGGED:
+                _BOOK_SHAPE_LOGGED = True
+                log.warning("Klarte ikke lese ordreboken. Type: %s", type(book).__name__)
+                if isinstance(book, dict):
+                    log.warning("Nøkler: %s", list(book.keys())[:15])
+                else:
+                    attrs = [a for a in dir(book) if not a.startswith("_")][:20]
+                    log.warning("Attributter: %s", attrs)
+                log.warning("Rå: %s", str(book)[:400])
             return None
 
         best_ask = min(p for p, _ in asks)
