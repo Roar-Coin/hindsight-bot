@@ -23,7 +23,6 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-          cache: pip
 
       - run: pip install py-clob-client-v2 requests
 
@@ -39,8 +38,8 @@ jobs:
         run: |
           git config user.name "hindsight-bot"
           git config user.email "bot@users.noreply.github.com"
-          git add state.json trades.csv
-          git diff --staged --quiet || git commit -m "state: $(date -u +%Y-%m-%dT%H:%MZ)"
+          git add -A
+          git diff --staged --quiet && echo "ingen endringer" && exit 0
+          git commit -m "state: $(date -u +%Y-%m-%dT%H:%MZ)"
           git pull --rebase --autostash
           git push
-
