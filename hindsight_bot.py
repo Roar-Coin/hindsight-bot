@@ -93,7 +93,8 @@ class Config:
     # -- drift -----------------------------------------------------------------
     dry_run: bool = True
     poll_seconds: int = 300
-    max_markets_scanned: int = 5000  # hvor dypt vi paginerer Gamma
+    max_markets_scanned: int = 3000  # hvor dypt vi paginerer Gamma
+    gamma_page_size: int = 100       # Gamma gir maks 100 per side
     assets: tuple = ("BTC", "ETH", "SOL", "XRP", "DOGE", "ADA", "LINK", "AVAX")
     state_path: str = "state.json"
     trade_log_path: str = "trades.csv"
@@ -208,10 +209,10 @@ class GammaClient:
             params = {
                 "closed": "false",
                 "active": "true",
-                "limit": 500,
+                "limit": cfg.gamma_page_size,
                 "offset": offset,
-                "order": "volumeNum",
-                "ascending": "false",
+                "order": "endDate",
+                "ascending": "true",
             }
             r = self.s.get(f"{cfg.gamma_host}/markets", params=params, timeout=30)
             r.raise_for_status()
@@ -219,15 +220,16 @@ class GammaClient:
             if not batch:
                 break
             out.extend(batch)
-            if len(batch) < 500:
+            if len(batch) < cfg.gamma_page_size:
                 break
-            offset += 500
+            offset += cfg.gamma_page_size
         log.info("Gamma: %d åpne markeder hentet", len(out))
         return out
 
     def candidates(self) -> list[Candidate]:
         cands: list[Candidate] = []
         f = {"rå": 0, "åpen": 0, "krypto": 0, "tidsvindu": 0, "volum": 0, "tokens": 0}
+        samples: list[str] = []
         for m in self.open_markets():
             f["rå"] += 1
             if m.get("closed") or not m.get("active"):
@@ -237,6 +239,8 @@ class GammaClient:
             f["åpen"] += 1
 
             question = m.get("question") or ""
+            if len(samples) < 8:
+                samples.append(question)
             asset = detect_asset(question)
             if not asset:
                 continue  # ikke krypto — utenfor regelen
@@ -283,6 +287,10 @@ class GammaClient:
             "%d markeder → %d utfall",
             f["rå"], f["åpen"], f["krypto"], f["tidsvindu"], f["volum"], f["tokens"], len(cands),
         )
+        if f["krypto"] == 0 and samples:
+            log.info("Ingen krypto funnet. Eksempler på titler som kom inn:")
+            for s in samples:
+                log.info("   · %s", s[:90])
         return cands
 
 
