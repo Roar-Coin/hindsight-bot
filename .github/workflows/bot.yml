@@ -2,7 +2,7 @@ name: hindsight-bot
 
 on:
   schedule:
-    - cron: "0 * * * *"     # hver time — samme oppløsning som backtesten din
+    - cron: "37 * * * *"    # ikke hel time — det minuttet er GitHubs travleste
   workflow_dispatch:          # manuell kjøring fra nettleseren
 
 # Hindrer at to runder overlapper og skriver over hverandres state.json
