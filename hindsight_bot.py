@@ -698,18 +698,33 @@ def scan_once(cfg: Config, state: State, gamma: GammaClient, exe: PolymarketExec
     log.info("%d kandidater innenfor vindu/volum", len(cands))
 
     taken = 0
+    skips: dict[str, int] = {}
+    in_band = 0
+
+    def note(reason: str) -> None:
+        key = re.sub(r"[\d.,]+", "N", reason)  # slå sammen like grunner med ulike tall
+        skips[key] = skips.get(key, 0) + 1
+
     for cand in cands:
         if state.has_market(cand.market_id):
+            note("allerede i markedet")
             continue
         quote = exe.quote(cand.token_id, cfg.stake_usd)
         if not quote:
+            note("ingen ordrebok")
             continue
-        if quote.best_ask < cfg.entry_min or quote.best_ask >= cfg.entry_max:
-            continue  # billig sjekk før resten
+        if quote.best_ask < cfg.entry_min:
+            note("pris under 93¢")
+            continue
+        if quote.best_ask >= cfg.entry_max:
+            note("pinnet 99¢ eller over")
+            continue
+        in_band += 1
 
         reason = passes_rules(cand, quote, state, cfg)
         if reason:
-            log.debug("hopper over %s: %s", cand.question[:50], reason)
+            note(reason)
+            log.info("hopper over %s (%.3f): %s", cand.question[:50], quote.best_ask, reason)
             continue
 
         limit = min(round_to_tick(quote.vwap, cand.tick_size, up=True), 0.999)
@@ -749,7 +764,12 @@ def scan_once(cfg: Config, state: State, gamma: GammaClient, exe: PolymarketExec
         if state.entered_today() >= cfg.max_new_positions_per_day:
             break
 
-    log.info("Runde ferdig: %d nye posisjoner, %d åpne", taken, len(state.open_positions()))
+    log.info("Runde ferdig: %d nye posisjoner, %d åpne · %d utfall lå i 93–99¢-båndet",
+             taken, len(state.open_positions()), in_band)
+    if skips:
+        log.info("Forkastet fordi:")
+        for reason, n in sorted(skips.items(), key=lambda kv: -kv[1]):
+            log.info("   %4d × %s", n, reason)
 
 
 def report(state: State) -> None:
