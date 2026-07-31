@@ -14,9 +14,9 @@
       "shares": 25.4323499491353,
       "notional": 25.0,
       "dry_run": true,
-      "resolved": false,
-      "won": null,
-      "pnl": 0.0
+      "resolved": true,
+      "won": true,
+      "pnl": 0.43234994913530045
     },
     {
       "token_id": "91331639106219609029667862957830876900944362858015315165657168189385002805810",
@@ -32,6 +32,42 @@
       "shares": 25.278058645096056,
       "notional": 25.0,
       "dry_run": true,
+      "resolved": true,
+      "won": true,
+      "pnl": 0.27805864509605627
+    },
+    {
+      "token_id": "39630693356812359830270925363843864458574484147297697185324212032954308659602",
+      "market_id": "3236437",
+      "question": "Will Bitcoin dip to $62,000 on July 31?",
+      "asset": "BTC",
+      "outcome": "No",
+      "resolution_day": "2026-08-01",
+      "entered_at": "2026-07-31T18:07:53.344096+00:00",
+      "price": 0.965,
+      "midpoint": 0.9555,
+      "cost_cents": 0.911415433826468,
+      "shares": 25.906735751295336,
+      "notional": 25.0,
+      "dry_run": true,
+      "resolved": false,
+      "won": null,
+      "pnl": 0.0
+    },
+    {
+      "token_id": "92244165206472808515457670973247119887220744572846270233814887192879101397442",
+      "market_id": "3236432",
+      "question": "Will Bitcoin reach $65,000 on July 31?",
+      "asset": "BTC",
+      "outcome": "No",
+      "resolution_day": "2026-08-01",
+      "entered_at": "2026-07-31T18:07:54.635496+00:00",
+      "price": 0.988,
+      "midpoint": 0.982,
+      "cost_cents": 0.6000000000000005,
+      "shares": 25.303643724696357,
+      "notional": 25.0,
+      "dry_run": true,
       "resolved": false,
       "won": null,
       "pnl": 0.0
@@ -39,5 +75,5 @@
   ],
   "halted": false,
   "halt_reason": "",
-  "updated": "2026-07-31T15:39:19.109070+00:00"
+  "updated": "2026-07-31T18:07:54.635750+00:00"
 }

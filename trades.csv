@@ -1,3 +1,5 @@
 timestamp,mode,asset,outcome,question,resolution_day,best_ask,midpoint,vwap,cost_cents,shares,notional,market_id
 2026-07-31T08:26:47.539021+00:00,dry,BTC,Yes,"Will the price of Bitcoin be above $62,000 on July 31?",2026-07-31,0.9830,0.9810,0.9830,0.200,25.43,25.00,3082125
 2026-07-31T08:44:40.381808+00:00,dry,BTC,No,"Will the price of Bitcoin be between $60,000 and $62,000 on July 31?",2026-07-31,0.9890,0.9845,0.9890,0.450,25.28,25.00,3081980
+2026-07-31T18:07:53.344096+00:00,dry,BTC,No,"Will Bitcoin dip to $62,000 on July 31?",2026-08-01,0.9650,0.9555,0.9650,0.911,25.91,25.00,3236437
+2026-07-31T18:07:54.635496+00:00,dry,BTC,No,"Will Bitcoin reach $65,000 on July 31?",2026-08-01,0.9880,0.9820,0.9880,0.600,25.30,25.00,3236432
