@@ -1,0 +1,46 @@
+name: hindsight-bot
+
+on:
+  schedule:
+    - cron: "0 * * * *"     # hver time — samme oppløsning som backtesten din
+  workflow_dispatch:          # manuell kjøring fra nettleseren
+
+# Hindrer at to runder overlapper og skriver over hverandres state.json
+concurrency:
+  group: hindsight-bot
+  cancel-in-progress: false
+
+permissions:
+  contents: write             # nødvendig for å committe tilstand tilbake
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - run: pip install py-clob-client-v2 requests
+
+      - name: Kjør én runde
+        env:
+          # Utelat POLYMARKET_PK i skyggefasen — boten går tørt uten den.
+          POLYMARKET_PK: ${{ secrets.POLYMARKET_PK }}
+          TG_TOKEN: ${{ secrets.TG_TOKEN }}
+          TG_CHAT: ${{ secrets.TG_CHAT }}
+        run: python hindsight_bot.py --once
+
+      - name: Lagre tilstand
+        run: |
+          git config user.name "hindsight-bot"
+          git config user.email "bot@users.noreply.github.com"
+          git add state.json trades.csv
+          git diff --staged --quiet || git commit -m "state: $(date -u +%Y-%m-%dT%H:%MZ)"
+          git pull --rebase --autostash
+          git push
+
