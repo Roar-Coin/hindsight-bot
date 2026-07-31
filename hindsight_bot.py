@@ -93,6 +93,7 @@ class Config:
     # -- drift -----------------------------------------------------------------
     dry_run: bool = True
     poll_seconds: int = 300
+    max_markets_scanned: int = 5000  # hvor dypt vi paginerer Gamma
     assets: tuple = ("BTC", "ETH", "SOL", "XRP", "DOGE", "ADA", "LINK", "AVAX")
     state_path: str = "state.json"
     trade_log_path: str = "trades.csv"
@@ -195,20 +196,22 @@ class GammaClient:
         self.s.headers.update({"User-Agent": "hindsight-bot/1.0"})
 
     def open_markets(self) -> list[dict]:
-        """Hent åpne markeder som lukker innenfor tidsvinduet."""
+        """Hent åpne markeder.
+
+        Dato- og volumfilter gjøres LOKALT, ikke på serveren. Gamma tar imot
+        parametre den ikke kjenner uten å klage, og en ISO-dato med '+00:00'
+        i en URL er en stille felle. Vi henter bredt og siler selv.
+        """
         cfg = self.cfg
-        lo = now_utc() + timedelta(hours=cfg.min_hours_to_close)
-        hi = now_utc() + timedelta(days=cfg.max_days_to_close)
         out, offset = [], 0
-        while True:
+        while offset < cfg.max_markets_scanned:
             params = {
                 "closed": "false",
                 "active": "true",
                 "limit": 500,
                 "offset": offset,
-                "end_date_min": lo.isoformat(),
-                "end_date_max": hi.isoformat(),
-                "volume_num_min": cfg.min_volume_usd,
+                "order": "volumeNum",
+                "ascending": "false",
             }
             r = self.s.get(f"{cfg.gamma_host}/markets", params=params, timeout=30)
             r.raise_for_status()
@@ -219,36 +222,45 @@ class GammaClient:
             if len(batch) < 500:
                 break
             offset += 500
-            if offset > 5000:  # sikkerhetsventil
-                break
+        log.info("Gamma: %d åpne markeder hentet", len(out))
         return out
 
     def candidates(self) -> list[Candidate]:
         cands: list[Candidate] = []
+        f = {"rå": 0, "åpen": 0, "krypto": 0, "tidsvindu": 0, "volum": 0, "tokens": 0}
         for m in self.open_markets():
+            f["rå"] += 1
             if m.get("closed") or not m.get("active"):
                 continue
             if m.get("acceptingOrders") is False:
                 continue
+            f["åpen"] += 1
+
             question = m.get("question") or ""
             asset = detect_asset(question)
             if not asset:
                 continue  # ikke krypto — utenfor regelen
+            f["krypto"] += 1
+
             end = parse_iso(m.get("endDate") or "")
             if not end:
                 continue
             hours_left = (end - now_utc()).total_seconds() / 3600
             if not (self.cfg.min_hours_to_close <= hours_left <= self.cfg.max_days_to_close * 24):
                 continue
+            f["tidsvindu"] += 1
+
             volume = float(m.get("volumeNum") or m.get("volume") or 0)
             if volume < self.cfg.min_volume_usd:
                 continue
+            f["volum"] += 1
 
             tokens = json_field(m.get("clobTokenIds")) or []
             outcomes = json_field(m.get("outcomes")) or []
             if len(tokens) != len(outcomes) or not tokens:
                 continue
             tick = float(m.get("orderPriceMinTickSize") or 0.01)
+            f["tokens"] += 1
 
             for token_id, outcome in zip(tokens, outcomes):
                 cands.append(
@@ -266,6 +278,11 @@ class GammaClient:
                         neg_risk=bool(m.get("negRisk")),
                     )
                 )
+        log.info(
+            "Trakt: %d rå → %d åpne → %d krypto → %d i tidsvindu → %d over volum → "
+            "%d markeder → %d utfall",
+            f["rå"], f["åpen"], f["krypto"], f["tidsvindu"], f["volum"], f["tokens"], len(cands),
+        )
         return cands
 
 
