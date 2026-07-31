@@ -93,7 +93,7 @@ class Config:
     # -- drift -----------------------------------------------------------------
     dry_run: bool = True
     poll_seconds: int = 300
-    max_markets_scanned: int = 3000  # hvor dypt vi paginerer Gamma
+    max_markets_scanned: int = 2000  # Gamma nekter paginering forbi ~2000
     gamma_page_size: int = 100       # Gamma gir maks 100 per side
     assets: tuple = ("BTC", "ETH", "SOL", "XRP", "DOGE", "ADA", "LINK", "AVAX")
     state_path: str = "state.json"
@@ -197,13 +197,18 @@ class GammaClient:
         self.s.headers.update({"User-Agent": "hindsight-bot/1.0"})
 
     def open_markets(self) -> list[dict]:
-        """Hent åpne markeder.
+        """Hent åpne markeder som lukker innenfor tidsvinduet.
 
-        Dato- og volumfilter gjøres LOKALT, ikke på serveren. Gamma tar imot
-        parametre den ikke kjenner uten å klage, og en ISO-dato med '+00:00'
-        i en URL er en stille felle. Vi henter bredt og siler selv.
+        Datoene sendes med 'Z'-suffiks, ikke '+00:00' — plusstegnet blir tolket
+        som mellomrom i en URL og gjør filteret meningsløst uten at Gamma klager.
+        Alle filtre gjentas lokalt uansett, så en stille serverfeil blir synlig
+        i trakten i stedet for å gi oss feil markeder.
         """
         cfg = self.cfg
+        stamp = "%Y-%m-%dT%H:%M:%SZ"
+        lo = (now_utc() + timedelta(hours=cfg.min_hours_to_close)).strftime(stamp)
+        hi = (now_utc() + timedelta(days=cfg.max_days_to_close)).strftime(stamp)
+
         out, offset = [], 0
         while offset < cfg.max_markets_scanned:
             params = {
@@ -213,17 +218,29 @@ class GammaClient:
                 "offset": offset,
                 "order": "endDate",
                 "ascending": "true",
+                "end_date_min": lo,
+                "end_date_max": hi,
             }
-            r = self.s.get(f"{cfg.gamma_host}/markets", params=params, timeout=30)
-            r.raise_for_status()
-            batch = r.json()
+            try:
+                r = self.s.get(f"{cfg.gamma_host}/markets", params=params, timeout=30)
+                r.raise_for_status()
+                batch = r.json()
+            except requests.HTTPError as exc:
+                code = exc.response.status_code if exc.response is not None else "?"
+                log.warning("Gamma stoppet paginering ved offset %d (HTTP %s)", offset, code)
+                break
+            except (requests.RequestException, ValueError) as exc:
+                log.warning("Gamma-forespørsel feilet ved offset %d: %s", offset, exc)
+                break
+
             if not batch:
                 break
             out.extend(batch)
             if len(batch) < cfg.gamma_page_size:
                 break
             offset += cfg.gamma_page_size
-        log.info("Gamma: %d åpne markeder hentet", len(out))
+
+        log.info("Gamma: %d markeder hentet (vindu %s → %s)", len(out), lo, hi)
         return out
 
     def candidates(self) -> list[Candidate]:
