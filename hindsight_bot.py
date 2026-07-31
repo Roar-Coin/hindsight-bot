@@ -79,11 +79,18 @@ class Config:
     # -- klyngekontroll --------------------------------------------------------
     # 1843 handler ble til 33 klynger. To BTC-markeder som gjøres opp samme dag
     # er ett markedsutslag talt to ganger, ikke to uavhengige tester.
-    max_positions_per_resolution_day: int = 3
-    max_positions_per_asset_per_day: int = 1
-    max_open_positions: int = 20
-    max_open_notional_usd: float = 500.0
-    max_new_positions_per_day: int = 6
+    #
+    # KOSTNADSMÅLINGSMODUS: takene under er løsnet for å samle inngangskostnader
+    # raskere i tørrkjøring. Kostnad måles per handel og påvirkes ikke av
+    # korrelasjon. Treffrate og fordel gjør det — derfor skjuler rapporten dem
+    # så lenge denne modusen er på, og --live nekter å starte.
+    # Verdiene i parentes er de som gjelder for ekte penger.
+    cost_measurement_mode: bool = True
+    max_positions_per_resolution_day: int = 12   # live: 3
+    max_positions_per_asset_per_day: int = 4     # live: 1
+    max_open_positions: int = 200                # live: 20
+    max_open_notional_usd: float = 5000.0        # live: 500
+    max_new_positions_per_day: int = 40          # live: 6
 
     # -- stoppkriterier (avtal dem på forhånd, ikke endre dem underveis) --------
     stop_on_consecutive_losses: int = 3      # backtestens lengste tapsrekke var 2
@@ -812,12 +819,17 @@ def scan_once(cfg: Config, state: State, gamma: GammaClient, exe: PolymarketExec
             log.info("   %4d × %s", n, reason)
 
 
-def report(state: State) -> None:
+def report(state: State, cfg: Config = CFG) -> None:
     settled = [p for p in state.positions if p.resolved]
     open_pos = state.open_positions()
     print(f"\nÅpne posisjoner : {len(open_pos)}  (${state.open_notional():.0f} bundet)")
     print(f"Gjort opp       : {len(settled)}")
-    if settled:
+
+    if cfg.cost_measurement_mode:
+        print("\nTreffrate og fordel vises ikke: klyngetaket er løsnet for å samle")
+        print("kostnadsdata raskere, så de samme markedsutslagene telles flere ganger")
+        print("og begge tallene ville blitt for pene. Fordelen har du fra backtesten.")
+    elif settled:
         wins = sum(1 for p in settled if p.won)
         pnl = sum(p.pnl for p in settled)
         wr = wins / len(settled) * 100
@@ -827,13 +839,20 @@ def report(state: State) -> None:
         print(f"Snitt inngang   : {avg_entry*100:.1f}¢")
         print(f"Fordel          : {edge:+.2f} pp   (backtest: +1.6 pp)")
         print(f"P&L             : ${pnl:+.2f}")
+
     all_costs = [p.cost_cents for p in state.positions]
     if all_costs:
-        avg_cost = sum(all_costs) / len(all_costs)
+        n = len(all_costs)
+        avg_cost = sum(all_costs) / n
         worst = max(all_costs)
-        print(f"\nMålt kostnad    : snitt {avg_cost:.2f}¢, verste {worst:.2f}¢")
+        over = sum(1 for c in all_costs if c > 1.36)
+        print(f"\nMålinger        : {n}")
+        print(f"Målt kostnad    : snitt {avg_cost:.2f}¢, verste {worst:.2f}¢")
+        print(f"Over 1.36¢      : {over} av {n}  ({over/n*100:.0f}%)")
         print(f"Fordelen dør ved: 2.32¢   ·  blir støy ved 1.36¢ (klynget)")
-        if avg_cost > 1.36:
+        if n < 100:
+            print(f"→ For få målinger til en dom. Trenger {100 - n} til.")
+        elif avg_cost > 1.36:
             print("→ Din faktiske kostnad spiser opp fordelen. Ikke gå live.")
         elif avg_cost > 0.5:
             print("→ Over backtestens antakelse. Forvent lavere fordel enn +1.6 pp.")
@@ -867,10 +886,17 @@ def main() -> int:
     state = State(cfg)
 
     if args.report:
-        report(state)
+        report(state, cfg)
         return 0
 
     if args.live:
+        if cfg.cost_measurement_mode:
+            log.error(
+                "cost_measurement_mode er på — klyngetaket er løsnet for skyggekjøring. "
+                "Sett den til False og sett takene tilbake til live-verdiene i Config "
+                "før du handler med ekte penger."
+            )
+            return 1
         if not os.environ.get("POLYMARKET_PK"):
             log.error("POLYMARKET_PK mangler i miljøet.")
             return 1
@@ -887,7 +913,7 @@ def main() -> int:
 
     if args.once:
         scan_once(cfg, state, gamma, exe)
-        report(state)
+        report(state, cfg)
         return 0
 
     log.info("Starter løkke (%s), poll hvert %ds",
