@@ -107,9 +107,27 @@
       "resolved": false,
       "won": null,
       "pnl": 0.0
+    },
+    {
+      "token_id": "69268008201075500244666920761965584863911436207470457437318552728174094459091",
+      "market_id": "3253750",
+      "question": "Will Bitcoin dip to $62,000 on August 1?",
+      "asset": "BTC",
+      "outcome": "No",
+      "resolution_day": "2026-08-02",
+      "entered_at": "2026-08-01T21:28:42.305569+00:00",
+      "price": 0.939,
+      "midpoint": 0.9299999999999999,
+      "cost_cents": 0.9000000000000008,
+      "shares": 26.624068157614484,
+      "notional": 25.0,
+      "dry_run": true,
+      "resolved": false,
+      "won": null,
+      "pnl": 0.0
     }
   ],
   "halted": false,
   "halt_reason": "",
-  "updated": "2026-08-01T19:48:17.476573+00:00"
+  "updated": "2026-08-01T21:28:42.305853+00:00"
 }

@@ -5,3 +5,4 @@ timestamp,mode,asset,outcome,question,resolution_day,best_ask,midpoint,vwap,cost
 2026-07-31T18:07:54.635496+00:00,dry,BTC,No,"Will Bitcoin reach $65,000 on July 31?",2026-08-01,0.9880,0.9820,0.9880,0.600,25.30,25.00,3236432
 2026-07-31T20:06:21.841749+00:00,dry,BTC,No,"Will Bitcoin dip to $61,000 on July 31?",2026-08-01,0.9840,0.9820,0.9840,0.200,25.41,25.00,3236439
 2026-08-01T19:48:17.476261+00:00,dry,BTC,No,"Will Bitcoin dip to $61,000 on August 1?",2026-08-02,0.9700,0.9615,0.9700,0.850,25.77,25.00,3253757
+2026-08-01T21:28:42.305569+00:00,dry,BTC,No,"Will Bitcoin dip to $62,000 on August 1?",2026-08-02,0.9390,0.9300,0.9390,0.900,26.62,25.00,3253750
