@@ -161,9 +161,45 @@
       "resolved": false,
       "won": null,
       "pnl": 0.0
+    },
+    {
+      "token_id": "46981509332596780657188993118281522016774830944754559074879730871818804958200",
+      "market_id": "3279500",
+      "question": "Will Bitcoin reach $65,000 on August 2?",
+      "asset": "BTC",
+      "outcome": "No",
+      "resolution_day": "2026-08-03",
+      "entered_at": "2026-08-02T21:28:27.017971+00:00",
+      "price": 0.97,
+      "midpoint": 0.9675,
+      "cost_cents": 0.24999999999999467,
+      "shares": 25.77319587628866,
+      "notional": 25.0,
+      "dry_run": true,
+      "resolved": false,
+      "won": null,
+      "pnl": 0.0
+    },
+    {
+      "token_id": "41923958129198410867275998861608244999064921211172689003878828500578264914228",
+      "market_id": "3279591",
+      "question": "Will Ethereum dip to $1,800 on August 2?",
+      "asset": "ETH",
+      "outcome": "No",
+      "resolution_day": "2026-08-03",
+      "entered_at": "2026-08-02T21:28:30.015781+00:00",
+      "price": 0.986,
+      "midpoint": 0.9795,
+      "cost_cents": 0.6499999999999839,
+      "shares": 25.354969574036513,
+      "notional": 25.0,
+      "dry_run": true,
+      "resolved": false,
+      "won": null,
+      "pnl": 0.0
     }
   ],
   "halted": false,
   "halt_reason": "",
-  "updated": "2026-08-02T19:49:07.176752+00:00"
+  "updated": "2026-08-02T21:28:30.016035+00:00"
 }
