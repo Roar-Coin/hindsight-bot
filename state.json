@@ -359,9 +359,27 @@
       "resolved": true,
       "won": true,
       "pnl": 1.8817204301075243
+    },
+    {
+      "token_id": "8168402358233128728803697345265127470931254768181119004057145340187213242674",
+      "market_id": "3324987",
+      "question": "Will Bitcoin reach $66,000 on August 4?",
+      "asset": "BTC",
+      "outcome": "No",
+      "resolution_day": "2026-08-05",
+      "entered_at": "2026-08-04T19:10:14.473486+00:00",
+      "price": 0.981,
+      "midpoint": 0.972,
+      "cost_cents": 0.9000000000000008,
+      "shares": 25.4841997961264,
+      "notional": 25.0,
+      "dry_run": true,
+      "resolved": false,
+      "won": null,
+      "pnl": 0.0
     }
   ],
   "halted": false,
   "halt_reason": "",
-  "updated": "2026-08-04T17:14:38.519453+00:00"
+  "updated": "2026-08-04T19:10:14.473854+00:00"
 }

@@ -19,3 +19,4 @@ timestamp,mode,asset,outcome,question,resolution_day,best_ask,midpoint,vwap,cost
 2026-08-04T07:18:25.359599+00:00,dry,BTC,No,"Will the price of Bitcoin be between $60,000 and $62,000 on August 4?",2026-08-04,0.9790,0.9735,0.9790,0.550,25.54,25.00,3158094
 2026-08-04T07:18:25.655984+00:00,dry,ETH,No,"Will the price of Ethereum be between $1,700 and $1,800 on August 4?",2026-08-04,0.9780,0.9705,0.9780,0.650,25.56,25.00,3158419
 2026-08-04T07:18:28.828427+00:00,dry,ETH,Yes,"Will the price of Ethereum be between $1,800 and $1,900 on August 4?",2026-08-04,0.9300,0.9250,0.9300,0.500,26.88,25.00,3158430
+2026-08-04T19:10:14.473486+00:00,dry,BTC,No,"Will Bitcoin reach $66,000 on August 4?",2026-08-05,0.9810,0.9720,0.9810,0.900,25.48,25.00,3324987
