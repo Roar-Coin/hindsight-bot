@@ -266,9 +266,9 @@
       "shares": 26.041666666666668,
       "notional": 25.0,
       "dry_run": true,
-      "resolved": false,
-      "won": null,
-      "pnl": 0.0
+      "resolved": true,
+      "won": true,
+      "pnl": 1.0416666666666679
     },
     {
       "token_id": "110265694267936992469417700335614533467196469203686817149366068640963818137254",
@@ -284,9 +284,9 @@
       "shares": 25.826446280991735,
       "notional": 25.0,
       "dry_run": true,
-      "resolved": false,
-      "won": null,
-      "pnl": 0.0
+      "resolved": true,
+      "won": true,
+      "pnl": 0.8264462809917354
     },
     {
       "token_id": "41623891651289160465420636322321881225642624731277247760640188322627301345925",
@@ -302,9 +302,9 @@
       "shares": 25.79979360165119,
       "notional": 25.0,
       "dry_run": true,
-      "resolved": false,
-      "won": null,
-      "pnl": 0.0
+      "resolved": true,
+      "won": true,
+      "pnl": 0.7997936016511886
     },
     {
       "token_id": "79997983858234615671008198608362035337716769416703113116711219769182965351100",
@@ -320,9 +320,9 @@
       "shares": 25.53626149131767,
       "notional": 25.0,
       "dry_run": true,
-      "resolved": false,
-      "won": null,
-      "pnl": 0.0
+      "resolved": true,
+      "won": true,
+      "pnl": 0.5362614913176706
     },
     {
       "token_id": "23894812512243509811275958196145463130315738743685722137122307131282410145163",
@@ -338,9 +338,9 @@
       "shares": 25.56237218813906,
       "notional": 25.0,
       "dry_run": true,
-      "resolved": false,
-      "won": null,
-      "pnl": 0.0
+      "resolved": true,
+      "won": true,
+      "pnl": 0.5623721881390615
     },
     {
       "token_id": "89112689600558131521036374004647022296581689071142613846073578214078819844221",
@@ -356,12 +356,12 @@
       "shares": 26.881720430107524,
       "notional": 25.0,
       "dry_run": true,
-      "resolved": false,
-      "won": null,
-      "pnl": 0.0
+      "resolved": true,
+      "won": true,
+      "pnl": 1.8817204301075243
     }
   ],
   "halted": false,
   "halt_reason": "",
-  "updated": "2026-08-04T15:05:28.482422+00:00"
+  "updated": "2026-08-04T17:14:38.519453+00:00"
 }
