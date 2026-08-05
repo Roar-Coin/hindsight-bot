@@ -50,6 +50,22 @@ LOG = "vaer-book.jsonl"
 STATE = "vaer-state.json"
 
 
+# ── HTTP ──────────────────────────────────────────────────────────────────
+def get(url, params=None, tries=3):
+    if params:
+        url = f"{url}?{urlencode(params)}"
+    for n in range(tries):
+        try:
+            req = Request(url, headers={"User-Agent": "booklogger/1"})
+            with urlopen(req, timeout=20) as r:
+                return json.loads(r.read().decode())
+        except Exception as e:
+            if n == tries - 1:
+                print(f"  ! {url[:70]} -> {e}", file=sys.stderr)
+                return None
+            time.sleep(1.5 * (n + 1))
+
+
 # ── Kategorisering — ORDRETT KOPI fra ingest.py ────────────────────────────
 # Ikke omskriv denne. Endres TAG_MAP i ingest.py, kopier den hit igjen,
 # ellers ser tørrkjøringen et annet utvalg enn backtesten gjorde.
