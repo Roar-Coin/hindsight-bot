@@ -25,17 +25,20 @@ første kjøring.
 import argparse
 import json
 import os
+import re
 import sys
 import time
 from collections import defaultdict
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from urllib.parse import urlencode
 from urllib.request import Request, urlopen
 
 # ── Parametre — skal matche backtesten ────────────────────────────────────
 THRESHOLD = 0.80        # kjøp første gang prisen krysser denne
 MAX_ENTRY = 0.99        # gapvakt: appen blokkerer fyll >= 99,9¢
-MIN_VOLUME = 250.0      # samme gulv som backtesten
+MIN_VOLUME = 25.0       # LAVT med vilje: backtestens $250 er SLUTTvolum.
+                        # Ved krysningen har markedet ofte omsatt for mindre.
+                        # Vi logger volumet og filtrerer ved analyse i stedet.
 STAKE = 100.0           # flat innsats per handel
 POLL_SEC = 120          # værbøker beveger seg sakte; 2 min er rikelig
 REQ_PAUSE = 0.15        # pause mellom CLOB-kall
@@ -46,63 +49,159 @@ CLOB = "https://clob.polymarket.com"
 LOG = "vaer-book.jsonl"
 STATE = "vaer-state.json"
 
-WEATHER_WORDS = (
-    "temperature", "temp ", "rain", "rainfall", "snow", "snowfall",
-    "hurricane", "storm", "heat", "degrees", "weather", "precipitation",
-)
+
+# ── Kategorisering — ORDRETT KOPI fra ingest.py ────────────────────────────
+# Ikke omskriv denne. Endres TAG_MAP i ingest.py, kopier den hit igjen,
+# ellers ser tørrkjøringen et annet utvalg enn backtesten gjorde.
+PRIORITY = ["crypto", "esports", "weather", "stocks",
+            "sports", "politics", "economy", "culture"]
+
+TAG_MAP = {
+    "crypto": {
+        "crypto", "crypto-prices", "bitcoin", "ethereum", "solana", "memecoins",
+        "stablecoins", "defi", "nft", "altcoins", "xrp", "dogecoin", "bnb",
+        "cardano", "chainlink", "avalanche", "litecoin", "pepe", "shiba-inu",
+        "crypto-etf", "hourly-crypto",
+    },
+    "esports": {
+        "esports", "counter-strike-2", "counter-strike", "cs2", "league-of-legends",
+        "dota-2", "valorant", "call-of-duty", "rocket-league", "overwatch",
+        "starcraft", "apex-legends",
+    },
+    "weather": {"weather", "climate", "temperature", "hurricane", "hurricanes"},
+    "stocks": {
+        "stocks", "earnings", "equities", "ipo", "etf", "nasdaq", "sp500",
+        "companies", "tech-stocks",
+    },
+    "sports": {
+        "sports", "nba", "nfl", "mlb", "nhl", "soccer", "epl", "ufc", "mma",
+        "tennis", "golf", "olympics", "formula-1", "cricket", "basketball",
+        "baseball", "football", "hockey", "boxing", "atp", "wta", "itf",
+        "champions-league", "europa-league", "fifa-world-cup", "wnba", "ncaa",
+        "college-football", "college-basketball", "rugby", "cycling", "chess",
+        "major-league-cricket", "nba-playoffs", "nba-finals", "wc-tournament-futures",
+    },
+    "politics": {
+        "politics", "elections", "geopolitics", "us-current-affairs", "world",
+        "trump", "foreign-affairs", "international-affairs", "house-races",
+        "us-elections", "democratic-party", "republican-party", "legal-cases",
+        "senate-races", "governor-races",
+    },
+    "economy": {
+        "economy", "fed", "macro", "finance", "business", "economics",
+        "macro-graph", "macro-single", "inflation", "fdic", "tariffs",
+    },
+    "culture": {
+        "pop-culture", "movies", "music", "awards", "oscars", "entertainment",
+        "tv", "celebrities", "openai", "ai", "science", "space",
+    },
+}
+
+NOISE_TAGS = {"all", "recurring", "hide-from-new", "multi-strikes", "games",
+              "1h", "1d", "weekly", "monthly", "daily", "featured", "new"}
+
+CATEGORY_KEYWORDS = {
+    "crypto": ["bitcoin", "btc", "ethereum", "eth", "solana", "sol", "crypto",
+               "doge", "dogecoin", "xrp", "memecoin", "altcoin", "bnb", "cardano",
+               "ada", "chainlink", "avax", "litecoin", "pepe"],
+    "weather": ["highest temperature", "lowest temperature", "rainfall",
+                "snowfall", "hurricane"],
+    "stocks": ["up or down on", "beat quarterly earnings", "market cap",
+               "finish week of", "ipo day"],
+    "politics": ["election", "president", "senate", "congress", "trump", "biden",
+                 "parliament", "minister", "vote", "poll", "ceasefire", "impeach"],
+    "sports": ["nba", "nfl", "mlb", "nhl", "ufc", "premier league", "champions league",
+               "world cup", "super bowl", "grand slam", "wimbledon", "goalscorer",
+               "playoffs", "draft", "itf", "o/u", "spread", "handicap", "exact score",
+               "set 1 winner", "set 2 winner", "set 3 winner"],
+    "economy": ["fed", "rate hike", "rate cut", "inflation", "cpi", "gdp",
+                "recession", "jobs report", "tariff"],
+}
+
+_WORD_RES = {cat: [re.compile(r"\b" + re.escape(w) + r"\b") for w in words]
+             for cat, words in CATEGORY_KEYWORDS.items()}
+_TAG_TO_CAT = {slug: cat for cat, slugs in TAG_MAP.items() for slug in slugs}
 
 
-# ── HTTP ──────────────────────────────────────────────────────────────────
-def get(url, params=None, tries=3):
-    if params:
-        url = f"{url}?{urlencode(params)}"
-    for n in range(tries):
-        try:
-            req = Request(url, headers={"User-Agent": "booklogger/1"})
-            with urlopen(req, timeout=20) as r:
-                return json.loads(r.read().decode())
-        except Exception as e:
-            if n == tries - 1:
-                print(f"  ! {url[:70]} -> {e}", file=sys.stderr)
-                return None
-            time.sleep(1.5 * (n + 1))
+def tag_labels(market):
+    out = []
+    for t in (market.get("tags") or []):
+        label = t.get("slug") or t.get("label") if isinstance(t, dict) else str(t)
+        if label:
+            out.append(str(label).lower())
+    # Gamma legger av og til taggene paa event-objektet i stedet — DETTE
+    # manglet i forste versjon og er sannsynligvis hovedfeilen.
+    if not out:
+        for ev in (market.get("events") or []):
+            for t in (ev.get("tags") or []):
+                label = t.get("slug") or t.get("label") if isinstance(t, dict) else str(t)
+                if label:
+                    out.append(str(label).lower())
+    return out
 
 
-# ── Markedsutvalg ─────────────────────────────────────────────────────────
-def is_weather(m):
-    """VERIFISER: bytt ut med TAG_MAP-oppslaget fra ingest.py hvis du har det.
-    Husk include_tag=true — uten den returnerer Gamma ingen tags."""
-    tags = m.get("tags") or []
-    for t in tags:
-        label = (t.get("label") or t.get("slug") or "").lower() if isinstance(t, dict) else str(t).lower()
-        if "weather" in label or "climate" in label:
-            return True
-    q = (m.get("question") or "").lower()
-    return any(w in q for w in WEATHER_WORDS)
+def categorize(market):
+    hits = {_TAG_TO_CAT[l] for l in tag_labels(market)
+            if l not in NOISE_TAGS and l in _TAG_TO_CAT}
+    if hits:
+        for cat in PRIORITY:
+            if cat in hits:
+                return cat
+    text = str(market.get("question", "")).lower()
+    for cat in PRIORITY:
+        for r in _WORD_RES.get(cat, []):
+            if r.search(text):
+                return cat
+    return "other"
+
+
+OFFSET_LIMIT = 2000     # Gamma nekter dypere paginering — samme som ingest.py
+HORIZON_DAYS = 7        # vaermarkeder gjores opp raskt; vinduet holder offset lavt
 
 
 def active_weather_markets():
-    """Aktive, uavgjorte værmarkeder over volumgulvet."""
-    out, offset = [], 0
-    while True:
-        # VERIFISER paginering/feltnavn mot ingest.py
-        page = get(f"{GAMMA}/markets", {
-            "closed": "false",
-            "active": "true",
+    """Aapne vaermarkeder som gjores opp innen HORIZON_DAYS.
+
+    Endret fra forste versjon:
+      - droppet active=true (ingest.py sender den aldri)
+      - lagt til end_date_min/max slik ingest.py gjor, saa offsetene holder seg grunne
+      - filtrerer closed paa klientsiden i stedet for aa stole paa serverparameteren
+    """
+    now = datetime.now(timezone.utc)
+    lo = now.strftime("%Y-%m-%dT%H:%M:%SZ")
+    hi = (now + timedelta(days=HORIZON_DAYS)).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+    hentet, aapne, vaer, out = 0, 0, 0, []
+    katalog = defaultdict(int)
+    offset = 0
+    while offset < OFFSET_LIMIT:
+        batch = get(f"{GAMMA}/markets", {
+            "limit": 500, "offset": offset,
+            "end_date_min": lo, "end_date_max": hi,
             "include_tag": "true",
-            "limit": 500,
-            "offset": offset,
         })
-        if not page:
+        if not batch:
             break
-        for m in page:
-            if float(m.get("volumeNum") or m.get("volume") or 0) < MIN_VOLUME:
+        hentet += len(batch)
+        for m in batch:
+            if m.get("closed") or m.get("umaResolutionStatus") == "resolved":
                 continue
-            if is_weather(m):
+            aapne += 1
+            cat = categorize(m)
+            katalog[cat] += 1
+            if cat != "weather":
+                continue
+            vaer += 1
+            if float(m.get("volumeNum") or m.get("volume") or 0) >= MIN_VOLUME:
                 out.append(m)
-        if len(page) < 500:
-            break
-        offset += 500
+        offset += len(batch)
+        time.sleep(0.35)
+
+    topp = ", ".join(f"{k} {v}" for k, v in
+                     sorted(katalog.items(), key=lambda x: -x[1])[:5]) or "ingen"
+    print(f"  hentet {hentet} | aapne {aapne} | vaer {vaer} | "
+          f"over ${MIN_VOLUME:.0f} {len(out)}", file=sys.stderr)
+    print(f"  kategorier: {topp}", file=sys.stderr)
     return out
 
 
