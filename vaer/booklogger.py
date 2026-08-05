@@ -172,24 +172,28 @@ def categorize(market):
 
 
 OFFSET_LIMIT = 2000     # Gamma nekter dypere paginering — samme som ingest.py
-HORIZON_DAYS = 7        # vaermarkeder gjores opp raskt; vinduet holder offset lavt
+HORIZON_DAYS = 7        # vaermarkeder gjores opp raskt
+DISCOVER_SEC = 1800     # hvor ofte markedslista bygges paa nytt
+
+_cache = {"tid": 0.0, "markeder": []}
 
 
-def active_weather_markets():
-    """Aapne vaermarkeder som gjores opp innen HORIZON_DAYS.
+def _iso(dt):
+    return dt.astimezone(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
-    Endret fra forste versjon:
-      - droppet active=true (ingest.py sender den aldri)
-      - lagt til end_date_min/max slik ingest.py gjor, saa offsetene holder seg grunne
-      - filtrerer closed paa klientsiden i stedet for aa stole paa serverparameteren
+
+def _parse(s):
+    return datetime.fromisoformat(s.replace("Z", "+00:00"))
+
+
+def _fetch_window(lo, hi, depth=0, teller=None):
+    """Hent alle markeder som gjores opp i [lo, hi).
+
+    Sport alene fyller offsetgrensen paa faa dager, saa et enkelt 7-dagers
+    kall returnerer 2000 sportsmarkeder og null vaer. Samme losning som
+    ingest.py: treffer vi grensen, deles vinduet i to og hentes paa nytt.
     """
-    now = datetime.now(timezone.utc)
-    lo = now.strftime("%Y-%m-%dT%H:%M:%SZ")
-    hi = (now + timedelta(days=HORIZON_DAYS)).strftime("%Y-%m-%dT%H:%M:%SZ")
-
-    hentet, aapne, vaer, out = 0, 0, 0, []
-    katalog = defaultdict(int)
-    offset = 0
+    rows, offset, traff_grensen = [], 0, False
     while offset < OFFSET_LIMIT:
         batch = get(f"{GAMMA}/markets", {
             "limit": 500, "offset": offset,
@@ -198,27 +202,66 @@ def active_weather_markets():
         })
         if not batch:
             break
-        hentet += len(batch)
-        for m in batch:
-            if m.get("closed") or m.get("umaResolutionStatus") == "resolved":
-                continue
-            aapne += 1
-            cat = categorize(m)
-            katalog[cat] += 1
-            if cat != "weather":
-                continue
-            vaer += 1
-            if float(m.get("volumeNum") or m.get("volume") or 0) >= MIN_VOLUME:
-                out.append(m)
+        rows.extend(batch)
         offset += len(batch)
+        if teller is not None:
+            teller["kall"] += 1
         time.sleep(0.35)
+    else:
+        traff_grensen = True
+
+    if not traff_grensen:
+        return rows
+
+    a, b = _parse(lo), _parse(hi)
+    if depth >= 8 or (b - a) <= timedelta(hours=1):
+        print(f"  !! {lo[:13]}–{hi[:13]} kan ikke deles finere — noe kan mangle",
+              file=sys.stderr)
+        return rows
+    midt = a + (b - a) / 2
+    if teller is not None:
+        teller["delt"] += 1
+    return (_fetch_window(lo, _iso(midt), depth + 1, teller)
+            + _fetch_window(_iso(midt), hi, depth + 1, teller))
+
+
+def active_weather_markets(force=False):
+    """Aapne vaermarkeder innen HORIZON_DAYS. Cachet — lista endrer seg sakte,
+    men bokene endrer seg fort, saa vi bygger den bare hvert 30. minutt."""
+    if not force and _cache["markeder"] and time.time() - _cache["tid"] < DISCOVER_SEC:
+        return _cache["markeder"]
+
+    naa = datetime.now(timezone.utc)
+    teller = {"kall": 0, "delt": 0}
+    raa = _fetch_window(_iso(naa), _iso(naa + timedelta(days=HORIZON_DAYS)),
+                        teller=teller)
+
+    sett, aapne, ut = set(), 0, []
+    katalog = defaultdict(int)
+    for m in raa:
+        mid = str(m.get("id") or m.get("conditionId") or "")
+        if mid in sett:
+            continue
+        sett.add(mid)
+        if m.get("closed") or m.get("umaResolutionStatus") == "resolved":
+            continue
+        aapne += 1
+        kat = categorize(m)
+        katalog[kat] += 1
+        if kat != "weather":
+            continue
+        if float(m.get("volumeNum") or m.get("volume") or 0) >= MIN_VOLUME:
+            ut.append(m)
 
     topp = ", ".join(f"{k} {v}" for k, v in
                      sorted(katalog.items(), key=lambda x: -x[1])[:5]) or "ingen"
-    print(f"  hentet {hentet} | aapne {aapne} | vaer {vaer} | "
-          f"over ${MIN_VOLUME:.0f} {len(out)}", file=sys.stderr)
+    print(f"  {teller['kall']} kall, {teller['delt']} vindusdelinger | "
+          f"unike {len(sett)} | aapne {aapne} | vaer {katalog['weather']} | "
+          f"over ${MIN_VOLUME:.0f} {len(ut)}", file=sys.stderr)
     print(f"  kategorier: {topp}", file=sys.stderr)
-    return out
+
+    _cache["markeder"], _cache["tid"] = ut, time.time()
+    return ut
 
 
 def token_ids(m):
