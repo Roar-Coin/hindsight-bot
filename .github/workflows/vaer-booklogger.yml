@@ -1,0 +1,75 @@
+name: Vær — booklogger
+
+# Tørrkjøring av værregelen. Ingen kapital, ingen ordre — logger bare
+# hva $100 FAKTISK ville blitt fylt til hver gang et værmarked krysser 80¢.
+#
+# Kjører i ~5t30m per fyring, fire ganger i døgnet. Committer loggen hver
+# time underveis, så en avbrutt jobb koster maks 60 minutter med data.
+
+on:
+  workflow_dispatch:        # ← knappen du trykker på for å starte manuelt
+  schedule:
+    - cron: "7 0,6,12,18 * * *"
+
+# Egen gruppe, så denne og krypto-tørrkjøringen ikke avbryter hverandre.
+concurrency:
+  group: vaer-booklogger
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  logg:
+    runs-on: ubuntu-latest
+    timeout-minutes: 350
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Kjør, og lagre hver time
+        run: |
+          set -u
+          git config user.name  "booklogger"
+          git config user.email "actions@github.com"
+
+          lagre () {
+            git add vaer/vaer-book.jsonl vaer/vaer-state.json 2>/dev/null || true
+            if git diff --staged --quiet; then
+              echo "  (ingenting nytt å lagre)"
+              return 0
+            fi
+            git commit -q -m "vær: $(wc -l < vaer/vaer-book.jsonl | tr -d ' ') signaler"
+            # Krypto-tørrkjøringen pusher til samme branch — prøv igjen ved kollisjon.
+            for forsok in 1 2 3 4 5; do
+              if git pull --rebase --autostash -q origin "${GITHUB_REF_NAME}" \
+                 && git push -q; then
+                echo "  lagret"
+                return 0
+              fi
+              sleep $(( RANDOM % 20 + 5 ))
+            done
+            echo "  ADVARSEL: fikk ikke pushet"
+          }
+
+          mkdir -p vaer
+          for bolk in 1 2 3 4 5; do
+            echo "── bolk $bolk av 5 ──"
+            ( cd vaer && python booklogger.py watch --minutes 66 ) || true
+            lagre
+          done
+
+      - name: Skriv tallene i sammendraget
+        if: always()
+        run: |
+          {
+            echo '## Vær-tørrkjøring'
+            echo '```'
+            ( cd vaer && python booklogger.py report ) 2>&1 || echo "ingen logg ennå"
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
