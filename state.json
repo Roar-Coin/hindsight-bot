@@ -392,9 +392,9 @@
       "shares": 25.303643724696357,
       "notional": 25.0,
       "dry_run": true,
-      "resolved": false,
-      "won": null,
-      "pnl": 0.0
+      "resolved": true,
+      "won": true,
+      "pnl": 0.30364372469635725
     },
     {
       "token_id": "52309899347714283778914543311596108865624159076365826311122287846375049066797",
@@ -410,6 +410,24 @@
       "shares": 25.354969574036513,
       "notional": 25.0,
       "dry_run": true,
+      "resolved": true,
+      "won": true,
+      "pnl": 0.3549695740365131
+    },
+    {
+      "token_id": "98867994916137752441342118919692182002470167617846816970738320416265169657081",
+      "market_id": "3352091",
+      "question": "Will Bitcoin reach $66,000 on August 5?",
+      "asset": "BTC",
+      "outcome": "No",
+      "resolution_day": "2026-08-06",
+      "entered_at": "2026-08-05T18:07:57.712014+00:00",
+      "price": 0.974,
+      "midpoint": 0.965,
+      "cost_cents": 0.9000000000000008,
+      "shares": 25.66735112936345,
+      "notional": 25.0,
+      "dry_run": true,
       "resolved": false,
       "won": null,
       "pnl": 0.0
@@ -417,5 +435,5 @@
   ],
   "halted": false,
   "halt_reason": "",
-  "updated": "2026-08-05T15:42:11.653727+00:00"
+  "updated": "2026-08-05T18:07:57.712414+00:00"
 }
