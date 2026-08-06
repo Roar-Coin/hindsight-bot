@@ -446,16 +446,91 @@ def report():
     print(f"  handler/klynge  {len(rows) / max(len(clusters), 1):.1f}\n")
 
 
+
+# ── Sondering ─────────────────────────────────────────────────────────────
+def probe():
+    """Proever aa finne en maate aa be Gamma om BARE vaermarkeder.
+
+    Skanningen over hele universet er for treg: sport fyller offsetgrensen
+    selv i timesvinduer. Lykkes én av disse, forsvinner problemet helt.
+    Kjor denne én gang, se hvilken som gir treff, si fra hvilken.
+    """
+    naa = datetime.now(timezone.utc)
+    lo, hi = _iso(naa), _iso(naa + timedelta(days=HORIZON_DAYS))
+
+    def vis(navn, data, plukk=None):
+        if data is None:
+            print(f"  {navn:52} FEILET"); return
+        if isinstance(data, dict):
+            data = data.get("data") or data.get("events") or [data]
+        n = len(data)
+        v = sum(1 for m in data if categorize(m) == "weather") if plukk != "raa" else "?"
+        smak = ""
+        for m in data:
+            if categorize(m) == "weather":
+                smak = f"  <- {str(m.get('question') or m.get('title'))[:44]}"
+                break
+        print(f"  {navn:52} {n:5} treff | vaer {v}{smak}")
+        return data
+
+    print("\n=== 1. finn tag-id for weather ===", file=sys.stderr)
+    tag_id = None
+    for u in (f"{GAMMA}/tags/slug/weather", f"{GAMMA}/tags?slug=weather"):
+        d = get(u)
+        if d:
+            t = d[0] if isinstance(d, list) and d else d
+            tag_id = (t or {}).get("id")
+            print(f"  {u.split('/')[-1]:52} -> id={tag_id}")
+            if tag_id:
+                break
+
+    print("\n=== 2. markeder filtrert paa tag ===")
+    if tag_id:
+        vis(f"markets?tag_id={tag_id}",
+            get(f"{GAMMA}/markets", {"tag_id": tag_id, "limit": 500,
+                                     "end_date_min": lo, "end_date_max": hi,
+                                     "include_tag": "true"}))
+        vis(f"markets?tag_id={tag_id}&related_tags=true",
+            get(f"{GAMMA}/markets", {"tag_id": tag_id, "related_tags": "true",
+                                     "limit": 500, "end_date_min": lo,
+                                     "end_date_max": hi, "include_tag": "true"}))
+    vis("markets?tag_slug=weather",
+        get(f"{GAMMA}/markets", {"tag_slug": "weather", "limit": 500,
+                                 "end_date_min": lo, "end_date_max": hi,
+                                 "include_tag": "true"}))
+
+    print("\n=== 3. events (langt faerre enn markeder) ===")
+    vis("events?tag_slug=weather&closed=false",
+        get(f"{GAMMA}/events", {"tag_slug": "weather", "closed": "false",
+                                "limit": 500, "include_tag": "true"}))
+    if tag_id:
+        vis(f"events?tag_id={tag_id}&closed=false",
+            get(f"{GAMMA}/events", {"tag_id": tag_id, "closed": "false",
+                                    "limit": 500, "include_tag": "true"}))
+    vis("events?closed=false  (alle, filtrert her)",
+        get(f"{GAMMA}/events", {"closed": "false", "limit": 500,
+                                "end_date_min": lo, "end_date_max": hi,
+                                "include_tag": "true"}))
+
+    print("\n=== 4. fritekstsok ===")
+    vis("markets?slug_contains=temperature",
+        get(f"{GAMMA}/markets", {"slug_contains": "temperature", "limit": 500,
+                                 "include_tag": "true"}))
+    print("\nSi fra hvilken linje som gir treff paa vaer.\n")
+
+
 # ── main ──────────────────────────────────────────────────────────────────
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("cmd", choices=["watch", "report"])
+    ap.add_argument("cmd", choices=["watch", "report", "probe"])
     ap.add_argument("--once", action="store_true", help="én runde, så avslutt")
     ap.add_argument("--minutes", type=int, default=0, help="stopp etter N minutter")
     a = ap.parse_args()
 
     if a.cmd == "report":
         return report()
+    if a.cmd == "probe":
+        return probe()
 
     state = load_state()
     t0 = time.time()
