@@ -497,17 +497,40 @@ def report():
     print(f"  kaldstart       {len(kalde)}  (laa over terskel ved oppstart — utenfor)")
     print(f"  fylt            {len(filled)}")
     print(f"  ufyllbare       {n_bad}  ({n_bad / len(rows):.0%})   [stopp ved 33 %]")
+    # To maal, og de svarer paa hver sin ting:
+    #   mot midtpunkt = ren gjennomforingskostnad (spread + dybde), samtidig maalt
+    #   mot siste handel = det samme PLUSS hvor foreldet backtestens
+    #     inngangspris var. Store negative tall her betyr stale referansepris,
+    #     ikke en fordel.
+    mids = sorted(r["slip_vs_mid_c"] for r in filled
+                  if r.get("slip_vs_mid_c") is not None)
+    if mids:
+        m_avg = sum(mids) / len(mids)
+        print(f"\nGjennomføringskostnad mot MIDTPUNKT  (det ekte kostnadstallet)")
+        print(f"  snitt           {m_avg:.2f}¢")
+        print(f"  median          {mids[len(mids) // 2]:.2f}¢")
+        print(f"  p95             {mids[min(len(mids)-1, int(0.95*len(mids)))]:.2f}¢")
+        print(f"  verste          {mids[-1]:.2f}¢")
+        print(f"  negative        {sum(1 for x in mids if x < 0)} av {len(mids)}"
+              f"   (bor vaere naer null — under midtpunkt er uvanlig)")
+        print(f"  tak (fordel +1,3 pp)   1,41¢  {'OK' if m_avg < 1.41 else 'BRUDD'}")
+        print(f"  tak (fordel +0,7 pp)   1,00¢  {'OK' if m_avg < 1.00 else 'BRUDD'}")
+
     if slips:
         avg = sum(slips) / len(slips)
+        stale = [x for x in slips if x < -2.0]
         p95 = slips[min(len(slips) - 1, int(0.95 * len(slips)))]
-        print(f"\nGjennomføringskostnad, fylte handler")
+        print(f"\nMot SISTE HANDEL  (= kostnad + foreldet referansepris)")
         print(f"  snitt           {avg:.2f}¢")
         print(f"  median          {slips[len(slips) // 2]:.2f}¢")
         print(f"  p95             {p95:.2f}¢")
         print(f"  verste          {slips[-1]:.2f}¢")
         print(f"  backtest antok  0,50¢")
-        print(f"  tak (fordel +1,3 pp)   1,41¢  {'OK' if avg < 1.41 else 'BRUDD'}")
-        print(f"  tak (fordel +0,7 pp)   1,00¢  {'OK' if avg < 1.00 else 'BRUDD'}")
+        print(f"  under -2¢       {len(stale)} av {len(slips)}"
+              f"   ({len(stale)/len(slips):.0%} der siste handel laa langt over boken)")
+        if len(stale) > 0.1 * len(slips):
+            print("  -> backtestens inngangspris er ofte foreldet i tynne marked.")
+            print("     Det er et gyldighetsproblem ved backtesten, ikke ved fyllene.")
     print(f"\nKlynger           {len(clusters)} over {len(days)} døgn"
           f"  ({len(clusters) / max(len(days), 1):.1f} per døgn)")
     print(f"  handler/klynge  {len(rows) / max(len(clusters), 1):.1f}\n")
