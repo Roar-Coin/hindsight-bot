@@ -399,8 +399,11 @@ def sweep(state):
         sist_under = state["under"].pop(tid, None)
         kryssing = sist_under is not None
         # Hvor gammel kan krysningen vaere? Eldre observasjon = losere maaling.
+        # NB: bool er en int i Python, saa `True` fra eldre tilstandsfiler ville
+        # gitt alder paa 30 millioner minutter. Maa utelukkes eksplisitt.
         alder = (round((time.time() - sist_under) / 60, 1)
-                 if isinstance(sist_under, (int, float)) else None)
+                 if isinstance(sist_under, (int, float))
+                 and not isinstance(sist_under, bool) else None)
 
         book = get(f"{CLOB}/book", {"token_id": tid})
         time.sleep(REQ_PAUSE)
