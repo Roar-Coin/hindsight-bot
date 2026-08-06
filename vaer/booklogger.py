@@ -46,8 +46,13 @@ REQ_PAUSE = 0.15        # pause mellom CLOB-kall
 GAMMA = "https://gamma-api.polymarket.com"
 CLOB = "https://clob.polymarket.com"
 
-LOG = "vaer-book.jsonl"
-STATE = "vaer-state.json"
+# Egne filer per kjoring. To jobber kan da aldri skrive til samme fil, og
+# git faar ingenting aa slaa sammen. Rebase paa en fil som bare vokser paa
+# slutten gir konflikt hver gang, og konfliktmarkorene odela state-fila.
+RUN = os.environ.get("GITHUB_RUN_ID") or datetime.now(timezone.utc).strftime("%Y%m%d-%H%M")
+LOG_DIR, STATE_DIR = "logg", "state"
+LOG = os.path.join(LOG_DIR, f"{RUN}.jsonl")
+STATE = os.path.join(STATE_DIR, f"{RUN}.json")
 
 
 # ── HTTP ──────────────────────────────────────────────────────────────────
@@ -330,15 +335,31 @@ def walk_asks(asks, stake=STAKE):
 
 # ── Tilstand ──────────────────────────────────────────────────────────────
 def load_state():
-    if os.path.exists(STATE):
-        with open(STATE) as f:
-            s = json.load(f)
-        s.setdefault("under", {})
-        return s
-    return {"seen": {}, "under": {}}
+    """Slaar sammen tilstanden fra alle tidligere kjoringer. `seen` og `under`
+    er rene oppslag, saa union er riktig sammenslaaing.
+
+    Taaler odelagte filer: en enkelt korrupt state-fil drepte fire av fem
+    bolker forrige gang. Naa flyttes den til side og resten leses videre."""
+    s = {"seen": {}, "under": {}}
+    os.makedirs(STATE_DIR, exist_ok=True)
+    for navn in sorted(os.listdir(STATE_DIR)):
+        if not navn.endswith(".json"):
+            continue
+        sti = os.path.join(STATE_DIR, navn)
+        try:
+            with open(sti) as f:
+                d = json.load(f)
+        except Exception as e:
+            os.replace(sti, sti + ".odelagt")
+            print(f"  ! {navn} kunne ikke leses ({e}) — lagt til side", file=sys.stderr)
+            continue
+        s["seen"].update(d.get("seen") or {})
+        s["under"].update(d.get("under") or {})
+    return s
 
 
 def save_state(s):
+    os.makedirs(STATE_DIR, exist_ok=True)
     tmp = STATE + ".tmp"
     with open(tmp, "w") as f:
         json.dump(s, f, indent=1)
@@ -346,6 +367,7 @@ def save_state(s):
 
 
 def append(rec):
+    os.makedirs(LOG_DIR, exist_ok=True)
     with open(LOG, "a") as f:
         f.write(json.dumps(rec, ensure_ascii=False) + "\n")
 
@@ -433,10 +455,26 @@ def cluster_key(r):
 
 
 def report():
-    if not os.path.exists(LOG):
+    filer = []
+    if os.path.isdir(LOG_DIR):
+        filer = [os.path.join(LOG_DIR, n) for n in sorted(os.listdir(LOG_DIR))
+                 if n.endswith(".jsonl")]
+    if os.path.exists("vaer-book.jsonl"):
+        filer.append("vaer-book.jsonl")        # fra for filene ble delt opp
+    if not filer:
         print("Ingen logg ennå.")
         return
-    rows = [json.loads(l) for l in open(LOG) if l.strip()]
+    rows = []
+    for sti in filer:
+        for l in open(sti):
+            l = l.strip()
+            if not l or l[0] in "<>=":         # eventuelle konfliktmarkorer
+                continue
+            try:
+                rows.append(json.loads(l))
+            except Exception:
+                pass
+    print(f"({len(filer)} loggfiler)")
     if not rows:
         print("Tom logg.")
         return
