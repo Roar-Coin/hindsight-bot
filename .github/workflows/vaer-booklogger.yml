@@ -8,6 +8,12 @@ name: Vær — booklogger
 
 on:
   workflow_dispatch:        # ← knappen du trykker på for å starte manuelt
+    inputs:
+      kommando:
+        description: "watch = tørrkjør | probe = sonder Gamma én gang"
+        type: choice
+        default: watch
+        options: [watch, probe]
   schedule:
     - cron: "7 0,6,12,18 * * *"
 
@@ -57,6 +63,13 @@ jobs:
           }
 
           mkdir -p vaer
+
+          # Sondering: ett kort kall, ingen loop, ingen lagring.
+          if [ "${{ inputs.kommando }}" = "probe" ]; then
+            cd vaer && python booklogger.py probe
+            exit 0
+          fi
+
           for bolk in 1 2 3 4 5; do
             echo "── bolk $bolk av 5 ──"
             ( cd vaer && python booklogger.py watch --minutes 66 ) || true
@@ -72,4 +85,3 @@ jobs:
             ( cd vaer && python booklogger.py report ) 2>&1 || echo "ingen logg ennå"
             echo '```'
           } >> "$GITHUB_STEP_SUMMARY"
-
