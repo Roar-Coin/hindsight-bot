@@ -78,8 +78,8 @@ jobs:
 
           # Kortere bolker: forrige kjøring mistet 70 minutter med data da
           # lagringen feilet. Nå står maks 25 minutter på spill om gangen.
-          for bolk in $(seq 1 8); do
-            echo "── bolk $bolk av 8 ──"
+          for bolk in $(seq 1 12); do
+            echo "── bolk $bolk av 12 ──"
             ( cd vaer && python booklogger.py watch --minutes 25 ) || true
             lagre
           done
