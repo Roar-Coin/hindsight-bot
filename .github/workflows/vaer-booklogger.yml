@@ -40,17 +40,23 @@ jobs:
       - name: Kjør, og lagre hver time
         run: |
           set -u
+          # Rydd bort et halvferdig rebase fra en tidligere kraesjet kjoring.
+          git rebase --abort 2>/dev/null || true
+          rm -rf .git/rebase-merge .git/rebase-apply
+          git checkout -- . 2>/dev/null || true
+
           git config user.name  "booklogger"
           git config user.email "actions@github.com"
 
           lagre () {
-            git add vaer/vaer-book.jsonl vaer/vaer-state.json 2>/dev/null || true
+            git add vaer/logg vaer/state 2>/dev/null || true
             if git diff --staged --quiet; then
               echo "  (ingenting nytt å lagre)"
               return 0
             fi
-            git commit -q -m "vær: $(wc -l < vaer/vaer-book.jsonl | tr -d ' ') signaler"
-            # Krypto-tørrkjøringen pusher til samme branch — prøv igjen ved kollisjon.
+            git commit -q -m "vær: $(cat vaer/logg/*.jsonl 2>/dev/null | wc -l | tr -d ' ') signaler"
+            # Hver kjøring skriver til sine egne filer, så det finnes ikke lenger
+            # noe å slå sammen. Retry-en er bare for kappløp mot krypto-jobben.
             for forsok in 1 2 3 4 5; do
               if git pull --rebase --autostash -q origin "${GITHUB_REF_NAME}" \
                  && git push -q; then
@@ -70,9 +76,11 @@ jobs:
             exit 0
           fi
 
-          for bolk in 1 2 3 4 5; do
-            echo "── bolk $bolk av 5 ──"
-            ( cd vaer && python booklogger.py watch --minutes 66 ) || true
+          # Kortere bolker: forrige kjøring mistet 70 minutter med data da
+          # lagringen feilet. Nå står maks 25 minutter på spill om gangen.
+          for bolk in $(seq 1 8); do
+            echo "── bolk $bolk av 8 ──"
+            ( cd vaer && python booklogger.py watch --minutes 25 ) || true
             lagre
           done
 
