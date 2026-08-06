@@ -10,10 +10,10 @@ on:
   workflow_dispatch:        # ← knappen du trykker på for å starte manuelt
     inputs:
       kommando:
-        description: "watch = tørrkjør | probe = sonder Gamma én gang"
+        description: "watch = tørrkjør | report = se tallene nå | probe = sonder Gamma"
         type: choice
         default: watch
-        options: [watch, probe]
+        options: [watch, report, probe]
   schedule:
     - cron: "7 0,6,12,18 * * *"
 
@@ -71,10 +71,11 @@ jobs:
           mkdir -p vaer
 
           # Sondering: ett kort kall, ingen loop, ingen lagring.
-          if [ "${{ inputs.kommando }}" = "probe" ]; then
-            cd vaer && python booklogger.py probe
-            exit 0
-          fi
+          # Kort kommando: kjør og avslutt, ingen loop, ingen lagring.
+          case "${{ inputs.kommando }}" in
+            probe)  cd vaer && python booklogger.py probe;  exit 0 ;;
+            report) cd vaer && python booklogger.py report; exit 0 ;;
+          esac
 
           # Kortere bolker: forrige kjøring mistet 70 minutter med data da
           # lagringen feilet. Nå står maks 25 minutter på spill om gangen.
