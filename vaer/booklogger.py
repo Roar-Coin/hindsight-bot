@@ -264,7 +264,10 @@ def vaktliste(state, force=False):
                 ut.append({"m": m, "i": i, "tid": tid})   # ta med, sjekk via CLOB
                 continue
             if gp < THRESHOLD:
-                state["under"][tid] = True     # herfra teller en oppgang
+                # Lagre NAAR vi saa den under terskel. Ligger jobben nede en
+                # time, kan et marked ha krysset og loept videre til 91¢ for
+                # vi ser igjen. Da er det ikke prisen regelen ville betalt.
+                state["under"][tid] = time.time()
             if gp >= WATCH_FROM:
                 ut.append({"m": m, "i": i, "tid": tid})
 
@@ -388,12 +391,16 @@ def sweep(state):
         if sig is None:
             continue
         if sig < THRESHOLD:
-            state["under"][tid] = True
+            state["under"][tid] = time.time()
             continue
 
         # Kaldstart: laa allerede over terskel da vi begynte aa se. Vi vet ikke
         # naar den krysset, saa prisen her er ikke prisen regelen ville betalt.
-        kryssing = state["under"].pop(tid, False)
+        sist_under = state["under"].pop(tid, None)
+        kryssing = sist_under is not None
+        # Hvor gammel kan krysningen vaere? Eldre observasjon = losere maaling.
+        alder = (round((time.time() - sist_under) / 60, 1)
+                 if isinstance(sist_under, (int, float)) else None)
 
         book = get(f"{CLOB}/book", {"token_id": tid})
         time.sleep(REQ_PAUSE)
@@ -424,6 +431,7 @@ def sweep(state):
             "filled": filled,
             "notional_available": round(avail, 2),
             "status": status,
+            "alder_min": alder,      # minutter siden vi sist saa den under 80¢
             "slip_c": round((vwap - sig) * 100, 3) if vwap else None,
             "slip_vs_mid_c": round((vwap - mid_p) * 100, 3) if vwap and mid_p else None,
         }
@@ -484,6 +492,8 @@ def report():
     if not rows:
         print(f"Ingen ekte krysninger ennaa ({len(kalde)} kaldstart, holdt utenfor).")
         return
+    ferske = [r for r in rows if r.get("alder_min") is not None
+              and r["alder_min"] <= 5]
     filled = [r for r in rows if r["status"] == "filled"]
     slips = sorted(r["slip_c"] for r in filled if r["slip_c"] is not None)
     n_bad = sum(1 for r in rows if r["status"] != "filled")
@@ -494,6 +504,7 @@ def report():
     days = {r["ts"][:10] for r in rows}
 
     print(f"\nEkte krysninger   {len(rows)}")
+    print(f"  herav ferske    {len(ferske)}  (sett under 80¢ for under 5 min siden)")
     print(f"  kaldstart       {len(kalde)}  (laa over terskel ved oppstart — utenfor)")
     print(f"  fylt            {len(filled)}")
     print(f"  ufyllbare       {n_bad}  ({n_bad / len(rows):.0%})   [stopp ved 33 %]")
