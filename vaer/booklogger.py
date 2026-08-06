@@ -171,9 +171,11 @@ def categorize(market):
     return "other"
 
 
-OFFSET_LIMIT = 2000     # Gamma nekter dypere paginering — samme som ingest.py
+OFFSET_LIMIT = 2000
 HORIZON_DAYS = 7        # vaermarkeder gjores opp raskt
 DISCOVER_SEC = 1800     # hvor ofte markedslista bygges paa nytt
+WEATHER_TAG = "84"      # Gammas tag-id for weather — funnet med `probe`
+PAGE = 100              # Gamma gir 100 om gangen selv naar man ber om 500
 
 _cache = {"tid": 0.0, "markeder": []}
 
@@ -182,62 +184,39 @@ def _iso(dt):
     return dt.astimezone(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
-def _parse(s):
-    return datetime.fromisoformat(s.replace("Z", "+00:00"))
+def active_weather_markets(force=False):
+    """Aapne vaermarkeder innen HORIZON_DAYS, hentet direkte paa tag.
 
+    Skanningen over hele universet er borte: sport fylte offsetgrensen selv
+    i timesvinduer, og funnet ble aldri ferdig. Med tag_id spor vi Gamma om
+    de riktige med én gang.
 
-def _fetch_window(lo, hi, depth=0, teller=None):
-    """Hent alle markeder som gjores opp i [lo, hi).
-
-    Sport alene fyller offsetgrensen paa faa dager, saa et enkelt 7-dagers
-    kall returnerer 2000 sportsmarkeder og null vaer. Samme losning som
-    ingest.py: treffer vi grensen, deles vinduet i to og hentes paa nytt.
+    Taggen er bare et forfilter — categorize() fra ingest.py avgjor fortsatt,
+    slik at torrkjoringen ser NOYAKTIG samme utvalg som backtesten gjorde.
     """
-    rows, offset, traff_grensen = [], 0, False
+    if not force and _cache["markeder"] and time.time() - _cache["tid"] < DISCOVER_SEC:
+        return _cache["markeder"]
+
+    naa = datetime.now(timezone.utc)
+    lo, hi = _iso(naa), _iso(naa + timedelta(days=HORIZON_DAYS))
+
+    raa, offset = [], 0
     while offset < OFFSET_LIMIT:
         batch = get(f"{GAMMA}/markets", {
-            "limit": 500, "offset": offset,
+            "tag_id": WEATHER_TAG, "related_tags": "true",
+            "limit": PAGE, "offset": offset,
             "end_date_min": lo, "end_date_max": hi,
             "include_tag": "true",
         })
         if not batch:
             break
-        rows.extend(batch)
+        raa.extend(batch)
         offset += len(batch)
-        if teller is not None:
-            teller["kall"] += 1
+        if len(batch) < PAGE:
+            break
         time.sleep(0.35)
-    else:
-        traff_grensen = True
 
-    if not traff_grensen:
-        return rows
-
-    a, b = _parse(lo), _parse(hi)
-    if depth >= 8 or (b - a) <= timedelta(hours=1):
-        print(f"  !! {lo[:13]}–{hi[:13]} kan ikke deles finere — noe kan mangle",
-              file=sys.stderr)
-        return rows
-    midt = a + (b - a) / 2
-    if teller is not None:
-        teller["delt"] += 1
-    return (_fetch_window(lo, _iso(midt), depth + 1, teller)
-            + _fetch_window(_iso(midt), hi, depth + 1, teller))
-
-
-def active_weather_markets(force=False):
-    """Aapne vaermarkeder innen HORIZON_DAYS. Cachet — lista endrer seg sakte,
-    men bokene endrer seg fort, saa vi bygger den bare hvert 30. minutt."""
-    if not force and _cache["markeder"] and time.time() - _cache["tid"] < DISCOVER_SEC:
-        return _cache["markeder"]
-
-    naa = datetime.now(timezone.utc)
-    teller = {"kall": 0, "delt": 0}
-    raa = _fetch_window(_iso(naa), _iso(naa + timedelta(days=HORIZON_DAYS)),
-                        teller=teller)
-
-    sett, aapne, ut = set(), 0, []
-    katalog = defaultdict(int)
+    sett, aapne, forkastet, ut = set(), 0, 0, []
     for m in raa:
         mid = str(m.get("id") or m.get("conditionId") or "")
         if mid in sett:
@@ -246,19 +225,18 @@ def active_weather_markets(force=False):
         if m.get("closed") or m.get("umaResolutionStatus") == "resolved":
             continue
         aapne += 1
-        kat = categorize(m)
-        katalog[kat] += 1
-        if kat != "weather":
+        if categorize(m) != "weather":
+            forkastet += 1        # taggen sa vaer, backtestens regel sa noe annet
             continue
         if float(m.get("volumeNum") or m.get("volume") or 0) >= MIN_VOLUME:
             ut.append(m)
 
-    topp = ", ".join(f"{k} {v}" for k, v in
-                     sorted(katalog.items(), key=lambda x: -x[1])[:5]) or "ingen"
-    print(f"  {teller['kall']} kall, {teller['delt']} vindusdelinger | "
-          f"unike {len(sett)} | aapne {aapne} | vaer {katalog['weather']} | "
-          f"over ${MIN_VOLUME:.0f} {len(ut)}", file=sys.stderr)
-    print(f"  kategorier: {topp}", file=sys.stderr)
+    print(f"  {offset // PAGE + 1} sider | unike {len(sett)} | aapne {aapne} | "
+          f"forkastet av categorize {forkastet} | over ${MIN_VOLUME:.0f} {len(ut)}",
+          file=sys.stderr)
+    if not raa:
+        print("  !! tag-kallet ga null — er tag-id 84 fortsatt riktig? "
+              "kjor `probe` paa nytt", file=sys.stderr)
 
     _cache["markeder"], _cache["tid"] = ut, time.time()
     return ut
@@ -322,8 +300,10 @@ def walk_asks(asks, stake=STAKE):
 def load_state():
     if os.path.exists(STATE):
         with open(STATE) as f:
-            return json.load(f)
-    return {"seen": {}}
+            s = json.load(f)
+        s.setdefault("under", {})   # eldre tilstandsfiler
+        return s
+    return {"seen": {}, "under": {}}
 
 
 def save_state(s):
@@ -343,7 +323,7 @@ def sweep(state):
     markets = active_weather_markets()
     print(f"[{datetime.now(timezone.utc):%H:%M}] {len(markets)} værmarkeder over ${MIN_VOLUME:.0f}",
           file=sys.stderr)
-    hits = 0
+    hits, kalde = 0, [0]
 
     for m in markets:
         tids, outs = token_ids(m), outcomes(m)
@@ -354,8 +334,17 @@ def sweep(state):
             last, mid = signal_prices(tid)
             time.sleep(REQ_PAUSE)
             sig = last if last is not None else mid
-            if sig is None or sig < THRESHOLD:
+            if sig is None:
                 continue
+            if sig < THRESHOLD:
+                # Sett under terskel — herfra teller en oppgang som ekte krysning.
+                state["under"][tid] = True
+                continue
+
+            # Kaldstart: markedet laa allerede over 80¢ da vi begynte aa se paa
+            # det. Vi vet ikke naar det krysset, saa prisen her er ikke prisen
+            # regelen ville betalt. Logges for innsyn, holdes utenfor tallene.
+            kryssing = state["under"].pop(tid, False)
 
             book = get(f"{CLOB}/book", {"token_id": tid})
             time.sleep(REQ_PAUSE)
@@ -364,6 +353,8 @@ def sweep(state):
             best_ask = min((float(a["price"]) for a in asks), default=None)
 
             status = "filled" if filled else ("partial" if shares else "empty")
+            if not kryssing:
+                status = "kaldstart"
             rec = {
                 "ts": datetime.now(timezone.utc).isoformat(timespec="seconds"),
                 "token_id": tid,
@@ -390,11 +381,16 @@ def sweep(state):
             append(rec)
             state["seen"][tid] = rec["ts"]
             hits += 1
-            print(f"  + {status:7} {rec['slip_c']}¢  {(rec['question'] or '')[:52]}",
-                  file=sys.stderr)
+            if kryssing:
+                print(f"  + {status:7} {rec['slip_c']}¢  {(rec['question'] or '')[:52]}",
+                      file=sys.stderr)
+            else:
+                kalde[0] += 1
 
-    if hits:
-        save_state(state)
+    if kalde[0]:
+        print(f"  ({kalde[0]} laa allerede over terskel — kaldstart, teller ikke)",
+              file=sys.stderr)
+    save_state(state)
     return hits
 
 
@@ -418,6 +414,11 @@ def report():
         print("Tom logg.")
         return
 
+    kalde = [r for r in rows if r["status"] == "kaldstart"]
+    rows = [r for r in rows if r["status"] != "kaldstart"]
+    if not rows:
+        print(f"Ingen ekte krysninger ennaa ({len(kalde)} kaldstart, holdt utenfor).")
+        return
     filled = [r for r in rows if r["status"] == "filled"]
     slips = sorted(r["slip_c"] for r in filled if r["slip_c"] is not None)
     n_bad = sum(1 for r in rows if r["status"] != "filled")
@@ -427,7 +428,8 @@ def report():
         clusters[cluster_key(r)].append(r)
     days = {r["ts"][:10] for r in rows}
 
-    print(f"\nSignaler          {len(rows)}")
+    print(f"\nEkte krysninger   {len(rows)}")
+    print(f"  kaldstart       {len(kalde)}  (laa over terskel ved oppstart — utenfor)")
     print(f"  fylt            {len(filled)}")
     print(f"  ufyllbare       {n_bad}  ({n_bad / len(rows):.0%})   [stopp ved 33 %]")
     if slips:
