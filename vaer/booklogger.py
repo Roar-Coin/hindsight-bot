@@ -173,7 +173,8 @@ def categorize(market):
 
 OFFSET_LIMIT = 2000
 HORIZON_DAYS = 7        # vaermarkeder gjores opp raskt
-DISCOVER_SEC = 1800     # hvor ofte markedslista bygges paa nytt
+DISCOVER_SEC = 300      # funnet er billig naa — 11 kall — saa kjor det ofte
+WATCH_FROM = 0.70       # CLOB-poll bare tokens Gamma sier ligger her eller over
 WEATHER_TAG = "84"      # Gammas tag-id for weather — funnet med `probe`
 PAGE = 100              # Gamma gir 100 om gangen selv naar man ber om 500
 
@@ -184,15 +185,30 @@ def _iso(dt):
     return dt.astimezone(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
-def active_weather_markets(force=False):
-    """Aapne vaermarkeder innen HORIZON_DAYS, hentet direkte paa tag.
+def _gamma_priser(m):
+    """Gamma legger naavaerende pris rett i markedsobjektet. Gratis — den
+    folger med funnkallet, saa vi slipper aa sporre CLOB om 2100 tokens."""
+    raa = m.get("outcomePrices")
+    if isinstance(raa, str):
+        try:
+            raa = json.loads(raa)
+        except Exception:
+            return []
+    try:
+        return [float(x) for x in (raa or [])]
+    except Exception:
+        return []
 
-    Skanningen over hele universet er borte: sport fylte offsetgrensen selv
-    i timesvinduer, og funnet ble aldri ferdig. Med tag_id spor vi Gamma om
-    de riktige med én gang.
 
-    Taggen er bare et forfilter — categorize() fra ingest.py avgjor fortsatt,
-    slik at torrkjoringen ser NOYAKTIG samme utvalg som backtesten gjorde.
+def vaktliste(state, force=False):
+    """To trinn:
+      1. Hent alle vaermarkeder paa tag (11 kall) og les Gamma-prisen deres.
+         Alt under terskel foeres inn i under-registeret — det er dette som
+         gjor at en senere oppgang teller som ekte krysning.
+      2. Returner BARE tokens fra WATCH_FROM og opp. Bare de blir CLOB-pollet.
+
+    Var: 2100 tokens x 2 CLOB-kall = 11 minutter per runde.
+    Naa: 11 Gamma-kall + CLOB bare paa de faa som er i naerheten.
     """
     if not force and _cache["markeder"] and time.time() - _cache["tid"] < DISCOVER_SEC:
         return _cache["markeder"]
@@ -216,7 +232,8 @@ def active_weather_markets(force=False):
             break
         time.sleep(0.35)
 
-    sett, aapne, forkastet, ut = set(), 0, 0, []
+    sett, aapne, forkastet, tokens, uten_pris = set(), 0, 0, 0, 0
+    ut = []
     for m in raa:
         mid = str(m.get("id") or m.get("conditionId") or "")
         if mid in sett:
@@ -226,17 +243,32 @@ def active_weather_markets(force=False):
             continue
         aapne += 1
         if categorize(m) != "weather":
-            forkastet += 1        # taggen sa vaer, backtestens regel sa noe annet
+            forkastet += 1
             continue
-        if float(m.get("volumeNum") or m.get("volume") or 0) >= MIN_VOLUME:
-            ut.append(m)
+        if float(m.get("volumeNum") or m.get("volume") or 0) < MIN_VOLUME:
+            continue
 
-    print(f"  {offset // PAGE + 1} sider | unike {len(sett)} | aapne {aapne} | "
-          f"forkastet av categorize {forkastet} | over ${MIN_VOLUME:.0f} {len(ut)}",
+        tids, priser = token_ids(m), _gamma_priser(m)
+        for i, tid in enumerate(tids):
+            tokens += 1
+            if tid in state["seen"]:
+                continue
+            gp = priser[i] if i < len(priser) else None
+            if gp is None:
+                uten_pris += 1
+                ut.append({"m": m, "i": i, "tid": tid})   # ta med, sjekk via CLOB
+                continue
+            if gp < THRESHOLD:
+                state["under"][tid] = True     # herfra teller en oppgang
+            if gp >= WATCH_FROM:
+                ut.append({"m": m, "i": i, "tid": tid})
+
+    print(f"  {offset // PAGE + 1} sider | vaermarkeder {aapne - forkastet} | "
+          f"tokens {tokens} | paa vaktliste {len(ut)}"
+          + (f" | uten Gamma-pris {uten_pris}" if uten_pris else ""),
           file=sys.stderr)
     if not raa:
-        print("  !! tag-kallet ga null — er tag-id 84 fortsatt riktig? "
-              "kjor `probe` paa nytt", file=sys.stderr)
+        print("  !! tag-kallet ga null — kjor `probe` paa nytt", file=sys.stderr)
 
     _cache["markeder"], _cache["tid"] = ut, time.time()
     return ut
@@ -265,18 +297,18 @@ def outcomes(m):
 
 # ── Pris og bok ───────────────────────────────────────────────────────────
 def signal_prices(tid):
-    """Tre referanser. Backtesten leste handelsprisserien, så `last` er den
-    som ligner mest — men logg alle tre, da slipper vi å gjette."""
+    """Tre referanser. Backtesten leste handelsprisserien, saa `last` ligner
+    mest — men logg alle, saa slipper vi aa gjette i etterkant."""
     last = get(f"{CLOB}/last-trade-price", {"token_id": tid})
     mid = get(f"{CLOB}/midpoint", {"token_id": tid})
     f = lambda d, k="price": float(d[k]) if d and k in d else None
-    return f(last), f(mid, "mid") if mid and "mid" in mid else f(mid)
+    return f(last), (f(mid, "mid") if mid and "mid" in mid else f(mid))
 
 
 def walk_asks(asks, stake=STAKE):
-    """Går gjennom ask-siden til $100 er brukt opp.
-    Returnerer VWAP, antall aksjer, hvor mange nivåer vi spiste,
-    om vi ble fylt helt, og hvor mye boken faktisk kunne ta."""
+    """Gaar gjennom ask-siden til $100 er brukt opp. Returnerer VWAP, antall
+    aksjer, antall nivaaer vi spiste, om vi ble fylt helt, og hvor mye
+    boken faktisk kunne ta."""
     spent = shares = 0.0
     levels = 0
     for lvl in sorted(asks, key=lambda a: float(a["price"])):
@@ -301,7 +333,7 @@ def load_state():
     if os.path.exists(STATE):
         with open(STATE) as f:
             s = json.load(f)
-        s.setdefault("under", {})   # eldre tilstandsfiler
+        s.setdefault("under", {})
         return s
     return {"seen": {}, "under": {}}
 
@@ -320,72 +352,67 @@ def append(rec):
 
 # ── Én runde ──────────────────────────────────────────────────────────────
 def sweep(state):
-    markets = active_weather_markets()
-    print(f"[{datetime.now(timezone.utc):%H:%M}] {len(markets)} værmarkeder over ${MIN_VOLUME:.0f}",
-          file=sys.stderr)
+    watch = vaktliste(state)
     hits, kalde = 0, [0]
 
-    for m in markets:
-        tids, outs = token_ids(m), outcomes(m)
-        for i, tid in enumerate(tids):
-            if tid in state["seen"]:
-                continue          # regelen kjøper FØRSTE krysning, aldri igjen
+    for w in watch:
+        tid, m, i = w["tid"], w["m"], w["i"]
+        if tid in state["seen"]:
+            continue
 
-            last, mid = signal_prices(tid)
-            time.sleep(REQ_PAUSE)
-            sig = last if last is not None else mid
-            if sig is None:
-                continue
-            if sig < THRESHOLD:
-                # Sett under terskel — herfra teller en oppgang som ekte krysning.
-                state["under"][tid] = True
-                continue
+        last, mid_p = signal_prices(tid)
+        time.sleep(REQ_PAUSE)
+        sig = last if last is not None else mid_p
+        if sig is None:
+            continue
+        if sig < THRESHOLD:
+            state["under"][tid] = True
+            continue
 
-            # Kaldstart: markedet laa allerede over 80¢ da vi begynte aa se paa
-            # det. Vi vet ikke naar det krysset, saa prisen her er ikke prisen
-            # regelen ville betalt. Logges for innsyn, holdes utenfor tallene.
-            kryssing = state["under"].pop(tid, False)
+        # Kaldstart: laa allerede over terskel da vi begynte aa se. Vi vet ikke
+        # naar den krysset, saa prisen her er ikke prisen regelen ville betalt.
+        kryssing = state["under"].pop(tid, False)
 
-            book = get(f"{CLOB}/book", {"token_id": tid})
-            time.sleep(REQ_PAUSE)
-            asks = (book or {}).get("asks") or []
-            vwap, shares, levels, filled, avail = walk_asks(asks)
-            best_ask = min((float(a["price"]) for a in asks), default=None)
+        book = get(f"{CLOB}/book", {"token_id": tid})
+        time.sleep(REQ_PAUSE)
+        asks = (book or {}).get("asks") or []
+        vwap, shares, levels, filled, avail = walk_asks(asks)
+        best_ask = min((float(a["price"]) for a in asks), default=None)
 
-            status = "filled" if filled else ("partial" if shares else "empty")
-            if not kryssing:
-                status = "kaldstart"
-            rec = {
-                "ts": datetime.now(timezone.utc).isoformat(timespec="seconds"),
-                "token_id": tid,
-                "condition_id": m.get("conditionId"),
-                "slug": m.get("slug"),
-                "event_slug": (m.get("events") or [{}])[0].get("slug") if m.get("events") else None,
-                "question": m.get("question"),
-                "outcome": outs[i] if i < len(outs) else None,
-                "end_date": m.get("endDate"),
-                "volume": float(m.get("volumeNum") or m.get("volume") or 0),
-                "sig_last": last,
-                "sig_mid": mid,
-                "best_ask": best_ask,
-                "fill_vwap": vwap,
-                "shares": round(shares, 2),
-                "levels": levels,
-                "filled": filled,
-                "notional_available": round(avail, 2),
-                "status": status,
-                # kostnaden, i cent — dette er tallet hele øvelsen handler om
-                "slip_c": round((vwap - sig) * 100, 3) if vwap else None,
-                "slip_vs_mid_c": round((vwap - mid) * 100, 3) if vwap and mid else None,
-            }
-            append(rec)
-            state["seen"][tid] = rec["ts"]
-            hits += 1
-            if kryssing:
-                print(f"  + {status:7} {rec['slip_c']}¢  {(rec['question'] or '')[:52]}",
-                      file=sys.stderr)
-            else:
-                kalde[0] += 1
+        status = "filled" if filled else ("partial" if shares else "empty")
+        if not kryssing:
+            status = "kaldstart"
+        outs = outcomes(m)
+        rec = {
+            "ts": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+            "token_id": tid,
+            "condition_id": m.get("conditionId"),
+            "slug": m.get("slug"),
+            "event_slug": (m.get("events") or [{}])[0].get("slug") if m.get("events") else None,
+            "question": m.get("question"),
+            "outcome": outs[i] if i < len(outs) else None,
+            "end_date": m.get("endDate"),
+            "volume": float(m.get("volumeNum") or m.get("volume") or 0),
+            "sig_last": last,
+            "sig_mid": mid_p,
+            "best_ask": best_ask,
+            "fill_vwap": vwap,
+            "shares": round(shares, 2),
+            "levels": levels,
+            "filled": filled,
+            "notional_available": round(avail, 2),
+            "status": status,
+            "slip_c": round((vwap - sig) * 100, 3) if vwap else None,
+            "slip_vs_mid_c": round((vwap - mid_p) * 100, 3) if vwap and mid_p else None,
+        }
+        append(rec)
+        state["seen"][tid] = rec["ts"]
+        hits += 1
+        if kryssing:
+            print(f"  + {status:7} {rec['slip_c']}¢  {(rec['question'] or '')[:52]}",
+                  file=sys.stderr)
+        else:
+            kalde[0] += 1
 
     if kalde[0]:
         print(f"  ({kalde[0]} laa allerede over terskel — kaldstart, teller ikke)",
