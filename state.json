@@ -611,9 +611,45 @@
       "resolved": false,
       "won": null,
       "pnl": 0.0
+    },
+    {
+      "token_id": "80833697408654238110277536174035835919081626918462723989615066293717655271236",
+      "market_id": "3241076",
+      "question": "Will the price of Bitcoin be above $64,000 on August 7?",
+      "asset": "BTC",
+      "outcome": "Yes",
+      "resolution_day": "2026-08-07",
+      "entered_at": "2026-08-07T09:37:00.235359+00:00",
+      "price": 0.94,
+      "midpoint": 0.935,
+      "cost_cents": 0.49999999999998934,
+      "shares": 26.595744680851066,
+      "notional": 25.0,
+      "dry_run": true,
+      "resolved": false,
+      "won": null,
+      "pnl": 0.0
+    },
+    {
+      "token_id": "35487809742385782436200442397527142510726392565266765117710970165257671557342",
+      "market_id": "3241115",
+      "question": "Will the price of XRP be above $1.00 on August 7?",
+      "asset": "XRP",
+      "outcome": "Yes",
+      "resolution_day": "2026-08-07",
+      "entered_at": "2026-08-07T09:37:02.450287+00:00",
+      "price": 0.989,
+      "midpoint": 0.9844999999999999,
+      "cost_cents": 0.43134238913303813,
+      "shares": 25.278058645096056,
+      "notional": 25.0,
+      "dry_run": true,
+      "resolved": false,
+      "won": null,
+      "pnl": 0.0
     }
   ],
   "halted": false,
   "halt_reason": "",
-  "updated": "2026-08-07T08:36:00.796429+00:00"
+  "updated": "2026-08-07T09:37:02.450668+00:00"
 }

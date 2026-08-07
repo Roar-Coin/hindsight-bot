@@ -33,3 +33,5 @@ timestamp,mode,asset,outcome,question,resolution_day,best_ask,midpoint,vwap,cost
 2026-08-07T06:50:57.443665+00:00,dry,SOL,Yes,Will the price of Solana be above $70 on August 7?,2026-08-07,0.9800,0.9760,0.9800,0.400,25.51,25.00,3241096
 2026-08-07T06:51:00.752135+00:00,dry,SOL,Yes,Will the price of Solana be between $70 and $80 on August 7?,2026-08-07,0.9890,0.9815,0.9890,0.725,25.28,25.00,3241095
 2026-08-07T06:51:01.591258+00:00,dry,BTC,No,"Will the price of Bitcoin be between $66,000 and $68,000 on August 7?",2026-08-07,0.9860,0.9835,0.9860,0.250,25.35,25.00,3241055
+2026-08-07T09:37:00.235359+00:00,dry,BTC,Yes,"Will the price of Bitcoin be above $64,000 on August 7?",2026-08-07,0.9400,0.9350,0.9400,0.500,26.60,25.00,3241076
+2026-08-07T09:37:02.450287+00:00,dry,XRP,Yes,Will the price of XRP be above $1.00 on August 7?,2026-08-07,0.9890,0.9845,0.9890,0.431,25.28,25.00,3241115
