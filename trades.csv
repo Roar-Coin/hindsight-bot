@@ -36,3 +36,5 @@ timestamp,mode,asset,outcome,question,resolution_day,best_ask,midpoint,vwap,cost
 2026-08-07T09:37:00.235359+00:00,dry,BTC,Yes,"Will the price of Bitcoin be above $64,000 on August 7?",2026-08-07,0.9400,0.9350,0.9400,0.500,26.60,25.00,3241076
 2026-08-07T09:37:02.450287+00:00,dry,XRP,Yes,Will the price of XRP be above $1.00 on August 7?,2026-08-07,0.9890,0.9845,0.9890,0.431,25.28,25.00,3241115
 2026-08-07T17:27:36.683650+00:00,dry,BTC,No,"Will Trump say ""Bitcoin"" or ""Crypto"" or ""Cryptocurrency"" during Friday roundtable?",2026-08-07,0.9500,0.9450,0.9500,0.500,26.32,25.00,3372821
+2026-08-07T19:34:26.351727+00:00,dry,BTC,No,"Will Bitcoin reach $66,000 on August 7?",2026-08-08,0.9790,0.9720,0.9790,0.700,25.54,25.00,3394166
+2026-08-07T19:34:28.410700+00:00,dry,BTC,No,"Will Bitcoin dip to $64,000 on August 7?",2026-08-08,0.9600,0.9550,0.9600,0.500,26.04,25.00,3394169
