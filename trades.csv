@@ -29,3 +29,7 @@ timestamp,mode,asset,outcome,question,resolution_day,best_ask,midpoint,vwap,cost
 2026-08-06T08:02:59.392092+00:00,dry,BTC,No,"Will the price of Bitcoin be between $62,000 and $64,000 on August 6?",2026-08-06,0.9300,0.9250,0.9300,0.500,26.88,25.00,3223173
 2026-08-06T08:03:03.031011+00:00,dry,BTC,No,"Will the price of Bitcoin be above $66,000 on August 6?",2026-08-06,0.9610,0.9605,0.9610,0.050,26.01,25.00,3223305
 2026-08-06T08:03:06.998590+00:00,dry,ETH,No,"Will the price of Ethereum be above $2,000 on August 6?",2026-08-06,0.9860,0.9835,0.9860,0.250,25.35,25.00,3223195
+2026-08-07T06:50:57.341557+00:00,dry,BTC,No,"Will the price of Bitcoin be above $66,000 on August 7?",2026-08-07,0.9880,0.9850,0.9880,0.270,25.30,25.00,3241078
+2026-08-07T06:50:57.443665+00:00,dry,SOL,Yes,Will the price of Solana be above $70 on August 7?,2026-08-07,0.9800,0.9760,0.9800,0.400,25.51,25.00,3241096
+2026-08-07T06:51:00.752135+00:00,dry,SOL,Yes,Will the price of Solana be between $70 and $80 on August 7?,2026-08-07,0.9890,0.9815,0.9890,0.725,25.28,25.00,3241095
+2026-08-07T06:51:01.591258+00:00,dry,BTC,No,"Will the price of Bitcoin be between $66,000 and $68,000 on August 7?",2026-08-07,0.9860,0.9835,0.9860,0.250,25.35,25.00,3241055
