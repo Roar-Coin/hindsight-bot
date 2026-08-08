@@ -112,6 +112,9 @@ class Config:
 
 CFG = Config()
 
+# Kostnadstaket der fordelen dør, målt i appens kostnadssveip (crypto, 8. aug 2026).
+COST_CEILING = 1.71
+
 log = logging.getLogger("hindsight")
 
 
@@ -845,19 +848,23 @@ def report(state: State, cfg: Config = CFG) -> None:
         n = len(all_costs)
         avg_cost = sum(all_costs) / n
         worst = max(all_costs)
-        over = sum(1 for c in all_costs if c > 1.36)
+        over = sum(1 for c in all_costs if c > COST_CEILING)
         print(f"\nMålinger        : {n}")
         print(f"Målt kostnad    : snitt {avg_cost:.2f}¢, verste {worst:.2f}¢")
-        print(f"Over 1.36¢      : {over} av {n}  ({over/n*100:.0f}%)")
-        print(f"Fordelen dør ved: 2.32¢   ·  blir støy ved 1.36¢ (klynget)")
+        print(f"Over {COST_CEILING}¢      : {over} av {n}  ({over/n*100:.0f}%)")
+        print(f"Fordelen dør ved: {COST_CEILING}¢")
         if n < 100:
-            print(f"→ For få målinger til en dom. Trenger {100 - n} til.")
-        elif avg_cost > 1.36:
-            print("→ Din faktiske kostnad spiser opp fordelen. Ikke gå live.")
+            print(f"→ Betingelse 2 (kostnad): for få målinger. Trenger {100 - n} til.")
+        elif avg_cost > COST_CEILING:
+            print("→ Betingelse 2 STRYKER: kostnaden spiser opp fordelen.")
         elif avg_cost > 0.5:
-            print("→ Over backtestens antakelse. Forvent lavere fordel enn +1.6 pp.")
+            print("→ Betingelse 2 er klarert, men over backtestens antakelse på 0.5¢.")
         else:
-            print("→ Innenfor backtestens antakelse.")
+            print("→ Betingelse 2 er klarert.")
+
+    print("\n→ Betingelse 1 (klyngegulvet) måles i Hindsight-appen, ikke her.")
+    print("   Per 8. aug: +2.0 pp fordel mot ±2.9 pp gulv over 166 klynger — STRYKER.")
+    print("   Trenger ~340 klynger. Se README for hele beslutningsregelen.")
     if state.halted:
         print(f"\nSTOPPET: {state.halt_reason}")
     print()
