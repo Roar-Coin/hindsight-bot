@@ -523,6 +523,7 @@ def report():
         print(f"\nGjennomføringskostnad mot MIDTPUNKT  (det ekte kostnadstallet)")
         print(f"  snitt           {m_avg:.2f}¢")
         print(f"  median          {mids[len(mids) // 2]:.2f}¢")
+        print(f"  p90             {mids[min(len(mids)-1, int(0.90*len(mids)))]:.2f}¢")
         print(f"  p95             {mids[min(len(mids)-1, int(0.95*len(mids)))]:.2f}¢")
         print(f"  verste          {mids[-1]:.2f}¢")
         print(f"  negative        {sum(1 for x in mids if x < 0)} av {len(mids)}"
@@ -546,9 +547,9 @@ def report():
         #   1,40¢ — samme regnestykke med FORSTE halvdels fordel (+0,9 pp).
         #           Halvdelene spriker, saa dette er den konservative lesningen.
         #   2,43¢ — der fordelen faktisk blir negativ. Optimistisk grense.
-        for navn, tak in (("hele utvalget", 1.96),
-                          ("forste halvdel, +0,9 pp", 1.40),
-                          ("blir negativ", 2.43)):
+        for navn, tak in (("streng — paavisbar ved klyngegulvet", 0.80),
+                          ("hele utvalget", 1.96),
+                          ("blir negativ — under her er EV positiv", 2.43)):
             if hi_ci < tak:
                 dom = "PASSERER"
             elif lo_ci > tak:
@@ -559,7 +560,7 @@ def report():
 
         # Naar er vi ferdige? Naar intervallet ikke lenger krysser taket.
         if se != float("inf") and se > 0:
-            for tak in (1.96, 1.40):
+            for tak in (0.80, 1.96):
                 if lo_ci <= tak <= hi_ci:
                     trengs = int(n * (2 * se / max(abs(m_avg - tak), 1e-9)) ** 2)
                     print(f"  -> ca. {trengs} fyll trengs for aa avgjore mot {tak:.2f}¢"
@@ -581,6 +582,29 @@ def report():
         if len(stale) > 0.1 * len(slips):
             print("  -> backtestens inngangspris er ofte foreldet i tynne marked.")
             print("     Det er et gyldighetsproblem ved backtesten, ikke ved fyllene.")
+    # Avgjor uenigheten empirisk: er den dyre halen tilfeldig stoy, eller
+    # ligger den systematisk i de tynne markedene? Er den konsentrert, og det
+    # er de samme markedene som baerer fordelen, undervurderer snittet over
+    # ALLE signaler kostnaden paa de handlene som faktisk betyr noe.
+    medv = [r for r in filled if r.get("volume") and r.get("slip_vs_mid_c") is not None]
+    if len(medv) >= 8:
+        medv.sort(key=lambda r: r["volume"])
+        halv = len(medv) // 2
+        tynn, tykk = medv[:halv], medv[halv:]
+        sn = lambda g: sum(r["slip_vs_mid_c"] for r in g) / len(g)
+        gr = medv[halv]["volume"]
+        print(f"\nHvor ligger kostnaden?  (skille ved volum ${gr:,.0f})")
+        print(f"  tynne markeder  {sn(tynn):.2f}¢   ({len(tynn)} fyll)")
+        print(f"  tykke markeder  {sn(tykk):.2f}¢   ({len(tykk)} fyll)")
+        forskjell = sn(tynn) - sn(tykk)
+        if forskjell > 0.5:
+            print(f"  -> halen er KONSENTRERT i tynne marked (+{forskjell:.2f}¢).")
+            print("     Da er snittet over alle signaler for optimistisk, og")
+            print("     det strenge taket er riktig aa bruke.")
+        else:
+            print(f"  -> ingen tydelig konsentrasjon ({forskjell:+.2f}¢).")
+            print("     Halen ser ut som stoy, og snittet er da det riktige maalet.")
+
     print(f"\nKlynger           {len(clusters)} over {len(days)} døgn"
           f"  ({len(clusters) / max(len(days), 1):.1f} per døgn)")
     print(f"  handler/klynge  {len(rows) / max(len(clusters), 1):.1f}\n")
