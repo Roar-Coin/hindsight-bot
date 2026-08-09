@@ -527,8 +527,35 @@ def report():
         print(f"  verste          {mids[-1]:.2f}¢")
         print(f"  negative        {sum(1 for x in mids if x < 0)} av {len(mids)}"
               f"   (bor vaere naer null — under midtpunkt er uvanlig)")
-        print(f"  tak (fordel +1,3 pp)   1,41¢  {'OK' if m_avg < 1.41 else 'BRUDD'}")
-        print(f"  tak (fordel +0,7 pp)   1,00¢  {'OK' if m_avg < 1.00 else 'BRUDD'}")
+
+        # Snittet avgjor lonnsomheten — samlet resultat er N x (fordel - snitt).
+        # Men med tung hale konvergerer det sakte, saa punktestimatet alene
+        # sier ingenting om vi har nok data. Standardfeilen sier det.
+        n = len(mids)
+        var = sum((x - m_avg) ** 2 for x in mids) / (n - 1) if n > 1 else 0.0
+        se = (var / n) ** 0.5 if n > 1 else float("inf")
+        lo_ci, hi_ci = m_avg - 2 * se, m_avg + 2 * se
+        print(f"\n  snitt med 95 %-intervall   {m_avg:.2f}¢  [{lo_ci:.2f} – {hi_ci:.2f}]")
+        print(f"  andel over 0,8¢            {sum(1 for x in mids if x > 0.8)/n:.0%}"
+              f"   (halens tyngde — ikke et kriterium i seg selv)")
+
+        for navn, tak in (("+1,3 pp", 1.41), ("+0,7 pp", 1.00)):
+            if hi_ci < tak:
+                dom = "PASSERER"
+            elif lo_ci > tak:
+                dom = "BRUDD"
+            else:
+                dom = "for tidlig — intervallet spenner over taket"
+            print(f"  mot tak {tak:.2f}¢ (fordel {navn}):  {dom}")
+
+        # Naar er vi ferdige? Naar intervallet ikke lenger krysser taket.
+        if se != float("inf") and se > 0:
+            for tak in (1.41, 1.00):
+                if lo_ci <= tak <= hi_ci:
+                    trengs = int(n * (2 * se / max(abs(m_avg - tak), 1e-9)) ** 2)
+                    print(f"  -> ca. {trengs} fyll trengs for aa avgjore mot {tak:.2f}¢"
+                          f" (har {n})")
+                    break
 
     if slips:
         avg = sum(slips) / len(slips)
