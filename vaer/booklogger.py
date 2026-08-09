@@ -539,18 +539,27 @@ def report():
         print(f"  andel over 0,8¢            {sum(1 for x in mids if x > 0.8)/n:.0%}"
               f"   (halens tyngde — ikke et kriterium i seg selv)")
 
-        for navn, tak in (("+1,3 pp", 1.41), ("+0,7 pp", 1.00)):
+        # Tak fra kostnadssveipet i Hindsight (16 928 handler, aug 2026).
+        # Tre stykker, fordi de svarer paa hver sin ting:
+        #   1,96¢ — der fordelen slutter aa skille seg fra null etter klynging.
+        #           Det er tallet aa planlegge mot paa hele utvalget.
+        #   1,40¢ — samme regnestykke med FORSTE halvdels fordel (+0,9 pp).
+        #           Halvdelene spriker, saa dette er den konservative lesningen.
+        #   2,43¢ — der fordelen faktisk blir negativ. Optimistisk grense.
+        for navn, tak in (("hele utvalget", 1.96),
+                          ("forste halvdel, +0,9 pp", 1.40),
+                          ("blir negativ", 2.43)):
             if hi_ci < tak:
                 dom = "PASSERER"
             elif lo_ci > tak:
                 dom = "BRUDD"
             else:
                 dom = "for tidlig — intervallet spenner over taket"
-            print(f"  mot tak {tak:.2f}¢ (fordel {navn}):  {dom}")
+                print(f"  mot tak {tak:.2f}¢ ({navn}):  {dom}")
 
         # Naar er vi ferdige? Naar intervallet ikke lenger krysser taket.
         if se != float("inf") and se > 0:
-            for tak in (1.41, 1.00):
+            for tak in (1.96, 1.40):
                 if lo_ci <= tak <= hi_ci:
                     trengs = int(n * (2 * se / max(abs(m_avg - tak), 1e-9)) ** 2)
                     print(f"  -> ca. {trengs} fyll trengs for aa avgjore mot {tak:.2f}¢"
