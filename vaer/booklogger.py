@@ -702,10 +702,118 @@ def probe():
     print("\nSi fra hvilken linje som gir treff paa vaer.\n")
 
 
+
+# ── Spread-tabell per kategori ────────────────────────────────────────────
+# Hindsight bruker én fast entry cost (0,5¢) paa ALLE kategorier. Paa vaer var
+# den 4x for lav. Denne kommandoen maaler hva hver kategori faktisk koster,
+# slik at gulvet kan settes per kategori i stedet for globalt.
+#
+# Trenger ingen krysninger: vi sampler markeder som ALLEREDE ligger i
+# 80–99¢-baandet og gaar gjennom boken. Minutter, ikke dogn.
+KAT_SLUGS = {
+    "weather": "weather", "crypto": "crypto", "sports": "sports",
+    "politics": "politics", "economy": "economy", "stocks": "stocks",
+    "culture": "pop-culture", "esports": "esports",
+}
+SAMPLE = 60          # tokens per kategori
+
+
+def _tag_id(slug):
+    d = get(f"{GAMMA}/tags/slug/{slug}")
+    if isinstance(d, list):
+        d = d[0] if d else None
+    return (d or {}).get("id")
+
+
+def _kostnad(tid):
+    """Returnerer (mot_siste_handel, mot_midtpunkt) i cent for $100."""
+    last, mid = signal_prices(tid)
+    time.sleep(REQ_PAUSE)
+    book = get(f"{CLOB}/book", {"token_id": tid})
+    time.sleep(REQ_PAUSE)
+    vwap, _, _, filled, _ = walk_asks((book or {}).get("asks") or [])
+    if vwap is None or not filled:
+        return None, None, False
+    a = (vwap - last) * 100 if last is not None else None
+    b = (vwap - mid) * 100 if mid is not None else None
+    return a, b, True
+
+
+def spreadtabell():
+    import random
+    naa = datetime.now(timezone.utc)
+    lo, hi = _iso(naa), _iso(naa + timedelta(days=HORIZON_DAYS))
+    print(f"{'kategori':10} {'n':>4} {'median':>8} {'p90':>8} {'verste':>8} "
+          f"{'halv spread':>12} {'ufyllb':>7}")
+    print("-" * 62)
+    linjer = []
+
+    for kat, slug in KAT_SLUGS.items():
+        tid_ = _tag_id(slug)
+        if not tid_:
+            print(f"{kat:10}  fant ingen tag-id for '{slug}'", file=sys.stderr)
+            continue
+
+        kandidater, offset = [], 0
+        while offset < 600:
+            batch = get(f"{GAMMA}/markets", {
+                "tag_id": tid_, "related_tags": "true", "limit": PAGE,
+                "offset": offset, "end_date_min": lo, "end_date_max": hi,
+                "include_tag": "true"})
+            if not batch:
+                break
+            for m in batch:
+                if m.get("closed") or categorize(m) != kat:
+                    continue
+                if float(m.get("volumeNum") or m.get("volume") or 0) < 250:
+                    continue
+                pr, tk = _gamma_priser(m), token_ids(m)
+                for i, t in enumerate(tk):
+                    # samme baand som regelen handler i
+                    if i < len(pr) and THRESHOLD <= pr[i] <= 0.99:
+                        kandidater.append(t)
+            offset += len(batch)
+            if len(batch) < PAGE:
+                break
+            time.sleep(0.35)
+
+        random.shuffle(kandidater)
+        sist, mids, ufyllb = [], [], 0
+        for t in kandidater[:SAMPLE]:
+            a, b, ok = _kostnad(t)
+            if not ok:
+                ufyllb += 1
+                continue
+            if a is not None:
+                sist.append(a)
+            if b is not None:
+                mids.append(b)
+
+        if not sist:
+            print(f"{kat:10} {'—':>4}  ingen fyllbare markeder i baandet")
+            continue
+        sist.sort(); mids.sort()
+        n = len(sist)
+        med = sist[n // 2]
+        p90 = sist[min(n - 1, int(0.90 * n))]
+        hs = mids[len(mids) // 2] if mids else float("nan")
+        andel = ufyllb / max(len(kandidater[:SAMPLE]), 1)
+        print(f"{kat:10} {n:>4} {med:>7.2f}¢ {p90:>7.2f}¢ {sist[-1]:>7.2f}¢ "
+              f"{hs:>11.2f}¢ {andel:>6.0%}")
+        linjer.append((kat, med, p90))
+
+    print("\nForeslaatt entry cost per kategori i Hindsight — bruk MEDIAN.")
+    print("Snittet trekkes opp av en tung hale; medianen er den typiske handelen.")
+    for kat, med, p90 in linjer:
+        print(f"  {kat:10} {med:.2f}¢     (p90 {p90:.2f}¢ — verdt en sensitivitetstest)")
+    print("\nMaalt paa $100 innsats i 80–99¢-baandet, volum >= $250.")
+    print("Gjelder aa KRYSSE spreaden. Legger du limit-ordre, er tallet et annet.")
+
+
 # ── main ──────────────────────────────────────────────────────────────────
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("cmd", choices=["watch", "report", "probe"])
+    ap.add_argument("cmd", choices=["watch", "report", "probe", "spread"])
     ap.add_argument("--once", action="store_true", help="én runde, så avslutt")
     ap.add_argument("--minutes", type=int, default=0, help="stopp etter N minutter")
     a = ap.parse_args()
@@ -714,6 +822,8 @@ def main():
         return report()
     if a.cmd == "probe":
         return probe()
+    if a.cmd == "spread":
+        return spreadtabell()
 
     state = load_state()
     t0 = time.time()
