@@ -18,8 +18,10 @@ on:
     - cron: "7 0,6,12,18 * * *"
 
 # Egen gruppe, så denne og krypto-tørrkjøringen ikke avbryter hverandre.
+# Gruppa maa skille paa kommando. Med felles gruppe havnet en rask `report`
+# i kø bak en `watch` som kjører i fem timer.
 concurrency:
-  group: vaer-booklogger
+  group: vaer-booklogger-${{ inputs.kommando || 'watch' }}
   cancel-in-progress: false
 
 permissions:
@@ -94,3 +96,4 @@ jobs:
             ( cd vaer && python booklogger.py report ) 2>&1 || echo "ingen logg ennå"
             echo '```'
           } >> "$GITHUB_STEP_SUMMARY"
+
