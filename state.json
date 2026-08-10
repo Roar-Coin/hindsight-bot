@@ -899,9 +899,27 @@
       "resolved": true,
       "won": true,
       "pnl": 1.595744680851066
+    },
+    {
+      "token_id": "41450020308390286889534728792637559258808558871142698130032107414575712757726",
+      "market_id": "3474318",
+      "question": "Will Ethereum dip to $1,800 on August 10?",
+      "asset": "ETH",
+      "outcome": "No",
+      "resolution_day": "2026-08-11",
+      "entered_at": "2026-08-10T18:27:08.473530+00:00",
+      "price": 0.988,
+      "midpoint": 0.981,
+      "cost_cents": 0.7000000000000006,
+      "shares": 25.303643724696357,
+      "notional": 25.0,
+      "dry_run": true,
+      "resolved": false,
+      "won": null,
+      "pnl": 0.0
     }
   ],
   "halted": false,
   "halt_reason": "",
-  "updated": "2026-08-10T17:29:42.698390+00:00"
+  "updated": "2026-08-10T18:27:08.474095+00:00"
 }
