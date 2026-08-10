@@ -10,10 +10,10 @@ on:
   workflow_dispatch:        # ← knappen du trykker på for å starte manuelt
     inputs:
       kommando:
-        description: "watch = tørrkjør | report = se tallene nå | probe = sonder Gamma"
+        description: "watch = tørrkjør | report = tallene nå | spread = kostnad per kategori | probe = sonder Gamma"
         type: choice
         default: watch
-        options: [watch, report, probe]
+        options: [watch, report, spread, probe]
   schedule:
     - cron: "7 0,6,12,18 * * *"
 
@@ -77,6 +77,7 @@ jobs:
           case "${{ inputs.kommando }}" in
             probe)  cd vaer && python booklogger.py probe;  exit 0 ;;
             report) cd vaer && python booklogger.py report; exit 0 ;;
+            spread) cd vaer && python booklogger.py spread; exit 0 ;;
           esac
 
           # Kortere bolker: forrige kjøring mistet 70 minutter med data da
