@@ -806,9 +806,9 @@
       "shares": 25.354969574036513,
       "notional": 25.0,
       "dry_run": true,
-      "resolved": false,
-      "won": null,
-      "pnl": 0.0
+      "resolved": true,
+      "won": true,
+      "pnl": 0.3549695740365131
     },
     {
       "token_id": "58351536913193195084143837887705325902200819984162551495975229340113428900343",
@@ -824,6 +824,42 @@
       "shares": 25.641025641025642,
       "notional": 25.0,
       "dry_run": true,
+      "resolved": true,
+      "won": true,
+      "pnl": 0.6410256410256423
+    },
+    {
+      "token_id": "64425931229850052021637169665574932195363591761126526769477890220531389865120",
+      "market_id": "3303781",
+      "question": "Will the price of Bitcoin be above $64,000 on August 10?",
+      "asset": "BTC",
+      "outcome": "Yes",
+      "resolution_day": "2026-08-10",
+      "entered_at": "2026-08-10T05:08:04.505089+00:00",
+      "price": 0.94,
+      "midpoint": 0.935,
+      "cost_cents": 0.49999999999998934,
+      "shares": 26.595744680851066,
+      "notional": 25.0,
+      "dry_run": true,
+      "resolved": false,
+      "won": null,
+      "pnl": 0.0
+    },
+    {
+      "token_id": "24612151998398045665485884272149693201141379306168937092250000415316399135469",
+      "market_id": "3303599",
+      "question": "Will the price of Bitcoin be between $66,000 and $68,000 on August 10?",
+      "asset": "BTC",
+      "outcome": "No",
+      "resolution_day": "2026-08-10",
+      "entered_at": "2026-08-10T05:08:06.215175+00:00",
+      "price": 0.95,
+      "midpoint": 0.945,
+      "cost_cents": 0.5000000000000004,
+      "shares": 26.315789473684212,
+      "notional": 25.0,
+      "dry_run": true,
       "resolved": false,
       "won": null,
       "pnl": 0.0
@@ -831,5 +867,5 @@
   ],
   "halted": false,
   "halt_reason": "",
-  "updated": "2026-08-10T02:54:13.360357+00:00"
+  "updated": "2026-08-10T05:08:06.215587+00:00"
 }
