@@ -524,7 +524,7 @@ def report():
                   if r.get("slip_vs_mid_c") is not None)
     if mids:
         m_avg = sum(mids) / len(mids)
-        print(f"\nGjennomføringskostnad mot MIDTPUNKT  (det ekte kostnadstallet)")
+        print(f"\nMot MIDTPUNKT  (diagnose: hvor bred spread vi krysser)")
         print(f"  snitt           {m_avg:.2f}¢")
         print(f"  median          {mids[len(mids) // 2]:.2f}¢")
         print(f"  p90             {mids[min(len(mids)-1, int(0.90*len(mids)))]:.2f}¢")
@@ -536,89 +536,65 @@ def report():
         # Snittet avgjor lonnsomheten — samlet resultat er N x (fordel - snitt).
         # Men med tung hale konvergerer det sakte, saa punktestimatet alene
         # sier ingenting om vi har nok data. Standardfeilen sier det.
-        n = len(mids)
-        var = sum((x - m_avg) ** 2 for x in mids) / (n - 1) if n > 1 else 0.0
-        se = (var / n) ** 0.5 if n > 1 else float("inf")
-        lo_ci, hi_ci = m_avg - 2 * se, m_avg + 2 * se
-        print(f"\n  snitt med 95 %-intervall   {m_avg:.2f}¢  [{lo_ci:.2f} – {hi_ci:.2f}]")
-        print(f"  andel over 0,8¢            {sum(1 for x in mids if x > 0.8)/n:.0%}"
-              f"   (halens tyngde — ikke et kriterium i seg selv)")
+        print(f"  -> halv spread; sier hvor tynne bokene er, men er IKKE tallet")
+        print(f"     takene maales mot. Se blokka under.")
+        print(f"  andel over 0,8¢ {sum(1 for x in mids if x > 0.8)/len(mids):.0%}"
+              f"   (halens tyngde)")
 
-        # Tak fra kostnadssveipet i Hindsight (16 928 handler, aug 2026).
-        # Tre stykker, fordi de svarer paa hver sin ting:
-        #   1,96¢ — der fordelen slutter aa skille seg fra null etter klynging.
-        #           Det er tallet aa planlegge mot paa hele utvalget.
-        #   1,40¢ — samme regnestykke med FORSTE halvdels fordel (+0,9 pp).
-        #           Halvdelene spriker, saa dette er den konservative lesningen.
-        #   2,43¢ — der fordelen faktisk blir negativ. Optimistisk grense.
-        for navn, tak in (("streng — paavisbar ved klyngegulvet", 0.80),
-                          ("hele utvalget", 1.96),
-                          ("blir negativ — under her er EV positiv", 2.43)):
-            if hi_ci < tak:
-                dom = "PASSERER"
-            elif lo_ci > tak:
-                dom = "BRUDD"
-            else:
-                dom = "for tidlig — intervallet spenner over taket"
-                print(f"  mot tak {tak:.2f}¢ ({navn}):  {dom}")
 
-        # Én linje som svarer paa "er vi ferdige?"
-        if n < 20:
-            dom_linje[0] = f"SAMLER DATA — {n} fyll, trenger minst 20 for et forste tall"
-        elif lo_ci > 2.43:
-            dom_linje[0] = ("FERDIG — BRUDD. Kostnaden ligger over 2,43¢, "
-                            "der fordelen blir negativ. Regelen tjener ikke penger.")
-        elif lo_ci > 1.96:
-            dom_linje[0] = ("FERDIG — BRUDD. Kostnaden ligger over 1,96¢, "
-                            "der fordelen ikke lenger skilles fra null.")
-        elif hi_ci < 0.80:
-            dom_linje[0] = ("FERDIG — BESTAATT. Kostnaden ligger under 0,80¢, "
-                            "altsaa innenfor selv den strengeste lesningen.")
-        elif lo_ci > 0.80 and hi_ci < 1.96:
-            # Intervallet ligger helt inne i det omstridte baandet. Mer data
-            # loser ikke dette — det er en tolkningsuenighet, ikke stoy.
-            dom_linje[0] = (f"AVGJORT, MEN OMSTRIDT — {m_avg:.2f}¢ [{lo_ci:.2f}"
-                            f"–{hi_ci:.2f}] ligger over det strenge taket (0,80¢) "
-                            f"og under det lose (1,96¢). Mer data flytter ikke "
-                            f"dette. Konsentrasjonstesten under avgjor.")
-        else:
-            # Regn mot det naermeste taket intervallet fortsatt spenner over.
-            aapne = [t for t in (0.80, 1.96, 2.43) if lo_ci <= t <= hi_ci]
-            tak_n = min(aapne, key=lambda t: abs(m_avg - t)) if aapne else 1.96
-            behov = int(n * (2 * se / max(abs(m_avg - tak_n), 1e-9)) ** 2) if se else 0
-            if behov > 3000:
-                dom_linje[0] = (f"UAVGJORBART — halen er saa tung at det trengs "
-                                f"~{behov} fyll for aa avgjore mot {tak_n:.2f}¢. "
-                                f"Ikke vent paa dette; se konsentrasjonstesten under.")
-            else:
-                dom_linje[0] = (f"UAVGJORT — {m_avg:.2f}¢ [{lo_ci:.2f}–{hi_ci:.2f}]. "
-                                f"Trenger ~{max(behov - n, 1)} fyll til for aa "
-                                f"avgjore mot {tak_n:.2f}¢.")
-
-        # Naar er vi ferdige? Naar intervallet ikke lenger krysser taket.
-        if se != float("inf") and se > 0:
-            for tak in (0.80, 1.96):
-                if lo_ci <= tak <= hi_ci:
-                    trengs = int(n * (2 * se / max(abs(m_avg - tak), 1e-9)) ** 2)
-                    print(f"  -> ca. {trengs} fyll trengs for aa avgjore mot {tak:.2f}¢"
-                          f" (har {n})")
-                    break
 
     if slips:
         avg = sum(slips) / len(slips)
         stale = [x for x in slips if x < -2.0]
-        p95 = slips[min(len(slips) - 1, int(0.95 * len(slips)))]
-        print(f"\nMot SISTE HANDEL  (= kostnad + foreldet referansepris)")
+        print(f"\nMot SISTE HANDEL — BESLUTNINGSTALLET")
+        print(f"  Backtesten leste handelsprisserien og la 0,5¢ paa toppen, saa")
+        print(f"  det er mot DEN prisen takene 1,96¢ og 2,43¢ er definert.")
         print(f"  snitt           {avg:.2f}¢")
         print(f"  median          {slips[len(slips) // 2]:.2f}¢")
-        print(f"  p95             {p95:.2f}¢")
+        print(f"  p90             {slips[min(len(slips)-1, int(0.90*len(slips)))]:.2f}¢")
+        print(f"  p95             {slips[min(len(slips)-1, int(0.95*len(slips)))]:.2f}¢")
         print(f"  verste          {slips[-1]:.2f}¢")
         print(f"  backtest antok  0,50¢")
         print(f"  under -2¢       {len(stale)} av {len(slips)}"
-              f"   ({len(stale)/len(slips):.0%} der siste handel laa langt over boken)")
-        if len(stale) > 0.1 * len(slips):
-            print("  -> backtestens inngangspris er ofte foreldet i tynne marked.")
-            print("     Det er et gyldighetsproblem ved backtesten, ikke ved fyllene.")
+              f"   ({len(stale)/len(slips):.0%} der siste handel laa over boken)")
+
+        n = len(slips)
+        var = sum((x - avg) ** 2 for x in slips) / (n - 1) if n > 1 else 0.0
+        se = (var / n) ** 0.5 if n > 1 else float("inf")
+        lo_ci, hi_ci = avg - 2 * se, avg + 2 * se
+        print(f"\n  snitt med 95 %-intervall   {avg:.2f}¢  [{lo_ci:.2f} – {hi_ci:.2f}]")
+        for navn, tak in (("streng — paavisbar ved klyngegulvet", 0.80),
+                          ("uskillelig fra null", 1.96),
+                          ("fordelen blir negativ", 2.43)):
+            d = ("PASSERER" if hi_ci < tak else
+                 "BRUDD" if lo_ci > tak else "for tidlig — intervallet dekker taket")
+            print(f"  mot {tak:.2f}¢ ({navn}):  {d}")
+
+        if n < 20:
+            dom_linje[0] = f"SAMLER DATA — {n} fyll, trenger minst 20"
+        elif lo_ci > 2.43:
+            dom_linje[0] = ("FERDIG — BRUDD. Kostnaden ligger over 2,43¢. "
+                            "Fordelen er negativ; regelen taper penger.")
+        elif lo_ci > 1.96:
+            dom_linje[0] = ("FERDIG — BRUDD. Kostnaden ligger over 1,96¢, der "
+                            "fordelen ikke lenger skilles fra null. Under 2,43¢, "
+                            "saa forventningsverdien er trolig saavidt positiv — "
+                            "men fordelen kan ikke lenger paavises.")
+        elif hi_ci < 0.80:
+            dom_linje[0] = ("FERDIG — BESTAATT. Under 0,80¢, innenfor selv den "
+                            "strengeste lesningen.")
+        elif lo_ci > 0.80 and hi_ci < 1.96:
+            dom_linje[0] = (f"AVGJORT, MEN OMSTRIDT — {avg:.2f}¢ [{lo_ci:.2f}–"
+                            f"{hi_ci:.2f}] ligger mellom takene. Mer data flytter "
+                            f"det ikke; konsentrasjonstesten avgjor.")
+        else:
+            aapne = [t for t in (0.80, 1.96, 2.43) if lo_ci <= t <= hi_ci]
+            tak_n = min(aapne, key=lambda t: abs(avg - t)) if aapne else 1.96
+            behov = int(n * (2 * se / max(abs(avg - tak_n), 1e-9)) ** 2) if se else 0
+            dom_linje[0] = (f"UAVGJORT — {avg:.2f}¢ [{lo_ci:.2f}–{hi_ci:.2f}]. "
+                            f"Trenger ~{max(behov - n, 1)} fyll til for aa avgjore "
+                            f"mot {tak_n:.2f}¢.")
+
     # Avgjor uenigheten empirisk: er den dyre halen tilfeldig stoy, eller
     # ligger den systematisk i de tynne markedene? Er den konsentrert, og det
     # er de samme markedene som baerer fordelen, undervurderer snittet over
@@ -634,12 +610,14 @@ def report():
         print(f"  tynne markeder  {sn(tynn):.2f}¢   ({len(tynn)} fyll)")
         print(f"  tykke markeder  {sn(tykk):.2f}¢   ({len(tykk)} fyll)")
         forskjell = sn(tynn) - sn(tykk)
-        if forskjell > 0.5:
+        rel = forskjell / max(abs(sn(tykk)), 1e-9)
+        print(f"  forskjell       {forskjell:+.2f}¢  ({rel:+.0%} relativt)")
+        if forskjell > 0.5 and rel > 0.4:
             print(f"  -> halen er KONSENTRERT i tynne marked (+{forskjell:.2f}¢).")
             print("     Da er snittet over alle signaler for optimistisk, og")
             print("     det strenge taket er riktig aa bruke.")
         else:
-            print(f"  -> ingen tydelig konsentrasjon ({forskjell:+.2f}¢).")
+            print(f"  -> ingen tydelig konsentrasjon.")
             print("     Halen ser ut som stoy, og snittet er da det riktige maalet.")
 
     print(f"\nKlynger           {len(clusters)} over {len(days)} døgn"
