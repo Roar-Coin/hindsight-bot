@@ -48,3 +48,4 @@ timestamp,mode,asset,outcome,question,resolution_day,best_ask,midpoint,vwap,cost
 2026-08-10T05:08:04.505089+00:00,dry,BTC,Yes,"Will the price of Bitcoin be above $64,000 on August 10?",2026-08-10,0.9400,0.9350,0.9400,0.500,26.60,25.00,3303781
 2026-08-10T05:08:06.215175+00:00,dry,BTC,No,"Will the price of Bitcoin be between $66,000 and $68,000 on August 10?",2026-08-10,0.9500,0.9450,0.9500,0.500,26.32,25.00,3303599
 2026-08-10T06:53:51.384555+00:00,dry,BTC,No,"Will the price of Bitcoin be between $62,000 and $64,000 on August 10?",2026-08-10,0.9700,0.9675,0.9700,0.250,25.77,25.00,3303570
+2026-08-10T08:59:49.367149+00:00,dry,BTC,No,"Will the price of Bitcoin be above $66,000 on August 10?",2026-08-10,0.9400,0.9350,0.9400,0.500,26.60,25.00,3303794
