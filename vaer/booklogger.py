@@ -495,6 +495,7 @@ def report():
     if not rows:
         print(f"Ingen ekte krysninger ennaa ({len(kalde)} kaldstart, holdt utenfor).")
         return
+    dom_linje = ["SAMLER DATA — for faa fyll til aa si noe"]
     ferske = [r for r in rows if r.get("alder_min") is not None
               and r["alder_min"] <= 5]
     filled = [r for r in rows if r["status"] == "filled"]
@@ -511,6 +512,9 @@ def report():
     print(f"  kaldstart       {len(kalde)}  (laa over terskel ved oppstart — utenfor)")
     print(f"  fylt            {len(filled)}")
     print(f"  ufyllbare       {n_bad}  ({n_bad / len(rows):.0%})   [stopp ved 33 %]")
+    if len(rows) >= 20 and n_bad / len(rows) > 1 / 3:
+        dom_linje.append("FERDIG — BRUDD. Over en tredel av signalene kunne "
+                         "ikke fylles med $100. Regelen er ikke gjennomforbar.")
     # To maal, og de svarer paa hver sin ting:
     #   mot midtpunkt = ren gjennomforingskostnad (spread + dybde), samtidig maalt
     #   mot siste handel = det samme PLUSS hvor foreldet backtestens
@@ -557,6 +561,39 @@ def report():
             else:
                 dom = "for tidlig — intervallet spenner over taket"
                 print(f"  mot tak {tak:.2f}¢ ({navn}):  {dom}")
+
+        # Én linje som svarer paa "er vi ferdige?"
+        if n < 20:
+            dom_linje[0] = f"SAMLER DATA — {n} fyll, trenger minst 20 for et forste tall"
+        elif lo_ci > 2.43:
+            dom_linje[0] = ("FERDIG — BRUDD. Kostnaden ligger over 2,43¢, "
+                            "der fordelen blir negativ. Regelen tjener ikke penger.")
+        elif lo_ci > 1.96:
+            dom_linje[0] = ("FERDIG — BRUDD. Kostnaden ligger over 1,96¢, "
+                            "der fordelen ikke lenger skilles fra null.")
+        elif hi_ci < 0.80:
+            dom_linje[0] = ("FERDIG — BESTAATT. Kostnaden ligger under 0,80¢, "
+                            "altsaa innenfor selv den strengeste lesningen.")
+        elif lo_ci > 0.80 and hi_ci < 1.96:
+            # Intervallet ligger helt inne i det omstridte baandet. Mer data
+            # loser ikke dette — det er en tolkningsuenighet, ikke stoy.
+            dom_linje[0] = (f"AVGJORT, MEN OMSTRIDT — {m_avg:.2f}¢ [{lo_ci:.2f}"
+                            f"–{hi_ci:.2f}] ligger over det strenge taket (0,80¢) "
+                            f"og under det lose (1,96¢). Mer data flytter ikke "
+                            f"dette. Konsentrasjonstesten under avgjor.")
+        else:
+            # Regn mot det naermeste taket intervallet fortsatt spenner over.
+            aapne = [t for t in (0.80, 1.96, 2.43) if lo_ci <= t <= hi_ci]
+            tak_n = min(aapne, key=lambda t: abs(m_avg - t)) if aapne else 1.96
+            behov = int(n * (2 * se / max(abs(m_avg - tak_n), 1e-9)) ** 2) if se else 0
+            if behov > 3000:
+                dom_linje[0] = (f"UAVGJORBART — halen er saa tung at det trengs "
+                                f"~{behov} fyll for aa avgjore mot {tak_n:.2f}¢. "
+                                f"Ikke vent paa dette; se konsentrasjonstesten under.")
+            else:
+                dom_linje[0] = (f"UAVGJORT — {m_avg:.2f}¢ [{lo_ci:.2f}–{hi_ci:.2f}]. "
+                                f"Trenger ~{max(behov - n, 1)} fyll til for aa "
+                                f"avgjore mot {tak_n:.2f}¢.")
 
         # Naar er vi ferdige? Naar intervallet ikke lenger krysser taket.
         if se != float("inf") and se > 0:
@@ -607,7 +644,11 @@ def report():
 
     print(f"\nKlynger           {len(clusters)} over {len(days)} døgn"
           f"  ({len(clusters) / max(len(days), 1):.1f} per døgn)")
-    print(f"  handler/klynge  {len(rows) / max(len(clusters), 1):.1f}\n")
+    print(f"  handler/klynge  {len(rows) / max(len(clusters), 1):.1f}")
+    print("\n" + "=" * 64)
+    for l in dom_linje[::-1]:      # ufyllbare-dommen overstyrer kostnadsdommen
+        print(l)
+    print("=" * 64 + "\n")
 
 
 
