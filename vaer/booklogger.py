@@ -313,7 +313,7 @@ def signal_prices(tid):
     return f(last), (f(mid, "mid") if mid and "mid" in mid else f(mid))
 
 
-def walk_asks(asks, stake=STAKE):
+def walk_asks(asks, stake=STAKE, cap=MAX_ENTRY):
     """Gaar gjennom ask-siden til $100 er brukt opp. Returnerer VWAP, antall
     aksjer, antall nivaaer vi spiste, om vi ble fylt helt, og hvor mye
     boken faktisk kunne ta."""
@@ -321,7 +321,7 @@ def walk_asks(asks, stake=STAKE):
     levels = 0
     for lvl in sorted(asks, key=lambda a: float(a["price"])):
         p, sz = float(lvl["price"]), float(lvl["size"])
-        if p > MAX_ENTRY:
+        if p > cap:
             break
         room = stake - spent
         if room <= 1e-9:
@@ -731,7 +731,10 @@ def _kostnad(tid):
     time.sleep(REQ_PAUSE)
     book = get(f"{CLOB}/book", {"token_id": tid})
     time.sleep(REQ_PAUSE)
-    vwap, _, _, filled, _ = walk_asks((book or {}).get("asks") or [])
+    # cap=1.0: her maaler vi boken, vi handler ikke. MAX_ENTRY er en gapvakt
+    # for regelen og ville kuttet asks over 99¢ — det gjorde markeder som laa
+    # paa 97–99¢ falskt "ufyllbare" og skjøv snittet nedover.
+    vwap, _, _, filled, _ = walk_asks((book or {}).get("asks") or [], cap=1.0)
     if vwap is None or not filled:
         return None, None, False
     a = (vwap - last) * 100 if last is not None else None
@@ -755,7 +758,7 @@ def spreadtabell():
             continue
 
         kandidater, offset = [], 0
-        while offset < 600:
+        while offset < OFFSET_LIMIT:
             batch = get(f"{GAMMA}/markets", {
                 "tag_id": tid_, "related_tags": "true", "limit": PAGE,
                 "offset": offset, "end_date_min": lo, "end_date_max": hi,
@@ -808,6 +811,13 @@ def spreadtabell():
         print(f"  {kat:10} {med:.2f}¢     (p90 {p90:.2f}¢ — verdt en sensitivitetstest)")
     print("\nMaalt paa $100 innsats i 80–99¢-baandet, volum >= $250.")
     print("Gjelder aa KRYSSE spreaden. Legger du limit-ordre, er tallet et annet.")
+    print("\nVIKTIG — dette er HVILEPRIS, ikke signalpris.")
+    print("Tabellen sampler markeder som allerede LIGGER i baandet, altsaa rolige")
+    print("boker. En regel handler i det oyeblikket prisen KRYSSER terskelen, og")
+    print("da er boken forstyrret. Torrkjoringen paa vaer maalte 1,59¢ i median")
+    print("mot 0,66¢ her — altsaa ca. 2,4x. Bruk tabellen som GULV, og gang opp")
+    print("til du har en torrkjoring per kategori.")
+    print("Rader med n under 20 er for tynne til aa brukes.")
 
 
 # ── main ──────────────────────────────────────────────────────────────────
