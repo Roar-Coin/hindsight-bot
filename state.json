@@ -863,9 +863,27 @@
       "resolved": false,
       "won": null,
       "pnl": 0.0
+    },
+    {
+      "token_id": "4993469643274573612356059213009548736036143167095343987799870892347719652279",
+      "market_id": "3303570",
+      "question": "Will the price of Bitcoin be between $62,000 and $64,000 on August 10?",
+      "asset": "BTC",
+      "outcome": "No",
+      "resolution_day": "2026-08-10",
+      "entered_at": "2026-08-10T06:53:51.384555+00:00",
+      "price": 0.97,
+      "midpoint": 0.9675,
+      "cost_cents": 0.24999999999999467,
+      "shares": 25.77319587628866,
+      "notional": 25.0,
+      "dry_run": true,
+      "resolved": false,
+      "won": null,
+      "pnl": 0.0
     }
   ],
   "halted": false,
   "halt_reason": "",
-  "updated": "2026-08-10T05:08:06.215587+00:00"
+  "updated": "2026-08-10T06:53:51.385073+00:00"
 }
