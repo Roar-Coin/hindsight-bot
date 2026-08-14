@@ -59,3 +59,4 @@ timestamp,mode,asset,outcome,question,resolution_day,best_ask,midpoint,vwap,cost
 2026-08-14T06:56:22.269153+00:00,dry,BTC,No,"Will the price of Bitcoin be between $60,000 and $62,000 on August 14?",2026-08-14,0.9660,0.9650,0.9660,0.100,25.88,25.00,3400552
 2026-08-14T06:56:24.695943+00:00,dry,BTC,Yes,"Will the price of Bitcoin be above $62,000 on August 14?",2026-08-14,0.9550,0.9545,0.9550,0.050,26.18,25.00,3400694
 2026-08-14T08:46:37.190466+00:00,dry,BTC,No,"Will the price of Bitcoin be between $64,000 and $66,000 on August 14?",2026-08-14,0.9750,0.9715,0.9750,0.350,25.64,25.00,3400564
+2026-08-14T16:26:39.324731+00:00,dry,BTC,No,"Will Trump say ""Bitcoin,"" ""Crypto,"" or ""Cryptocurrency"" during remarks in New York?",2026-08-14,0.9800,0.9705,0.9800,0.950,25.51,25.00,3527760
