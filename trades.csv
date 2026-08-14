@@ -55,3 +55,6 @@ timestamp,mode,asset,outcome,question,resolution_day,best_ask,midpoint,vwap,cost
 2026-08-12T05:16:49.417864+00:00,dry,BTC,Yes,"Will the price of Bitcoin be above $62,000 on August 12?",2026-08-12,0.9830,0.9815,0.9830,0.050,25.43,25.00,3361383
 2026-08-12T21:23:50.809342+00:00,dry,ETH,No,"Will Ethereum dip to $1,850 on August 12?",2026-08-13,0.9500,0.9450,0.9500,0.500,26.32,25.00,3533436
 2026-08-13T19:38:16.791039+00:00,dry,BTC,No,"Will Bitcoin dip to $62,000 on August 13?",2026-08-14,0.9860,0.9755,0.9860,0.950,25.35,25.00,3556987
+2026-08-14T06:56:19.360520+00:00,dry,BTC,No,"Will the price of Bitcoin be above $64,000 on August 14?",2026-08-14,0.9500,0.9450,0.9500,0.500,26.32,25.00,3400706
+2026-08-14T06:56:22.269153+00:00,dry,BTC,No,"Will the price of Bitcoin be between $60,000 and $62,000 on August 14?",2026-08-14,0.9660,0.9650,0.9660,0.100,25.88,25.00,3400552
+2026-08-14T06:56:24.695943+00:00,dry,BTC,Yes,"Will the price of Bitcoin be above $62,000 on August 14?",2026-08-14,0.9550,0.9545,0.9550,0.050,26.18,25.00,3400694
