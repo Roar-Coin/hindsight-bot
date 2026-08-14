@@ -1004,12 +1004,12 @@
       "shares": 25.354969574036513,
       "notional": 25.0,
       "dry_run": true,
-      "resolved": false,
-      "won": null,
-      "pnl": 0.0
+      "resolved": true,
+      "won": true,
+      "pnl": 0.3549695740365131
     }
   ],
   "halted": false,
   "halt_reason": "",
-  "updated": "2026-08-14T03:09:16.018327+00:00"
+  "updated": "2026-08-14T05:17:11.095305+00:00"
 }
