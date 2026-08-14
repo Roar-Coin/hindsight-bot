@@ -41,5 +41,15 @@ jobs:
           git add -A
           git diff --staged --quiet && echo "ingen endringer" && exit 0
           git commit -m "state: $(date -u +%Y-%m-%dT%H:%MZ)"
-          git pull --rebase --autostash
-          git push
+          # Andre workflows pusher til samme repo. Kolliderer vi, prøver vi igjen.
+          for forsok in 1 2 3 4 5; do
+            if git pull --rebase --autostash origin main && git push origin main; then
+              echo "lagret på forsøk $forsok"
+              exit 0
+            fi
+            echo "push kolliderte (forsøk $forsok) — venter litt"
+            sleep $((RANDOM % 15 + 5))
+          done
+          echo "klarte ikke lagre etter 5 forsøk"
+          exit 1
+
