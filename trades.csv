@@ -63,3 +63,6 @@ timestamp,mode,asset,outcome,question,resolution_day,best_ask,midpoint,vwap,cost
 2026-08-14T17:32:34.932029+00:00,dry,BTC,No,"Will Bitcoin dip to $62,000 on August 14?",2026-08-15,0.9700,0.9655,0.9700,0.450,25.77,25.00,3576523
 2026-08-14T21:52:43.397644+00:00,dry,ETH,No,"Will Ethereum reach $1,900 on August 14?",2026-08-15,0.9600,0.9550,0.9600,0.500,26.04,25.00,3576544
 2026-08-14T21:52:43.797991+00:00,dry,ETH,No,"Will Ethereum dip to $1,850 on August 14?",2026-08-15,0.9800,0.9770,0.9800,0.300,25.51,25.00,3576545
+2026-08-15T08:58:01.069512+00:00,dry,ETH,No,"Will the price of Ethereum be between $1,900 and $2,000 on August 15?",2026-08-15,0.9840,0.9815,0.9840,0.250,25.41,25.00,3421392
+2026-08-15T08:58:01.643508+00:00,dry,ETH,No,"Will the price of Ethereum be above $1,900 on August 15?",2026-08-15,0.9830,0.9815,0.9830,0.150,25.43,25.00,3421329
+2026-08-15T08:58:03.050688+00:00,dry,ETH,Yes,"Will the price of Ethereum be between $1,800 and $1,900 on August 15?",2026-08-15,0.9860,0.9825,0.9860,0.250,25.35,25.00,3421389
