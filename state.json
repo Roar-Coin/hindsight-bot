@@ -1403,9 +1403,27 @@
       "resolved": true,
       "won": false,
       "pnl": -25.0
+    },
+    {
+      "token_id": "26141810403057115785643432015682868405755316100235686102830011334348870642180",
+      "market_id": "3653982",
+      "question": "Will Ethereum reach $1,950 on August 17?",
+      "asset": "ETH",
+      "outcome": "No",
+      "resolution_day": "2026-08-18",
+      "entered_at": "2026-08-17T20:57:23.693602+00:00",
+      "price": 0.986,
+      "midpoint": 0.983,
+      "cost_cents": 0.29999999999998916,
+      "shares": 25.354969574036513,
+      "notional": 25.0,
+      "dry_run": true,
+      "resolved": false,
+      "won": null,
+      "pnl": 0.0
     }
   ],
   "halted": false,
   "halt_reason": "",
-  "updated": "2026-08-17T19:53:45.573725+00:00"
+  "updated": "2026-08-17T20:57:23.694098+00:00"
 }
