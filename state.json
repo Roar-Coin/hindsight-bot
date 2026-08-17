@@ -1367,9 +1367,45 @@
       "resolved": false,
       "won": null,
       "pnl": 0.0
+    },
+    {
+      "token_id": "103068698038322058033598253519216734498632004001367547893059632813753535490917",
+      "market_id": "3492224",
+      "question": "Will the price of Bitcoin be above $64,000 on August 17?",
+      "asset": "BTC",
+      "outcome": "No",
+      "resolution_day": "2026-08-17",
+      "entered_at": "2026-08-17T09:20:52.156751+00:00",
+      "price": 0.94,
+      "midpoint": 0.9359999999999999,
+      "cost_cents": 0.40000000000000036,
+      "shares": 26.595744680851066,
+      "notional": 25.0,
+      "dry_run": true,
+      "resolved": false,
+      "won": null,
+      "pnl": 0.0
+    },
+    {
+      "token_id": "14454230608482490380967433926529460794002414773030224570814512046578253945148",
+      "market_id": "3492170",
+      "question": "Will the price of Bitcoin be between $62,000 and $64,000 on August 17?",
+      "asset": "BTC",
+      "outcome": "Yes",
+      "resolution_day": "2026-08-17",
+      "entered_at": "2026-08-17T09:20:59.838829+00:00",
+      "price": 0.93,
+      "midpoint": 0.925,
+      "cost_cents": 0.5000000000000004,
+      "shares": 26.881720430107524,
+      "notional": 25.0,
+      "dry_run": true,
+      "resolved": false,
+      "won": null,
+      "pnl": 0.0
     }
   ],
   "halted": false,
   "halt_reason": "",
-  "updated": "2026-08-17T08:21:02.449009+00:00"
+  "updated": "2026-08-17T09:20:59.839438+00:00"
 }
