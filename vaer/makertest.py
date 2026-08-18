@@ -321,13 +321,70 @@ def report():
         print("=" * 62 + "\n")
 
 
+
+# ── Sondering: finnes handelsdata med tidsstempel? ────────────────────────
+def probe_trades():
+    """Bokbilder kan ikke skille en handel fra en kansellering. En market maker
+    som flytter kvoten sin ser identisk ut med et fyll. Derfor ga bokmetoden
+    100 % fyllrate — den talte requotes.
+
+    Det eneste som loser det er ekte handelsprints med tidsstempel og pris:
+    da vet vi at det HANDLET paa vaart nivaa, og hvor mye.
+
+    Denne kommandoen leter etter et slikt endepunkt. Kjor én gang, si fra
+    hvilken linje som gir treff."""
+    m = markeder()[:1]
+    if not m:
+        print("fant ingen vaermarkeder aa teste mot", file=sys.stderr)
+        return
+    m = m[0]
+    cond = m.get("conditionId")
+    tid = (token_ids(m) or [None])[0]
+    print(f"tester mot: {(m.get('question') or '')[:60]}")
+    print(f"  conditionId {cond}\n  token {tid}\n")
+
+    def vis(navn, url, params=None):
+        d = get(url, params)
+        if d is None:
+            print(f"  {navn:52} FEILET/tom")
+            return
+        if isinstance(d, dict):
+            d = d.get("data") or d.get("history") or d.get("trades") or [d]
+        if not isinstance(d, list) or not d:
+            print(f"  {navn:52} 0 rader")
+            return
+        r = d[0]
+        felt = [k for k in ("price", "size", "timestamp", "t", "p", "side",
+                            "match_time", "matchtime") if k in r]
+        print(f"  {navn:52} {len(d):4} rader | felt: {', '.join(felt) or list(r)[:5]}")
+
+    DATA = "https://data-api.polymarket.com"
+    print("=== handelsprints ===")
+    vis("data-api /trades?market=<cond>", f"{DATA}/trades",
+        {"market": cond, "limit": 100})
+    vis("data-api /trades?asset_id=<token>", f"{DATA}/trades",
+        {"asset_id": tid, "limit": 100})
+    vis("clob /trades?market=<cond>", f"{CLOB}/trades",
+        {"market": cond, "limit": 100})
+
+    print("\n=== prishistorikk (nest best) ===")
+    vis("clob /prices-history 1m", f"{CLOB}/prices-history",
+        {"market": tid, "interval": "1d", "fidelity": "1"})
+
+    print("\nEt endepunkt med price + timestamp per handel loser problemet.")
+    print("Bare prishistorikk holder ikke: den viser at prisen var der, ikke")
+    print("at det handlet paa VAART nivaa, og ikke hvor mye.\n")
+
+
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("cmd", choices=["watch", "report"])
+    ap.add_argument("cmd", choices=["watch", "report", "probe-trades"])
     ap.add_argument("--minutes", type=int, default=0)
     a = ap.parse_args()
     if a.cmd == "report":
         return report()
+    if a.cmd == "probe-trades":
+        return probe_trades()
     state = load_state()
     t0 = time.time()
     while True:
