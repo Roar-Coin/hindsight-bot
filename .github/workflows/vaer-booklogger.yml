@@ -10,10 +10,10 @@ on:
   workflow_dispatch:        # ← knappen du trykker på for å starte manuelt
     inputs:
       kommando:
-        description: "watch = tørrkjør | report = tallene nå | spread = kostnad per kategori | probe = sonder Gamma"
+        description: "watch = tørrkjør | report = tallene | maker/maker-report = legge spread | spread = kostnad per kategori | probe = sonder Gamma"
         type: choice
         default: watch
-        options: [watch, report, spread, probe]
+        options: [watch, report, maker, maker-report, spread, probe]
   schedule:
     - cron: "7 0,6,12,18 * * *"
 
@@ -51,7 +51,7 @@ jobs:
           git config user.email "actions@github.com"
 
           lagre () {
-            git add vaer/logg vaer/state 2>/dev/null || true
+            git add vaer/logg vaer/state vaer/maker vaer/maker-state 2>/dev/null || true
             if git diff --staged --quiet; then
               echo "  (ingenting nytt å lagre)"
               return 0
@@ -78,13 +78,18 @@ jobs:
             probe)  cd vaer && python booklogger.py probe;  exit 0 ;;
             report) cd vaer && python booklogger.py report; exit 0 ;;
             spread) cd vaer && python booklogger.py spread; exit 0 ;;
+            maker-report) cd vaer && python makertest.py report; exit 0 ;;
           esac
+
+          # maker: samme bolke-og-lagre-mønster som watch, annet skript.
+          SKRIPT=booklogger.py
+          if [ "${{ inputs.kommando }}" = "maker" ]; then SKRIPT=makertest.py; fi
 
           # Kortere bolker: forrige kjøring mistet 70 minutter med data da
           # lagringen feilet. Nå står maks 25 minutter på spill om gangen.
           for bolk in $(seq 1 12); do
             echo "── bolk $bolk av 12 ──"
-            ( cd vaer && python booklogger.py watch --minutes 25 ) || true
+            ( cd vaer && python "$SKRIPT" watch --minutes 25 ) || true
             lagre
           done
 
