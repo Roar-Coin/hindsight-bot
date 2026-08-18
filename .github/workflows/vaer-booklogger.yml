@@ -13,7 +13,7 @@ on:
         description: "watch = tørrkjør | report = tallene | maker/maker-report = legge spread | spread = kostnad per kategori | probe = sonder Gamma"
         type: choice
         default: watch
-        options: [watch, report, maker, maker-report, spread, probe]
+        options: [watch, report, maker, maker-report, probe-trades, spread, probe]
   schedule:
     - cron: "7 0,6,12,18 * * *"
 
@@ -79,6 +79,7 @@ jobs:
             report) cd vaer && python booklogger.py report; exit 0 ;;
             spread) cd vaer && python booklogger.py spread; exit 0 ;;
             maker-report) cd vaer && python makertest.py report; exit 0 ;;
+            probe-trades) cd vaer && python makertest.py probe-trades; exit 0 ;;
           esac
 
           # maker: samme bolke-og-lagre-mønster som watch, annet skript.
