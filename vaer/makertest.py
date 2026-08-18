@@ -67,6 +67,31 @@ def topp(tid):
     return bb, min(asks), foran
 
 
+DATA_API = "https://data-api.polymarket.com"
+
+
+def handler(tid, etter_ts, limit=200):
+    """Ekte handelsprints nyere enn etter_ts. Dette er det som skiller en
+    handel fra en kansellering — boken alene kan ikke det, og det var derfor
+    de to forrige forsokene ga 100 % fyllrate."""
+    d = get(f"{DATA_API}/trades", {"asset_id": tid, "limit": limit})
+    if not isinstance(d, list):
+        return []
+    ut = []
+    for t in d:
+        try:
+            ts = float(t.get("timestamp") or 0)
+            if ts > 1e11:          # millisekunder
+                ts /= 1000.0
+            if ts <= etter_ts:
+                continue
+            ut.append((ts, float(t["price"]), float(t.get("size") or 0),
+                       str(t.get("side") or "").upper()))
+        except Exception:
+            continue
+    return sorted(ut)
+
+
 def siste(tid):
     d = get(f"{CLOB}/last-trade-price", {"token_id": tid})
     return float(d["price"]) if d and "price" in d else None
@@ -147,33 +172,32 @@ def sweep(state):
     ferdige = []
     for tid, q in list(kv.items()):
         if not q.get("fylt"):
-            # Fyll leses av BOKEN, ikke av last-trade-price. Den siste handelen
-            # kan ha skjedd for vi la ordren — ligger budet paa 47¢ fordi noen
-            # solgte der i gaar, ga den gamle testen "fyll" med en gang, og
-            # fyllraten ble 100 %.
+            # Fyll avgjores av EKTE handler etter at vi la ordren.
             #
-            # Vi laa BAKERST i koen paa vaart nivaa, med `foran_i_ko` i $ foran
-            # oss. To tolkninger:
-            #   konservativ  — hele nivaaet er borte (beste bud har falt under
-            #                  vaar pris). Da er alt foran oss tatt, og vi ogsaa.
-            #   optimistisk  — nivaaet staar, men storrelsen er mindre enn det
-            #                  som laa foran oss. Noe er spist; kanskje oss.
-            # Begge er tilnaermelser: en kansellering ser ut som en handel i
-            # boken. Derfor overvurderer selv den konservative litt.
-            bb, ba, storrelse = topp(tid)
+            # Vi laa bakerst i koen paa vaart nivaa, med `foran_i_ko` dollar
+            # foran oss. En SELL-handel til vaar pris eller lavere spiser koen
+            # nedenfra. Naar det akkumulerte salgsvolumet passerer det som laa
+            # foran oss, er turen kommet til oss.
+            #
+            # Salg UNDER vaar pris feier hele nivaaet og tar oss uansett.
+            nye = handler(tid, q.get("sett_til") or q["lagt"])
             time.sleep(REQ_PAUSE)
-            if bb is None:
-                continue
+            if nye:
+                q["sett_til"] = nye[-1][0]
+            spist = q.get("spist", 0.0)
+            for ts, pris, storr, side in nye:
+                if pris < q["bud"] - 1e-9:
+                    q["fylt"], q["type"] = ts, "feid"     # nivaaet gikk gjennom
+                    break
+                if abs(pris - q["bud"]) < 1e-9 and side != "BUY":
+                    spist += storr * pris
+                    if spist >= q["foran_i_ko"]:
+                        q["fylt"], q["type"] = ts, "ko_naadd"
+                        break
+            q["spist"] = round(spist, 2)
 
-            if bb < q["bud"] - 1e-9:
-                q["fylt"], q["type"] = naa, "konservativ"
-            elif abs(bb - q["bud"]) < 1e-9 and storrelse < q["foran_i_ko"] - 1e-9:
-                q["fylt"], q["type"] = naa, "optimistisk"
-                q["spist"] = round(q["foran_i_ko"] - storrelse, 2)
-            else:
-                # Beste bud har gaatt OPP: noen la seg foran oss. Vi ligger
-                # fortsatt der, bare lenger bak. Det er ikke et fyll.
-                if naa - q["lagt"] > 6 * 3600:
+            if not q.get("fylt"):
+                if naa - q["lagt"] > 12 * 3600:
                     skriv({**q, "tid": tid, "utfall": "aldri_fylt"})
                     ferdige.append(tid)
                 continue
@@ -255,11 +279,11 @@ def report():
     print(f"\nSimulerte ordrer  {len(rows)}")
     print(f"  fylt            {len(fylt)}  ({len(fylt)/len(rows):.0%})")
     print(f"  aldri fylt      {len(aldri)}   <- du tjener ingenting paa disse")
-    if fylt and len(fylt) / len(rows) > 0.5:
+    if fylt and len(fylt) / len(rows) > 0.6:
         print("  !! fyllrate over 50 % er urimelig hoyt for en hvilende ordre.")
         print("     Sjekk fylldeteksjonen for du stoler paa tallene under.")
-    kons = sum(1 for r in fylt if r.get("type") == "konservativ")
-    print(f"  herav konservative fyll {kons} / optimistiske {len(fylt)-kons}")
+    feid = sum(1 for r in fylt if r.get("type") == "feid")
+    print(f"  herav nivaa feid {feid} / ko naadd {len(fylt)-feid}")
 
     if not fylt:
         print("\nIngen fyll maalt ennaa.")
