@@ -146,20 +146,33 @@ def sweep(state):
     # 1. Foelg opp ordrer som allerede ligger ute
     ferdige = []
     for tid, q in list(kv.items()):
-        st = siste(tid)
-        time.sleep(REQ_PAUSE)
-        if st is None:
-            continue
-
         if not q.get("fylt"):
-            # To fylltolkninger, fordi vi ikke kjenner koposisjonen vaar:
-            #   optimistisk — handel PAA vaart bud teller (vi laa forst)
-            #   konservativt — bare handel UNDER budet (nivaaet ble feid bort)
-            if st < q["bud"] - 1e-9:
+            # Fyll leses av BOKEN, ikke av last-trade-price. Den siste handelen
+            # kan ha skjedd for vi la ordren — ligger budet paa 47¢ fordi noen
+            # solgte der i gaar, ga den gamle testen "fyll" med en gang, og
+            # fyllraten ble 100 %.
+            #
+            # Vi laa BAKERST i koen paa vaart nivaa, med `foran_i_ko` i $ foran
+            # oss. To tolkninger:
+            #   konservativ  — hele nivaaet er borte (beste bud har falt under
+            #                  vaar pris). Da er alt foran oss tatt, og vi ogsaa.
+            #   optimistisk  — nivaaet staar, men storrelsen er mindre enn det
+            #                  som laa foran oss. Noe er spist; kanskje oss.
+            # Begge er tilnaermelser: en kansellering ser ut som en handel i
+            # boken. Derfor overvurderer selv den konservative litt.
+            bb, ba, storrelse = topp(tid)
+            time.sleep(REQ_PAUSE)
+            if bb is None:
+                continue
+
+            if bb < q["bud"] - 1e-9:
                 q["fylt"], q["type"] = naa, "konservativ"
-            elif st <= q["bud"] + 1e-9:
+            elif abs(bb - q["bud"]) < 1e-9 and storrelse < q["foran_i_ko"] - 1e-9:
                 q["fylt"], q["type"] = naa, "optimistisk"
+                q["spist"] = round(q["foran_i_ko"] - storrelse, 2)
             else:
+                # Beste bud har gaatt OPP: noen la seg foran oss. Vi ligger
+                # fortsatt der, bare lenger bak. Det er ikke et fyll.
                 if naa - q["lagt"] > 6 * 3600:
                     skriv({**q, "tid": tid, "utfall": "aldri_fylt"})
                     ferdige.append(tid)
@@ -242,6 +255,11 @@ def report():
     print(f"\nSimulerte ordrer  {len(rows)}")
     print(f"  fylt            {len(fylt)}  ({len(fylt)/len(rows):.0%})")
     print(f"  aldri fylt      {len(aldri)}   <- du tjener ingenting paa disse")
+    if fylt and len(fylt) / len(rows) > 0.5:
+        print("  !! fyllrate over 50 % er urimelig hoyt for en hvilende ordre.")
+        print("     Sjekk fylldeteksjonen for du stoler paa tallene under.")
+    kons = sum(1 for r in fylt if r.get("type") == "konservativ")
+    print(f"  herav konservative fyll {kons} / optimistiske {len(fylt)-kons}")
 
     if not fylt:
         print("\nIngen fyll maalt ennaa.")
@@ -250,6 +268,14 @@ def report():
     snitt = lambda xs: sum(xs) / len(xs) if xs else 0.0
     fanget = snitt([r["fanget_c"] for r in fylt])
     print(f"\nFanget spread     {fanget:.2f}¢ i snitt (mot midtpunkt)")
+
+    # Oppgjor: gaar markedet til 0 eller 1, er markout ikke en prisbevegelse
+    # men et utfall. Skilles ut, ellers drukner de vanlige tallene.
+    oppgjort = [r for r in fylt if any(abs(r.get(f"mo{h}") or 0) > 20 for h in MARKOUTS)]
+    if oppgjort:
+        print(f"\n  {len(oppgjort)} av {len(fylt)} beveget seg over 20¢ — trolig")
+        print(f"  oppgjor, ikke handel. Tas med i snittet under; de ER ekte tap,")
+        print(f"  men de er en annen risiko enn ugunstig utvalg.")
 
     print(f"\nMARKOUT — hva prisen gjorde ETTER at vi ble fylt")
     print(f"  negativ = den gikk mot oss = ugunstig utvalg")
