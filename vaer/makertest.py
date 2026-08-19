@@ -70,18 +70,28 @@ def topp(tid):
 DATA_API = "https://data-api.polymarket.com"
 
 
-def handler(tid, etter_ts, limit=200):
-    """Ekte handelsprints nyere enn etter_ts. Dette er det som skiller en
-    handel fra en kansellering — boken alene kan ikke det, og det var derfor
-    de to forrige forsokene ga 100 % fyllrate."""
-    d = get(f"{DATA_API}/trades", {"asset_id": tid, "limit": limit})
+def handler(cond, tid, etter_ts, limit=200):
+    """Ekte handelsprints for ETT token, nyere enn etter_ts.
+
+    To ting maatte paa plass, begge funnet ved sondering:
+      - asset_id blir IGNORERT av data-api. Den ga en global strom av handler
+        fra hele Polymarket, og det var grunnen til at tre versjoner paa rad
+        ga 100 % fyllrate. market=<conditionId> filtrerer derimot riktig.
+      - Begge sider av en handel rapporteres, hver i sitt tokens prisuttrykk
+        (Ja kjopt til 0,56 = Nei solgt til 0,44). Vi filtrerer paa `asset`
+        slik at prisene er i VAART tokens termer.
+    """
+    d = get(f"{DATA_API}/trades", {"market": cond, "limit": limit})
     if not isinstance(d, list):
         return []
+    mitt = str(tid)
     ut = []
     for t in d:
+        if str(t.get("asset") or "") != mitt:
+            continue
         try:
             ts = float(t.get("timestamp") or 0)
-            if ts > 1e11:          # millisekunder
+            if ts > 1e11:
                 ts /= 1000.0
             if ts <= etter_ts:
                 continue
@@ -180,14 +190,17 @@ def sweep(state):
             # foran oss, er turen kommet til oss.
             #
             # Salg UNDER vaar pris feier hele nivaaet og tar oss uansett.
-            nye = handler(tid, q.get("sett_til") or q["lagt"])
+            nye = handler(q.get("cond"), tid,
+                          q.get("sett_til") or q["lagt"])
             time.sleep(REQ_PAUSE)
             if nye:
                 q["sett_til"] = nye[-1][0]
             spist = q.get("spist", 0.0)
             for ts, pris, storr, side in nye:
-                if pris < q["bud"] - 1e-9:
-                    q["fylt"], q["type"] = ts, "feid"     # nivaaet gikk gjennom
+                if side != "BUY" and pris < q["bud"] - 1e-9:
+                    # Noen solgte UNDER vaart bud: boken handlet gjennom vaart
+                    # nivaa, og prisprioritet gjor at vi ble tatt underveis.
+                    q["fylt"], q["type"] = ts, "feid"
                     break
                 if abs(pris - q["bud"]) < 1e-9 and side != "BUY":
                     spist += storr * pris
@@ -240,6 +253,7 @@ def sweep(state):
                 continue
             kv[tid] = {
                 "lagt": naa, "bud": bb, "ask": ba,
+                "cond": m.get("conditionId"),
                 "spread_c": round((ba - bb) * 100, 2),
                 "fanget_c": round((ba - bb) / 2 * 100, 2),  # vs midtpunkt
                 "foran_i_ko": round(foran, 2),
