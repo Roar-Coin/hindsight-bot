@@ -1454,9 +1454,9 @@
       "shares": 25.329280648429584,
       "notional": 25.0,
       "dry_run": true,
-      "resolved": false,
-      "won": null,
-      "pnl": 0.0
+      "resolved": true,
+      "won": true,
+      "pnl": 0.3292806484295845
     },
     {
       "token_id": "89236134389365169146524363287935214849196395089941377857603729163978077145261",
@@ -1472,12 +1472,12 @@
       "shares": 25.510204081632654,
       "notional": 25.0,
       "dry_run": true,
-      "resolved": false,
-      "won": null,
-      "pnl": 0.0
+      "resolved": true,
+      "won": false,
+      "pnl": -25.0
     }
   ],
   "halted": false,
   "halt_reason": "",
-  "updated": "2026-08-19T16:05:04.072982+00:00"
+  "updated": "2026-08-19T16:58:24.265715+00:00"
 }
