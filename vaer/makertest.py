@@ -403,57 +403,61 @@ def probe_trades():
 
 # ── Diagnose: hva inneholder handelsdataene egentlig? ─────────────────────
 def probe_fill():
-    """Tre forsok paa fylldeteksjon har gitt 100 % fyllrate. I stedet for et
-    fjerde forsok: skriv ut raadataene ved siden av boken, saa vi ser hva som
-    faktisk kommer inn."""
-    ms = markeder()[:3]
+    """asset_id blir IGNORERT av data-api: samme ti handler kom tilbake for
+    hvert token, ogsaa paa tvers av ulike markeder. Det var en global strom.
+
+    market=<conditionId> filtrerer derimot (34 rader, ikke 100-grensen).
+    Men da faar vi begge utfall i samme liste, og maa vite hvilket token hver
+    handel horer til. Denne dumper ALLE feltene saa vi ser hva som finnes."""
+    ms = markeder()[:2]
     if not ms:
         print("ingen markeder", file=sys.stderr)
         return
     naa = time.time()
 
     for m in ms:
+        cond = m.get("conditionId")
         tids, outs, pr = token_ids(m), outcomes(m), _gamma_priser(m)
         print("=" * 70)
         print((m.get("question") or "")[:68])
-        print(f"Gamma-priser: {pr}   utfall: {outs}")
+        print(f"  priser {pr}  utfall {outs}")
+        for i, t in enumerate(tids):
+            print(f"  token {i}: {t}")
 
-        for i, tid in enumerate(tids):
-            bb, ba, foran = topp(tid)
-            print(f"\n  token {i} ({outs[i] if i < len(outs) else '?'})"
-                  f"  bud {bb} / ask {ba}  ({foran:.0f}$ paa budet)")
+        d = get(f"{DATA_API}/trades", {"market": cond, "limit": 10})
+        if not isinstance(d, list) or not d:
+            print("\n  market=<cond> ga ingenting")
+            continue
 
-            d = get(f"{DATA_API}/trades", {"asset_id": tid, "limit": 12})
-            if not isinstance(d, list) or not d:
-                print("    ingen handler returnert")
-                continue
+        print(f"\n  {len(d)} handler. ALLE felt i den forste:")
+        for k, v in d[0].items():
+            s = str(v)
+            print(f"    {k:22} {s[:60]}")
 
-            print(f"    {'alder':>10} {'pris':>7} {'storr':>8}  side   vs bud")
-            under = 0
-            for t in d[:10]:
-                try:
-                    ts = float(t.get("timestamp") or 0)
-                    if ts > 1e11:
-                        ts /= 1000.0
-                    alder = (naa - ts) / 60
-                    p = float(t["price"])
-                except Exception as e:
-                    print(f"    kunne ikke tolke: {t}  ({e})")
-                    continue
-                rel = "UNDER" if bb is not None and p < bb - 1e-9 else \
-                      ("=bud" if bb is not None and abs(p - bb) < 1e-9 else "over")
-                if rel == "UNDER":
-                    under += 1
-                aldertekst = (f"{alder:8.1f}m" if alder < 6000
-                              else f"{alder/1440:7.1f}d")
-                print(f"    {aldertekst:>10} {p:>7.3f} {float(t.get('size') or 0):>8.1f}"
-                      f"  {str(t.get('side') or '?')[:5]:5} {rel}")
-            print(f"    -> {under} av {len(d[:10])} ligger UNDER beste bud")
-            print(f"       (er de gamle, er tidsfilteret feil; er de fra motsatt")
-            print(f"        utfall, maa prisene speilvendes: 1 - p)")
-            if i >= 1:
-                break
+        # finnes det et felt som identifiserer utfallet?
+        nokler = set(d[0])
+        kandidater = [k for k in nokler if any(
+            o in k.lower() for o in ("asset", "outcome", "token", "side", "index"))]
+        print(f"\n  mulige utfall-felt: {kandidater or 'INGEN'}")
+
+        print(f"\n  {'alder':>9} {'pris':>7} {'storr':>8}  " +
+              "  ".join(f"{k[:12]:>12}" for k in kandidater))
+        for t in d[:8]:
+            try:
+                ts = float(t.get("timestamp") or 0)
+                if ts > 1e11:
+                    ts /= 1000.0
+                alder = (naa - ts) / 60
+                print(f"  {alder:8.1f}m {float(t['price']):>7.3f} "
+                      f"{float(t.get('size') or 0):>8.1f}  " +
+                      "  ".join(f"{str(t.get(k))[:12]:>12}" for k in kandidater))
+            except Exception as e:
+                print(f"  ukjent rad: {e}")
         print()
+
+    print("Ser jeg et felt som matcher token-id-ene over, er problemet lost.")
+    print("Finnes det ikke, kan vi ikke vite hvilket utfall en handel gjaldt,")
+    print("og da lar denne maalingen seg ikke gjore med disse dataene.\n")
 
 
 def main():
