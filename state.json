@@ -1439,9 +1439,27 @@
       "resolved": true,
       "won": true,
       "pnl": 0.4065040650406502
+    },
+    {
+      "token_id": "87764760909182246885364762466561845002414358538468254439808912822453946810500",
+      "market_id": "3541722",
+      "question": "Will the price of Bitcoin be between $66,000 and $68,000 on August 19?",
+      "asset": "BTC",
+      "outcome": "No",
+      "resolution_day": "2026-08-19",
+      "entered_at": "2026-08-19T05:59:03.016302+00:00",
+      "price": 0.987,
+      "midpoint": 0.9815,
+      "cost_cents": 0.5499999999999949,
+      "shares": 25.329280648429584,
+      "notional": 25.0,
+      "dry_run": true,
+      "resolved": false,
+      "won": null,
+      "pnl": 0.0
     }
   ],
   "halted": false,
   "halt_reason": "",
-  "updated": "2026-08-19T05:05:16.996428+00:00"
+  "updated": "2026-08-19T05:59:03.016656+00:00"
 }
