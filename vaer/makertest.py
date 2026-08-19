@@ -400,15 +400,73 @@ def probe_trades():
     print("at det handlet paa VAART nivaa, og ikke hvor mye.\n")
 
 
+
+# ── Diagnose: hva inneholder handelsdataene egentlig? ─────────────────────
+def probe_fill():
+    """Tre forsok paa fylldeteksjon har gitt 100 % fyllrate. I stedet for et
+    fjerde forsok: skriv ut raadataene ved siden av boken, saa vi ser hva som
+    faktisk kommer inn."""
+    ms = markeder()[:3]
+    if not ms:
+        print("ingen markeder", file=sys.stderr)
+        return
+    naa = time.time()
+
+    for m in ms:
+        tids, outs, pr = token_ids(m), outcomes(m), _gamma_priser(m)
+        print("=" * 70)
+        print((m.get("question") or "")[:68])
+        print(f"Gamma-priser: {pr}   utfall: {outs}")
+
+        for i, tid in enumerate(tids):
+            bb, ba, foran = topp(tid)
+            print(f"\n  token {i} ({outs[i] if i < len(outs) else '?'})"
+                  f"  bud {bb} / ask {ba}  ({foran:.0f}$ paa budet)")
+
+            d = get(f"{DATA_API}/trades", {"asset_id": tid, "limit": 12})
+            if not isinstance(d, list) or not d:
+                print("    ingen handler returnert")
+                continue
+
+            print(f"    {'alder':>10} {'pris':>7} {'storr':>8}  side   vs bud")
+            under = 0
+            for t in d[:10]:
+                try:
+                    ts = float(t.get("timestamp") or 0)
+                    if ts > 1e11:
+                        ts /= 1000.0
+                    alder = (naa - ts) / 60
+                    p = float(t["price"])
+                except Exception as e:
+                    print(f"    kunne ikke tolke: {t}  ({e})")
+                    continue
+                rel = "UNDER" if bb is not None and p < bb - 1e-9 else \
+                      ("=bud" if bb is not None and abs(p - bb) < 1e-9 else "over")
+                if rel == "UNDER":
+                    under += 1
+                aldertekst = (f"{alder:8.1f}m" if alder < 6000
+                              else f"{alder/1440:7.1f}d")
+                print(f"    {aldertekst:>10} {p:>7.3f} {float(t.get('size') or 0):>8.1f}"
+                      f"  {str(t.get('side') or '?')[:5]:5} {rel}")
+            print(f"    -> {under} av {len(d[:10])} ligger UNDER beste bud")
+            print(f"       (er de gamle, er tidsfilteret feil; er de fra motsatt")
+            print(f"        utfall, maa prisene speilvendes: 1 - p)")
+            if i >= 1:
+                break
+        print()
+
+
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("cmd", choices=["watch", "report", "probe-trades"])
+    ap.add_argument("cmd", choices=["watch", "report", "probe-trades", "probe-fill"])
     ap.add_argument("--minutes", type=int, default=0)
     a = ap.parse_args()
     if a.cmd == "report":
         return report()
     if a.cmd == "probe-trades":
         return probe_trades()
+    if a.cmd == "probe-fill":
+        return probe_fill()
     state = load_state()
     t0 = time.time()
     while True:
