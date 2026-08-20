@@ -1531,7 +1531,7 @@
       "pnl": -25.0
     }
   ],
-  "halted": true,
+  "halted": false,
   "halt_reason": "3 tap p\u00e5 rad (backtestens verste var 2)",
   "updated": "2026-08-19T21:53:47.946730+00:00"
 }
