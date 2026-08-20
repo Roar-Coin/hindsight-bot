@@ -85,12 +85,16 @@ class Config:
     # korrelasjon. Treffrate og fordel gjør det — derfor skjuler rapporten dem
     # så lenge denne modusen er på, og --live nekter å starte.
     # Verdiene i parentes er de som gjelder for ekte penger.
-    cost_measurement_mode: bool = True
-    max_positions_per_resolution_day: int = 12   # live: 3
-    max_positions_per_asset_per_day: int = 4     # live: 1
-    max_open_positions: int = 200                # live: 20
-    max_open_notional_usd: float = 5000.0        # live: 500
-    max_new_positions_per_day: int = 40          # live: 6
+    # KOSTNADSMÅLINGSMODUS: avsluttet 20. aug. 85 målinger, snitt 0,43¢, ingen
+    # over taket på 1,71¢ — betingelse 2 er besvart. Takene er satt tilbake til
+    # live-verdiene, men boten går fortsatt tørt. Fra nå er den en ekte
+    # utvalgstest av regelen, ikke en kostnadsmåler.
+    cost_measurement_mode: bool = False
+    max_positions_per_resolution_day: int = 3
+    max_positions_per_asset_per_day: int = 1
+    max_open_positions: int = 20
+    max_open_notional_usd: float = 500.0
+    max_new_positions_per_day: int = 6
 
     # -- stoppkriterier (avtal dem på forhånd, ikke endre dem underveis) --------
     stop_on_consecutive_losses: int = 3      # backtestens lengste tapsrekke var 2
@@ -503,6 +507,7 @@ class Position:
     shares: float
     notional: float
     dry_run: bool
+    relaxed_caps: bool = False   # tatt under løsnede klyngetak (kostnadsmodus)
     resolved: bool = False
     won: bool | None = None
     pnl: float = 0.0
@@ -521,6 +526,10 @@ class State:
         if not self.path.exists():
             return
         raw = json.loads(self.path.read_text())
+        # Posisjoner lagret før 20. aug mangler feltet og ble alle tatt under
+        # løsnede tak — de skal ikke telle i den rene utvalgstesten.
+        for p in raw.get("positions", []):
+            p.setdefault("relaxed_caps", True)
         self.positions = [Position(**p) for p in raw.get("positions", [])]
         self.halted = raw.get("halted", False)
         self.halt_reason = raw.get("halt_reason", "")
@@ -570,7 +579,9 @@ class State:
 
     def check_stops(self) -> str | None:
         cfg = self.cfg
-        settled = [p for p in self.positions if p.resolved]
+        # Bare posisjoner tatt under live-tak teller. Kostnadsfasens tall er
+        # korrelerte og ville utløst stoppen på ett enkelt markedsutslag.
+        settled = [p for p in self.positions if p.resolved and not p.relaxed_caps]
 
         streak = 0
         for p in reversed(settled):
@@ -803,6 +814,7 @@ def scan_once(cfg: Config, state: State, gamma: GammaClient, exe: PolymarketExec
             shares=shares,
             notional=cfg.stake_usd,
             dry_run=cfg.dry_run,
+            relaxed_caps=cfg.cost_measurement_mode,
         )
         state.positions.append(pos)
         log_trade(pos, cfg)
@@ -822,26 +834,44 @@ def scan_once(cfg: Config, state: State, gamma: GammaClient, exe: PolymarketExec
             log.info("   %4d × %s", n, reason)
 
 
+def _block(label: str, settled: list[Position], note: str = "") -> None:
+    if not settled:
+        return
+    wins = sum(1 for p in settled if p.won)
+    pnl = sum(p.pnl for p in settled)
+    wr = wins / len(settled) * 100
+    avg_entry = sum(p.price for p in settled) / len(settled)
+    edge = wr - avg_entry * 100
+    print(f"\n{label}")
+    print(f"  Gjort opp     : {len(settled)}")
+    print(f"  Treffrate     : {wr:.1f}%  ({wins}/{len(settled)})")
+    print(f"  Snitt inngang : {avg_entry*100:.1f}¢")
+    print(f"  Fordel        : {edge:+.2f} pp   (backtest: +2.3 pp)")
+    print(f"  P&L           : ${pnl:+.2f}")
+    if note:
+        print(f"  {note}")
+
+
 def report(state: State, cfg: Config = CFG) -> None:
     settled = [p for p in state.positions if p.resolved]
     open_pos = state.open_positions()
     print(f"\nÅpne posisjoner : {len(open_pos)}  (${state.open_notional():.0f} bundet)")
-    print(f"Gjort opp       : {len(settled)}")
 
-    if cfg.cost_measurement_mode:
-        print("\nTreffrate og fordel vises ikke: klyngetaket er løsnet for å samle")
-        print("kostnadsdata raskere, så de samme markedsutslagene telles flere ganger")
-        print("og begge tallene ville blitt for pene. Fordelen har du fra backtesten.")
-    elif settled:
-        wins = sum(1 for p in settled if p.won)
-        pnl = sum(p.pnl for p in settled)
-        wr = wins / len(settled) * 100
-        avg_entry = sum(p.price for p in settled) / len(settled)
-        edge = wr - avg_entry * 100
-        print(f"Treffrate       : {wr:.1f}%  ({wins}/{len(settled)})")
-        print(f"Snitt inngang   : {avg_entry*100:.1f}¢")
-        print(f"Fordel          : {edge:+.2f} pp   (backtest: +1.6 pp)")
-        print(f"P&L             : ${pnl:+.2f}")
+    strict = [p for p in settled if not p.relaxed_caps]
+    relaxed = [p for p in settled if p.relaxed_caps]
+
+    _block(
+        "UTVALGSTEST — live-tak (1 per mynt per dag)",
+        strict,
+        "" if len(strict) >= 40 else f"  For lite utvalg ennå. {40 - len(strict)} igjen til 40.",
+    )
+    _block(
+        "KOSTNADSFASEN — løsnede tak, tallene er ikke uavhengige",
+        relaxed,
+        "Samme markedsutslag telt flere ganger. Les med forbehold.",
+    )
+    if not settled:
+        print("Gjort opp       : 0")
 
     all_costs = [p.cost_cents for p in state.positions]
     if all_costs:
@@ -852,21 +882,19 @@ def report(state: State, cfg: Config = CFG) -> None:
         print(f"\nMålinger        : {n}")
         print(f"Målt kostnad    : snitt {avg_cost:.2f}¢, verste {worst:.2f}¢")
         print(f"Over {COST_CEILING}¢      : {over} av {n}  ({over/n*100:.0f}%)")
-        print(f"Fordelen dør ved: {COST_CEILING}¢")
         if n < 100:
-            print(f"→ Betingelse 2 (kostnad): for få målinger. Trenger {100 - n} til.")
+            print(f"→ Betingelse 2 (kostnad): {100 - n} målinger igjen til 100.")
         elif avg_cost > COST_CEILING:
             print("→ Betingelse 2 STRYKER: kostnaden spiser opp fordelen.")
-        elif avg_cost > 0.5:
-            print("→ Betingelse 2 er klarert, men over backtestens antakelse på 0.5¢.")
         else:
-            print("→ Betingelse 2 er klarert.")
+            print(f"→ Betingelse 2 er klarert (tak {COST_CEILING}¢).")
 
     print("\n→ Betingelse 1 (klyngegulvet) måles i Hindsight-appen, ikke her.")
     print("   Per 8. aug: +2.0 pp fordel mot ±2.9 pp gulv over 166 klynger — STRYKER.")
     print("   Trenger ~340 klynger. Se README for hele beslutningsregelen.")
     if state.halted:
         print(f"\nSTOPPET: {state.halt_reason}")
+        print("   Kjør med --resume for å starte igjen.")
     print()
 
 
@@ -876,6 +904,8 @@ def main() -> int:
     ap.add_argument("--once", action="store_true", help="kjør én runde og avslutt")
     ap.add_argument("--report", action="store_true", help="vis status og avslutt")
     ap.add_argument("--stake", type=float, help="overstyr innsats per handel")
+    ap.add_argument("--resume", action="store_true",
+                    help="nullstill stoppen og fortsett")
     ap.add_argument("--verbose", action="store_true")
     args = ap.parse_args()
 
@@ -891,6 +921,12 @@ def main() -> int:
         cfg.stake_usd = args.stake
 
     state = State(cfg)
+
+    if args.resume and state.halted:
+        log.info("Nullstiller stopp: %s", state.halt_reason)
+        state.halted = False
+        state.halt_reason = ""
+        state.save()
 
     if args.report:
         report(state, cfg)
