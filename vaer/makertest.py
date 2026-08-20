@@ -44,6 +44,10 @@ SIZE = 100.0          # $ per simulert ordre
 POLL_SEC = 120
 MARKOUTS = (5, 30, 120)   # minutter etter fyll
 MAX_KVOTER = 400      # tak paa samtidige simulerte ordrer
+MAX_LIV_MIN = 30      # kanseller ufylte ordrer etter dette. En ekte maker
+                      # trekker kvoten naar markedet beveger seg; en ordre som
+                      # ligger i 12 timer fanger hver eneste nedtur og blir
+                      # fylt 100 % av tiden — men bare ugunstig.
 REQ_PAUSE = 0.15
 
 RUN = os.environ.get("GITHUB_RUN_ID") or datetime.now(timezone.utc).strftime("%Y%m%d-%H%M")
@@ -210,10 +214,11 @@ def sweep(state):
             q["spist"] = round(spist, 2)
 
             if not q.get("fylt"):
-                if naa - q["lagt"] > 12 * 3600:
+                if naa - q["lagt"] > MAX_LIV_MIN * 60:
                     skriv({**q, "tid": tid, "utfall": "aldri_fylt"})
                     ferdige.append(tid)
                 continue
+            q["ventet_min"] = round((q["fylt"] - q["lagt"]) / 60, 1)
             q["mid_ved_fyll"] = midt(tid)
             time.sleep(REQ_PAUSE)
             continue
@@ -293,9 +298,13 @@ def report():
     print(f"\nSimulerte ordrer  {len(rows)}")
     print(f"  fylt            {len(fylt)}  ({len(fylt)/len(rows):.0%})")
     print(f"  aldri fylt      {len(aldri)}   <- du tjener ingenting paa disse")
-    if fylt and len(fylt) / len(rows) > 0.6:
-        print("  !! fyllrate over 50 % er urimelig hoyt for en hvilende ordre.")
-        print("     Sjekk fylldeteksjonen for du stoler paa tallene under.")
+    v = sorted(r["ventet_min"] for r in fylt if r.get("ventet_min") is not None)
+    if v:
+        print(f"  ventetid til fyll: median {v[len(v)//2]:.0f} min, "
+              f"raskeste {v[0]:.0f}, tregeste {v[-1]:.0f}"
+              f"   [kvoten kanselleres etter {MAX_LIV_MIN}]")
+    if fylt and len(fylt) / len(rows) > 0.8:
+        print("  !! fyllrate over 80 % — sjekk at kvoten faktisk kanselleres.")
     feid = sum(1 for r in fylt if r.get("type") == "feid")
     print(f"  herav nivaa feid {feid} / ko naadd {len(fylt)-feid}")
 
