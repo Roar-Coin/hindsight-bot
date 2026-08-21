@@ -1614,9 +1614,47 @@
       "resolved": true,
       "won": false,
       "pnl": -25.0
+    },
+    {
+      "token_id": "23327219927848182883055137732203447217461385424115342339198361788456791173837",
+      "market_id": "3652275",
+      "question": "Will the price of Bitcoin be greater than $72,000 on August 21?",
+      "asset": "BTC",
+      "outcome": "Yes",
+      "resolution_day": "2026-08-21",
+      "entered_at": "2026-08-21T06:00:55.373825+00:00",
+      "price": 0.975,
+      "midpoint": 0.9675,
+      "cost_cents": 0.7499999999999951,
+      "shares": 25.641025641025642,
+      "notional": 25.0,
+      "dry_run": true,
+      "relaxed_caps": false,
+      "resolved": false,
+      "won": null,
+      "pnl": 0.0
+    },
+    {
+      "token_id": "115694393923643857555111892851311283914400463891797701677263578075052937453583",
+      "market_id": "3651175",
+      "question": "Will the price of Ethereum be above $2,200 on August 21?",
+      "asset": "ETH",
+      "outcome": "Yes",
+      "resolution_day": "2026-08-21",
+      "entered_at": "2026-08-21T06:00:58.387981+00:00",
+      "price": 0.988,
+      "midpoint": 0.9844999999999999,
+      "cost_cents": 0.35000000000000586,
+      "shares": 25.303643724696357,
+      "notional": 25.0,
+      "dry_run": true,
+      "relaxed_caps": false,
+      "resolved": false,
+      "won": null,
+      "pnl": 0.0
     }
   ],
   "halted": false,
   "halt_reason": "3 tap p\u00e5 rad (backtestens verste var 2)",
-  "updated": "2026-08-21T05:06:57.427153+00:00"
+  "updated": "2026-08-21T06:00:58.388725+00:00"
 }
