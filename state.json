@@ -1690,9 +1690,28 @@
       "resolved": true,
       "won": true,
       "pnl": 0.3549695740365131
+    },
+    {
+      "token_id": "74821906150374123039811271326223687446112174423600386232564698142807426056191",
+      "market_id": "3652330",
+      "question": "Will the price of Ethereum be greater than $2,300 on August 22?",
+      "asset": "ETH",
+      "outcome": "Yes",
+      "resolution_day": "2026-08-22",
+      "entered_at": "2026-08-22T09:00:16.618539+00:00",
+      "price": 0.978,
+      "midpoint": 0.9724999999999999,
+      "cost_cents": 0.45000000000001705,
+      "shares": 25.56237218813906,
+      "notional": 25.0,
+      "dry_run": true,
+      "relaxed_caps": false,
+      "resolved": false,
+      "won": null,
+      "pnl": 0.0
     }
   ],
   "halted": false,
   "halt_reason": "3 tap p\u00e5 rad (backtestens verste var 2)",
-  "updated": "2026-08-22T07:56:37.784435+00:00"
+  "updated": "2026-08-22T09:00:16.619219+00:00"
 }
