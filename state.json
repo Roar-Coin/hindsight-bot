@@ -1747,9 +1747,47 @@
       "resolved": true,
       "won": true,
       "pnl": 0.3549695740365131
+    },
+    {
+      "token_id": "50371088055078004192526722873126655768856354871318526166414490577031744759767",
+      "market_id": "3791931",
+      "question": "Will Bitcoin dip to $75,000 on August 23?",
+      "asset": "BTC",
+      "outcome": "No",
+      "resolution_day": "2026-08-24",
+      "entered_at": "2026-08-23T18:59:54.898110+00:00",
+      "price": 0.94,
+      "midpoint": 0.935,
+      "cost_cents": 0.49999999999998934,
+      "shares": 26.595744680851066,
+      "notional": 25.0,
+      "dry_run": true,
+      "relaxed_caps": false,
+      "resolved": false,
+      "won": null,
+      "pnl": 0.0
+    },
+    {
+      "token_id": "108965749278608746136099484578507094154051152971848319898677968736353916162723",
+      "market_id": "3654002",
+      "question": "Will Ethereum reach $2,600 August 17-23?",
+      "asset": "ETH",
+      "outcome": "No",
+      "resolution_day": "2026-08-24",
+      "entered_at": "2026-08-23T19:00:03.321366+00:00",
+      "price": 0.976,
+      "midpoint": 0.9704999999999999,
+      "cost_cents": 0.550000000000006,
+      "shares": 25.614754098360656,
+      "notional": 25.0,
+      "dry_run": true,
+      "relaxed_caps": false,
+      "resolved": false,
+      "won": null,
+      "pnl": 0.0
     }
   ],
   "halted": false,
   "halt_reason": "3 tap p\u00e5 rad (backtestens verste var 2)",
-  "updated": "2026-08-23T17:50:17.424190+00:00"
+  "updated": "2026-08-23T19:00:03.322093+00:00"
 }
