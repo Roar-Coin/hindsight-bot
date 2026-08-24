@@ -1801,9 +1801,9 @@
       "notional": 25.0,
       "dry_run": true,
       "relaxed_caps": false,
-      "resolved": false,
-      "won": null,
-      "pnl": 0.0
+      "resolved": true,
+      "won": true,
+      "pnl": 0.30364372469635725
     },
     {
       "token_id": "93782061523852098609417383550885369487251019880255713713644921890090224098680",
@@ -1820,6 +1820,44 @@
       "notional": 25.0,
       "dry_run": true,
       "relaxed_caps": false,
+      "resolved": true,
+      "won": true,
+      "pnl": 0.5102040816326543
+    },
+    {
+      "token_id": "68998873273810471541913361858136031491687280770980278100110250342158300502398",
+      "market_id": "3829968",
+      "question": "Will Ethereum reach $2,650 on August 24?",
+      "asset": "ETH",
+      "outcome": "No",
+      "resolution_day": "2026-08-25",
+      "entered_at": "2026-08-24T17:07:50.162411+00:00",
+      "price": 0.983,
+      "midpoint": 0.9764999999999999,
+      "cost_cents": 0.6500000000000061,
+      "shares": 25.4323499491353,
+      "notional": 25.0,
+      "dry_run": true,
+      "relaxed_caps": false,
+      "resolved": false,
+      "won": null,
+      "pnl": 0.0
+    },
+    {
+      "token_id": "3671725850593141445088169282773324777358863525496834318174459737890472319077",
+      "market_id": "3829873",
+      "question": "Will Bitcoin reach $83,000 on August 24?",
+      "asset": "BTC",
+      "outcome": "No",
+      "resolution_day": "2026-08-25",
+      "entered_at": "2026-08-24T17:07:52.896178+00:00",
+      "price": 0.987,
+      "midpoint": 0.9804999999999999,
+      "cost_cents": 0.6500000000000061,
+      "shares": 25.329280648429584,
+      "notional": 25.0,
+      "dry_run": true,
+      "relaxed_caps": false,
       "resolved": false,
       "won": null,
       "pnl": 0.0
@@ -1827,5 +1865,5 @@
   ],
   "halted": false,
   "halt_reason": "3 tap p\u00e5 rad (backtestens verste var 2)",
-  "updated": "2026-08-24T16:06:26.579255+00:00"
+  "updated": "2026-08-24T17:07:52.896943+00:00"
 }
