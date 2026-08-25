@@ -1937,9 +1937,28 @@
       "resolved": false,
       "won": null,
       "pnl": 0.0
+    },
+    {
+      "token_id": "69195305491330158914825973962405172238908419105373247620145652150297273405057",
+      "market_id": "3866182",
+      "question": "Will Ethereum dip to $2,350 on August 25?",
+      "asset": "ETH",
+      "outcome": "No",
+      "resolution_day": "2026-08-26",
+      "entered_at": "2026-08-25T18:00:26.475092+00:00",
+      "price": 0.98,
+      "midpoint": 0.9784999999999999,
+      "cost_cents": 0.15000000000000568,
+      "shares": 25.510204081632654,
+      "notional": 25.0,
+      "dry_run": true,
+      "relaxed_caps": false,
+      "resolved": false,
+      "won": null,
+      "pnl": 0.0
     }
   ],
   "halted": false,
   "halt_reason": "3 tap p\u00e5 rad (backtestens verste var 2)",
-  "updated": "2026-08-25T17:08:10.198054+00:00"
+  "updated": "2026-08-25T18:00:26.475935+00:00"
 }

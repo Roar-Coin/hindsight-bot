@@ -101,3 +101,4 @@ timestamp,mode,asset,outcome,question,resolution_day,best_ask,midpoint,vwap,cost
 2026-08-25T06:00:41.512444+00:00,dry,BTC,Yes,"Will the price of Bitcoin be above $78,000 on August 25?",2026-08-25,0.9710,0.9705,0.9710,0.050,25.75,25.00,3829623
 2026-08-25T07:27:31.709481+00:00,dry,SOL,Up,Solana Up or Down on August 25?,2026-08-25,0.9650,0.9625,0.9650,0.250,25.91,25.00,3809908
 2026-08-25T17:08:10.197319+00:00,dry,BTC,No,"Will Bitcoin reach $83,000 on August 25?",2026-08-26,0.9880,0.9840,0.9880,0.400,25.30,25.00,3866080
+2026-08-25T18:00:26.475092+00:00,dry,ETH,No,"Will Ethereum dip to $2,350 on August 25?",2026-08-26,0.9800,0.9785,0.9800,0.150,25.51,25.00,3866182
