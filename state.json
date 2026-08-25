@@ -1915,6 +1915,25 @@
       "notional": 25.0,
       "dry_run": true,
       "relaxed_caps": false,
+      "resolved": true,
+      "won": true,
+      "pnl": 0.9067357512953365
+    },
+    {
+      "token_id": "71140321052542372926046740727216570371228807519463249364801454684712887955469",
+      "market_id": "3866080",
+      "question": "Will Bitcoin reach $83,000 on August 25?",
+      "asset": "BTC",
+      "outcome": "No",
+      "resolution_day": "2026-08-26",
+      "entered_at": "2026-08-25T17:08:10.197319+00:00",
+      "price": 0.988,
+      "midpoint": 0.984,
+      "cost_cents": 0.40000000000000036,
+      "shares": 25.303643724696357,
+      "notional": 25.0,
+      "dry_run": true,
+      "relaxed_caps": false,
       "resolved": false,
       "won": null,
       "pnl": 0.0
@@ -1922,5 +1941,5 @@
   ],
   "halted": false,
   "halt_reason": "3 tap p\u00e5 rad (backtestens verste var 2)",
-  "updated": "2026-08-25T16:10:37.742711+00:00"
+  "updated": "2026-08-25T17:08:10.198054+00:00"
 }
