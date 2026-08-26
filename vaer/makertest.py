@@ -51,9 +51,23 @@ MAX_LIV_MIN = 30      # kanseller ufylte ordrer etter dette. En ekte maker
 REQ_PAUSE = 0.15
 
 RUN = os.environ.get("GITHUB_RUN_ID") or datetime.now(timezone.utc).strftime("%Y%m%d-%H%M")
-LOG_DIR, STATE_DIR = "maker", "maker-state"
-LOG = os.path.join(LOG_DIR, f"{RUN}.jsonl")
-STATE = os.path.join(STATE_DIR, f"{RUN}.json")
+
+# Kategori settes med --tag. Hver kategori faar egne mapper, ellers blandes
+# vaerdata og cryptodata i samme rapport.
+TAG = {"slug": "weather", "id": None}
+LOG_DIR = STATE_DIR = LOG = STATE = None
+
+
+def sett_kategori(slug):
+    global LOG_DIR, STATE_DIR, LOG, STATE
+    TAG["slug"] = slug
+    LOG_DIR = "maker" if slug == "weather" else f"maker-{slug}"
+    STATE_DIR = LOG_DIR + "-state"
+    LOG = os.path.join(LOG_DIR, f"{RUN}.jsonl")
+    STATE = os.path.join(STATE_DIR, f"{RUN}.json")
+
+
+sett_kategori("weather")
 
 
 # ── Bok ───────────────────────────────────────────────────────────────────
@@ -122,7 +136,20 @@ def midt(tid):
 
 
 # ── Markeder ──────────────────────────────────────────────────────────────
-def markeder(tag=WEATHER_TAG):
+def markeder(tag=None):
+    if tag is None:
+        if TAG["id"] is None:
+            if TAG["slug"] == "weather":
+                TAG["id"] = WEATHER_TAG
+            else:
+                d = get(f"{GAMMA}/tags/slug/{TAG['slug']}")
+                if isinstance(d, list):
+                    d = d[0] if d else None
+                TAG["id"] = (d or {}).get("id")
+                if not TAG["id"]:
+                    print(f"fant ingen tag-id for '{TAG['slug']}'", file=sys.stderr)
+                    return []
+        tag = TAG["id"]
     naa = datetime.now(timezone.utc)
     lo, hi = _iso(naa), _iso(naa + timedelta(days=HORIZON_DAYS))
     ut, offset = [], 0
@@ -137,6 +164,8 @@ def markeder(tag=WEATHER_TAG):
             if m.get("closed"):
                 continue
             if float(m.get("volumeNum") or m.get("volume") or 0) < MIN_VOLUME:
+                continue
+            if categorize(m) != TAG["slug"]:
                 continue
             ut.append(m)
         offset += len(batch)
@@ -487,7 +516,11 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("cmd", choices=["watch", "report", "probe-trades", "probe-fill"])
     ap.add_argument("--minutes", type=int, default=0)
+    ap.add_argument("--tag", default="weather",
+                    help="kategori-slug: weather, crypto, sports, politics ...")
     a = ap.parse_args()
+    sett_kategori(a.tag)
+    print(f"kategori: {a.tag}", file=sys.stderr)
     if a.cmd == "report":
         return report()
     if a.cmd == "probe-trades":
