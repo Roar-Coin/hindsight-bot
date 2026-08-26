@@ -1972,9 +1972,9 @@
       "notional": 25.0,
       "dry_run": true,
       "relaxed_caps": false,
-      "resolved": false,
-      "won": null,
-      "pnl": 0.0
+      "resolved": true,
+      "won": true,
+      "pnl": 0.5362614913176706
     },
     {
       "token_id": "45510240715020106620005931497466635797931224403156698252027716412453416559374",
@@ -1991,6 +1991,44 @@
       "notional": 25.0,
       "dry_run": true,
       "relaxed_caps": false,
+      "resolved": true,
+      "won": true,
+      "pnl": 0.3549695740365131
+    },
+    {
+      "token_id": "42772976259014519540295852038685951119253984544409732633000027228497091518931",
+      "market_id": "3895989",
+      "question": "Will Bitcoin dip to $76,000 on August 26?",
+      "asset": "BTC",
+      "outcome": "No",
+      "resolution_day": "2026-08-27",
+      "entered_at": "2026-08-26T18:21:12.797302+00:00",
+      "price": 0.98,
+      "midpoint": 0.9755,
+      "cost_cents": 0.44999999999999485,
+      "shares": 25.510204081632654,
+      "notional": 25.0,
+      "dry_run": true,
+      "relaxed_caps": false,
+      "resolved": false,
+      "won": null,
+      "pnl": 0.0
+    },
+    {
+      "token_id": "16555601984922735010831751672808628191892370112116364700939511461999547590423",
+      "market_id": "3896032",
+      "question": "Will Ethereum dip to $2,350 on August 26?",
+      "asset": "ETH",
+      "outcome": "No",
+      "resolution_day": "2026-08-27",
+      "entered_at": "2026-08-26T18:21:13.583079+00:00",
+      "price": 0.988,
+      "midpoint": 0.983,
+      "cost_cents": 0.5000000000000004,
+      "shares": 25.303643724696357,
+      "notional": 25.0,
+      "dry_run": true,
+      "relaxed_caps": false,
       "resolved": false,
       "won": null,
       "pnl": 0.0
@@ -1998,5 +2036,5 @@
   ],
   "halted": false,
   "halt_reason": "3 tap p\u00e5 rad (backtestens verste var 2)",
-  "updated": "2026-08-26T16:03:10.491252+00:00"
+  "updated": "2026-08-26T18:21:13.583880+00:00"
 }
