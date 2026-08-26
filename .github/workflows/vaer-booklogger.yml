@@ -14,6 +14,11 @@ on:
         type: choice
         default: watch
         options: [watch, report, maker, maker-report, probe-trades, probe-fill, spread, probe]
+      kategori:
+        description: "kategori for maker / maker-report"
+        type: choice
+        default: weather
+        options: [weather, crypto, sports, politics, economy, stocks, culture, esports]
   schedule:
     - cron: "7 0,6,12,18 * * *"
 
@@ -51,7 +56,7 @@ jobs:
           git config user.email "actions@github.com"
 
           lagre () {
-            git add vaer/logg vaer/state vaer/maker vaer/maker-state 2>/dev/null || true
+            git add vaer/logg vaer/state vaer/maker* 2>/dev/null || true
             if git diff --staged --quiet; then
               echo "  (ingenting nytt å lagre)"
               return 0
@@ -78,20 +83,25 @@ jobs:
             probe)  cd vaer && python booklogger.py probe;  exit 0 ;;
             report) cd vaer && python booklogger.py report; exit 0 ;;
             spread) cd vaer && python booklogger.py spread; exit 0 ;;
-            maker-report) cd vaer && python makertest.py report; exit 0 ;;
+            maker-report) cd vaer && python makertest.py report \
+                            --tag "${{ inputs.kategori }}"; exit 0 ;;
             probe-trades) cd vaer && python makertest.py probe-trades; exit 0 ;;
             probe-fill) cd vaer && python makertest.py probe-fill; exit 0 ;;
           esac
 
           # maker: samme bolke-og-lagre-mønster som watch, annet skript.
           SKRIPT=booklogger.py
-          if [ "${{ inputs.kommando }}" = "maker" ]; then SKRIPT=makertest.py; fi
+          EKSTRA=""
+          if [ "${{ inputs.kommando }}" = "maker" ]; then
+            SKRIPT=makertest.py
+            EKSTRA="--tag ${{ inputs.kategori }}"
+          fi
 
           # Kortere bolker: forrige kjøring mistet 70 minutter med data da
           # lagringen feilet. Nå står maks 25 minutter på spill om gangen.
           for bolk in $(seq 1 12); do
             echo "── bolk $bolk av 12 ──"
-            ( cd vaer && python "$SKRIPT" watch --minutes 25 ) || true
+            ( cd vaer && python "$SKRIPT" watch --minutes 25 $EKSTRA ) || true
             lagre
           done
 
