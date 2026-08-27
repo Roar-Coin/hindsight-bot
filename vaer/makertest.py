@@ -136,6 +136,25 @@ def midt(tid):
 
 
 # ── Markeder ──────────────────────────────────────────────────────────────
+def referanse(tid, m=None, i=0):
+    """Pris til markout-maaling, med fallback.
+
+    /midpoint gir 404 naar markedet har gjort opp. Uten fallback ble markouten
+    None og falt ut av statistikken — altsaa forsvant nettopp de posisjonene
+    som gikk til null. Det er en skjevhet i optimistisk retning."""
+    p = midt(tid)
+    if p is not None:
+        return p, "mid"
+    p = siste(tid)
+    if p is not None:
+        return p, "siste"
+    if m is not None:
+        pr = _gamma_priser(m)
+        if i < len(pr):
+            return pr[i], "gamma"
+    return None, None
+
+
 def markeder(tag=None):
     if tag is None:
         if TAG["id"] is None:
@@ -248,7 +267,7 @@ def sweep(state):
                     ferdige.append(tid)
                 continue
             q["ventet_min"] = round((q["fylt"] - q["lagt"]) / 60, 1)
-            q["mid_ved_fyll"] = midt(tid)
+            q["mid_ved_fyll"] = referanse(tid, q.get("marked"), q.get("i", 0))[0]
             time.sleep(REQ_PAUSE)
             continue
 
@@ -257,10 +276,11 @@ def sweep(state):
         for h in MARKOUTS:
             n = f"mo{h}"
             if n not in q and alder >= h:
-                m = midt(tid)
+                m, kilde = referanse(tid, q.get("marked"), q.get("i", 0))
                 time.sleep(REQ_PAUSE)
                 # positiv = prisen gikk VAAR vei etter at vi kjopte
                 q[n] = round((m - q["bud"]) * 100, 3) if m is not None else None
+                q[f"kilde{h}"] = kilde
 
         if all(f"mo{h}" in q for h in MARKOUTS):
             skriv({**q, "tid": tid, "utfall": "maalt"})
@@ -288,6 +308,9 @@ def sweep(state):
             kv[tid] = {
                 "lagt": naa, "bud": bb, "ask": ba,
                 "cond": m.get("conditionId"),
+                "marked": {"outcomePrices": m.get("outcomePrices"),
+                           "clobTokenIds": m.get("clobTokenIds")},
+                "i": i,
                 "spread_c": round((ba - bb) * 100, 2),
                 "fanget_c": round((ba - bb) / 2 * 100, 2),  # vs midtpunkt
                 "foran_i_ko": round(foran, 2),
@@ -365,6 +388,13 @@ def report():
         xs_s = sorted(xs)
         print(f"  etter {h:>3} min   {s:+.2f}¢   median {xs_s[len(xs)//2]:+.2f}¢"
               f"   verste {xs_s[0]:+.2f}¢")
+
+    h_max = max(MARKOUTS)
+    mangler = sum(1 for r in fylt if r.get(f"mo{h_max}") is None)
+    ikke_mid = sum(1 for r in fylt if r.get(f"kilde{h_max}") not in (None, "mid"))
+    if mangler or ikke_mid:
+        print(f"\n  {mangler} av {len(fylt)} mangler markout helt;"
+              f" {ikke_mid} maalt uten midtpunkt (marked gjort opp)")
 
     print(f"\nNETTO = fanget spread + markout")
     for h, v in netto.items():
