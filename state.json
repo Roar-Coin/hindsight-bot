@@ -2086,6 +2086,44 @@
       "notional": 25.0,
       "dry_run": true,
       "relaxed_caps": false,
+      "resolved": true,
+      "won": true,
+      "pnl": 0.3549695740365131
+    },
+    {
+      "token_id": "64571660946076468390156164385908312598752035502070448998742397543557911643206",
+      "market_id": "3933080",
+      "question": "Ethereum Up or Down on August 29?",
+      "asset": "ETH",
+      "outcome": "Down",
+      "resolution_day": "2026-08-29",
+      "entered_at": "2026-08-29T09:20:35.346311+00:00",
+      "price": 0.979,
+      "midpoint": 0.9704999999999999,
+      "cost_cents": 0.8500000000000063,
+      "shares": 25.53626149131767,
+      "notional": 25.0,
+      "dry_run": true,
+      "relaxed_caps": false,
+      "resolved": false,
+      "won": null,
+      "pnl": 0.0
+    },
+    {
+      "token_id": "67008316987512810262477299738615463791127974191718312116586408753401091179247",
+      "market_id": "3933071",
+      "question": "Bitcoin Up or Down on August 29?",
+      "asset": "BTC",
+      "outcome": "Down",
+      "resolution_day": "2026-08-29",
+      "entered_at": "2026-08-29T09:20:38.603383+00:00",
+      "price": 0.968,
+      "midpoint": 0.9644999999999999,
+      "cost_cents": 0.35000000000000586,
+      "shares": 25.826446280991735,
+      "notional": 25.0,
+      "dry_run": true,
+      "relaxed_caps": false,
       "resolved": false,
       "won": null,
       "pnl": 0.0
@@ -2093,5 +2131,5 @@
   ],
   "halted": false,
   "halt_reason": "3 tap p\u00e5 rad (backtestens verste var 2)",
-  "updated": "2026-08-29T02:24:50.526955+00:00"
+  "updated": "2026-08-29T09:20:38.604244+00:00"
 }
