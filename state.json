@@ -2127,9 +2127,28 @@
       "resolved": true,
       "won": true,
       "pnl": 0.8264462809917354
+    },
+    {
+      "token_id": "44584192077447605807773657582758403842246477828528319456106821388202719901292",
+      "market_id": "3965715",
+      "question": "Will Bitcoin reach $80,000 on August 29?",
+      "asset": "BTC",
+      "outcome": "No",
+      "resolution_day": "2026-08-30",
+      "entered_at": "2026-08-29T21:55:27.600929+00:00",
+      "price": 0.981,
+      "midpoint": 0.977,
+      "cost_cents": 0.40000000000000036,
+      "shares": 25.4841997961264,
+      "notional": 25.0,
+      "dry_run": true,
+      "relaxed_caps": false,
+      "resolved": false,
+      "won": null,
+      "pnl": 0.0
     }
   ],
   "halted": false,
   "halt_reason": "3 tap p\u00e5 rad (backtestens verste var 2)",
-  "updated": "2026-08-29T18:47:56.351022+00:00"
+  "updated": "2026-08-29T21:55:27.601547+00:00"
 }
