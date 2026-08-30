@@ -112,3 +112,5 @@ timestamp,mode,asset,outcome,question,resolution_day,best_ask,midpoint,vwap,cost
 2026-08-29T09:20:35.346311+00:00,dry,ETH,Down,Ethereum Up or Down on August 29?,2026-08-29,0.9790,0.9705,0.9790,0.850,25.54,25.00,3933080
 2026-08-29T09:20:38.603383+00:00,dry,BTC,Down,Bitcoin Up or Down on August 29?,2026-08-29,0.9680,0.9645,0.9680,0.350,25.83,25.00,3933071
 2026-08-29T21:55:27.600929+00:00,dry,BTC,No,"Will Bitcoin reach $80,000 on August 29?",2026-08-30,0.9810,0.9770,0.9810,0.400,25.48,25.00,3965715
+2026-08-30T17:44:31.735627+00:00,dry,ETH,No,"Will Ethereum reach $2,600 August 24-30?",2026-08-31,0.9630,0.9585,0.9630,0.450,25.96,25.00,3829972
+2026-08-30T17:44:37.201106+00:00,dry,BTC,No,"Will Bitcoin reach $82,000 August 24-30?",2026-08-31,0.9790,0.9755,0.9790,0.350,25.54,25.00,3829882
