@@ -44,6 +44,10 @@ SIZE = 100.0          # $ per simulert ordre
 POLL_SEC = 120
 MARKOUTS = (5, 30, 120)   # minutter etter fyll
 MAX_KVOTER = 400      # tak paa samtidige simulerte ordrer
+MIN_TIMER_TIL_OPPGJOR = 6   # ikke kvoter markeder som snart gjores opp. Naer
+                            # oppgjor dumper informerte den tapende siden, og
+                            # et hvilende bud tar imot. Det er retningsvedd,
+                            # ikke market making.
 MAX_LIV_MIN = 30      # kanseller ufylte ordrer etter dette. En ekte maker
                       # trekker kvoten naar markedet beveger seg; en ordre som
                       # ligger i 12 timer fanger hver eneste nedtur og blir
@@ -136,7 +140,7 @@ def midt(tid):
 
 
 # ── Markeder ──────────────────────────────────────────────────────────────
-def referanse(tid, m=None, i=0):
+def referanse(tid, cond=None, i=0):
     """Pris til markout-maaling, med fallback.
 
     /midpoint gir 404 naar markedet har gjort opp. Uten fallback ble markouten
@@ -148,10 +152,15 @@ def referanse(tid, m=None, i=0):
     p = siste(tid)
     if p is not None:
         return p, "siste"
-    if m is not None:
-        pr = _gamma_priser(m)
-        if i < len(pr):
-            return pr[i], "gamma"
+    # NB: her maa markedet hentes PAA NYTT. Et lagret oyeblikksbilde fra
+    # kvotetidspunktet gir prisen vi allerede kjente, ikke oppgjorsverdien,
+    # og ville rapportert markout ~0 for nettopp de markedene som gjorde opp.
+    if cond:
+        d = get(f"{GAMMA}/markets", {"condition_ids": cond, "limit": 1})
+        if isinstance(d, list) and d:
+            pr = _gamma_priser(d[0])
+            if i < len(pr):
+                return pr[i], "gamma-fersk"
     return None, None
 
 
@@ -267,7 +276,7 @@ def sweep(state):
                     ferdige.append(tid)
                 continue
             q["ventet_min"] = round((q["fylt"] - q["lagt"]) / 60, 1)
-            q["mid_ved_fyll"] = referanse(tid, q.get("marked"), q.get("i", 0))[0]
+            q["mid_ved_fyll"] = referanse(tid, q.get("cond"), q.get("i", 0))[0]
             time.sleep(REQ_PAUSE)
             continue
 
@@ -276,7 +285,7 @@ def sweep(state):
         for h in MARKOUTS:
             n = f"mo{h}"
             if n not in q and alder >= h:
-                m, kilde = referanse(tid, q.get("marked"), q.get("i", 0))
+                m, kilde = referanse(tid, q.get("cond"), q.get("i", 0))
                 time.sleep(REQ_PAUSE)
                 # positiv = prisen gikk VAAR vei etter at vi kjopte
                 q[n] = round((m - q["bud"]) * 100, 3) if m is not None else None
@@ -301,6 +310,15 @@ def sweep(state):
             p = pr[i] if i < len(pr) else None
             if p is None or not (BAND[0] <= p <= BAND[1]):
                 continue
+            slutt = m.get("endDate")
+            if slutt:
+                try:
+                    igjen = (datetime.fromisoformat(slutt.replace("Z", "+00:00"))
+                             - datetime.now(timezone.utc)).total_seconds() / 3600
+                    if igjen < MIN_TIMER_TIL_OPPGJOR:
+                        continue
+                except Exception:
+                    pass
             bb, ba, foran = topp(tid)
             time.sleep(REQ_PAUSE)
             if bb is None or ba - bb < MIN_SPREAD:
@@ -395,6 +413,25 @@ def report():
     if mangler or ikke_mid:
         print(f"\n  {mangler} av {len(fylt)} mangler markout helt;"
               f" {ikke_mid} maalt uten midtpunkt (marked gjort opp)")
+
+    # De to risikoene er ulike i natur og maa skilles: prisbevegelse mot deg
+    # (ugunstig utvalg) er noe en maker kan styre med raskere requoting.
+    # Oppgjor er binaert og kan ikke styres bort.
+    h = max(MARKOUTS)
+    med = [r for r in fylt if r.get(f"mo{h}") is not None]
+    oppg = [r for r in med if abs(r[f"mo{h}"]) > 20
+            or r.get(f"kilde{h}") in ("siste", "gamma-fersk")]
+    vanlig = [r for r in med if r not in oppg]
+    if oppg and vanlig:
+        so = snitt([r[f"mo{h}"] for r in oppg])
+        sv = snitt([r[f"mo{h}"] for r in vanlig])
+        print(f"\nSPLITT etter {h} min")
+        print(f"  markeder som gjorde opp   {len(oppg):4}  markout {so:+.2f}¢"
+              f"   netto {fanget + so:+.2f}¢")
+        print(f"  vanlig handel             {len(vanlig):4}  markout {sv:+.2f}¢"
+              f"   netto {fanget + sv:+.2f}¢")
+        print(f"  -> er nettoen positiv paa vanlig handel og negativ paa oppgjor,")
+        print(f"     er problemet NAERHET TIL OPPGJOR, ikke market making i seg selv.")
 
     print(f"\nNETTO = fanget spread + markout")
     for h, v in netto.items():
