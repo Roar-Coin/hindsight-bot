@@ -2162,9 +2162,9 @@
       "notional": 25.0,
       "dry_run": true,
       "relaxed_caps": false,
-      "resolved": false,
-      "won": null,
-      "pnl": 0.0
+      "resolved": true,
+      "won": true,
+      "pnl": 0.9605399792315694
     },
     {
       "token_id": "73367041246341170527720231337313016733960472780903401857821304467042719132271",
@@ -2181,12 +2181,12 @@
       "notional": 25.0,
       "dry_run": true,
       "relaxed_caps": false,
-      "resolved": false,
-      "won": null,
-      "pnl": 0.0
+      "resolved": true,
+      "won": true,
+      "pnl": 0.5362614913176706
     }
   ],
   "halted": false,
   "halt_reason": "3 tap p\u00e5 rad (backtestens verste var 2)",
-  "updated": "2026-08-30T23:47:26.742074+00:00"
+  "updated": "2026-08-31T06:00:47.618096+00:00"
 }
