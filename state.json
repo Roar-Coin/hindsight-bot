@@ -2355,9 +2355,28 @@
       "resolved": false,
       "won": null,
       "pnl": 0.0
+    },
+    {
+      "token_id": "78683715938190530034764416196718452721990588221281087161839792974188598181808",
+      "market_id": "4180425",
+      "question": "Will Ethereum reach $2,600 on September 3?",
+      "asset": "ETH",
+      "outcome": "No",
+      "resolution_day": "2026-09-04",
+      "entered_at": "2026-09-03T21:51:47.463714+00:00",
+      "price": 0.975,
+      "midpoint": 0.9675,
+      "cost_cents": 0.7499999999999951,
+      "shares": 25.641025641025642,
+      "notional": 25.0,
+      "dry_run": true,
+      "relaxed_caps": false,
+      "resolved": false,
+      "won": null,
+      "pnl": 0.0
     }
   ],
   "halted": false,
   "halt_reason": "3 tap p\u00e5 rad (backtestens verste var 2)",
-  "updated": "2026-09-03T18:51:11.236593+00:00"
+  "updated": "2026-09-03T21:51:47.464630+00:00"
 }
