@@ -2336,9 +2336,28 @@
       "resolved": true,
       "won": true,
       "pnl": 0.3549695740365131
+    },
+    {
+      "token_id": "3024935701954039900158658069892231596718594536695056973848090725211153222745",
+      "market_id": "4180404",
+      "question": "Will Bitcoin dip to $77,000 on September 3?",
+      "asset": "BTC",
+      "outcome": "No",
+      "resolution_day": "2026-09-04",
+      "entered_at": "2026-09-03T18:51:11.235900+00:00",
+      "price": 0.987,
+      "midpoint": 0.983,
+      "cost_cents": 0.40000000000000036,
+      "shares": 25.329280648429584,
+      "notional": 25.0,
+      "dry_run": true,
+      "relaxed_caps": false,
+      "resolved": false,
+      "won": null,
+      "pnl": 0.0
     }
   ],
   "halted": false,
   "halt_reason": "3 tap p\u00e5 rad (backtestens verste var 2)",
-  "updated": "2026-09-03T14:42:31.019310+00:00"
+  "updated": "2026-09-03T18:51:11.236593+00:00"
 }

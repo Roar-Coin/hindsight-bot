@@ -122,3 +122,4 @@ timestamp,mode,asset,outcome,question,resolution_day,best_ask,midpoint,vwap,cost
 2026-09-02T09:52:22.717183+00:00,dry,ETH,Yes,"Will the price of Ethereum be above $2,300 on September 2?",2026-09-02,0.9600,0.9575,0.9600,0.250,26.04,25.00,3903714
 2026-09-02T18:55:47.346505+00:00,dry,BTC,No,"Will Bitcoin reach $79,000 on September 2?",2026-09-03,0.9690,0.9595,0.9690,0.950,25.80,25.00,4104818
 2026-09-02T18:55:49.893794+00:00,dry,ETH,No,"Will Ethereum dip to $2,300 on September 2?",2026-09-03,0.9860,0.9780,0.9860,0.800,25.35,25.00,4104851
+2026-09-03T18:51:11.235900+00:00,dry,BTC,No,"Will Bitcoin dip to $77,000 on September 3?",2026-09-04,0.9870,0.9830,0.9870,0.400,25.33,25.00,4180404
