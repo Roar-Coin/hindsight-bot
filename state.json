@@ -2412,9 +2412,28 @@
       "resolved": true,
       "won": true,
       "pnl": 0.48419979612640063
+    },
+    {
+      "token_id": "73407101474262476376335820981265461051070348917958827425366083015144275103233",
+      "market_id": "4205701",
+      "question": "Will Bitcoin reach $82,000 on September 4?",
+      "asset": "BTC",
+      "outcome": "No",
+      "resolution_day": "2026-09-05",
+      "entered_at": "2026-09-04T20:59:41.495903+00:00",
+      "price": 0.986,
+      "midpoint": 0.983,
+      "cost_cents": 0.20000000000001128,
+      "shares": 25.354969574036513,
+      "notional": 25.0,
+      "dry_run": true,
+      "relaxed_caps": false,
+      "resolved": false,
+      "won": null,
+      "pnl": 0.0
     }
   ],
   "halted": false,
   "halt_reason": "3 tap p\u00e5 rad (backtestens verste var 2)",
-  "updated": "2026-09-04T17:45:03.402504+00:00"
+  "updated": "2026-09-04T20:59:41.496568+00:00"
 }
