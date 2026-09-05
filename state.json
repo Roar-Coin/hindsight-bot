@@ -2431,9 +2431,47 @@
       "resolved": true,
       "won": true,
       "pnl": 0.3549695740365131
+    },
+    {
+      "token_id": "110587349779240740976933033670286210551664598147534041755020364867803908155510",
+      "market_id": "4237410",
+      "question": "Will Bitcoin reach $81,000 on September 5?",
+      "asset": "BTC",
+      "outcome": "No",
+      "resolution_day": "2026-09-06",
+      "entered_at": "2026-09-05T21:37:40.137015+00:00",
+      "price": 0.979,
+      "midpoint": 0.9724999999999999,
+      "cost_cents": 0.6500000000000061,
+      "shares": 25.53626149131767,
+      "notional": 25.0,
+      "dry_run": true,
+      "relaxed_caps": false,
+      "resolved": false,
+      "won": null,
+      "pnl": 0.0
+    },
+    {
+      "token_id": "40964675870365701864141577014510515593362484583990653554283348087694615170029",
+      "market_id": "4237494",
+      "question": "Will Ethereum reach $2,550 on September 5?",
+      "asset": "ETH",
+      "outcome": "No",
+      "resolution_day": "2026-09-06",
+      "entered_at": "2026-09-05T21:37:41.846608+00:00",
+      "price": 0.979,
+      "midpoint": 0.9695,
+      "cost_cents": 0.9499999999999953,
+      "shares": 25.53626149131767,
+      "notional": 25.0,
+      "dry_run": true,
+      "relaxed_caps": false,
+      "resolved": false,
+      "won": null,
+      "pnl": 0.0
     }
   ],
   "halted": false,
   "halt_reason": "3 tap p\u00e5 rad (backtestens verste var 2)",
-  "updated": "2026-09-05T19:22:44.425836+00:00"
+  "updated": "2026-09-05T21:37:41.847418+00:00"
 }
