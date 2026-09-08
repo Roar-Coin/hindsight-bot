@@ -204,6 +204,30 @@ class Candidate:
         return f"{self.resolution_day}:{self.asset}"
 
 
+VOLUME_FIELDS = (
+    "volumeNum", "volume", "volumeClob", "volume24hr",
+    "volume24hrClob", "volume1wk", "volume1wkClob", "volume1mo",
+)
+
+
+def market_volume(m: dict) -> float:
+    """Les volum uten å anta ett feltnavn.
+
+    Gamma har flyttet på disse feltene før. Vi tar det største tallet vi
+    finner blant kjente kandidater i stedet for å stole på ett av dem.
+    """
+    best = 0.0
+    for key in VOLUME_FIELDS:
+        raw = m.get(key)
+        if raw in (None, ""):
+            continue
+        try:
+            best = max(best, float(raw))
+        except (TypeError, ValueError):
+            continue
+    return best
+
+
 class GammaClient:
     def __init__(self, cfg: Config = CFG):
         self.cfg = cfg
@@ -261,6 +285,7 @@ class GammaClient:
         cands: list[Candidate] = []
         f = {"rå": 0, "åpen": 0, "krypto": 0, "tidsvindu": 0, "volum": 0, "tokens": 0}
         samples: list[str] = []
+        vol_samples: list[dict] = []
         for m in self.open_markets():
             f["rå"] += 1
             if m.get("closed") or not m.get("active"):
@@ -285,8 +310,10 @@ class GammaClient:
                 continue
             f["tidsvindu"] += 1
 
-            volume = float(m.get("volumeNum") or m.get("volume") or 0)
+            volume = market_volume(m)
             if volume < self.cfg.min_volume_usd:
+                if len(vol_samples) < 3:
+                    vol_samples.append(m)
                 continue
             f["volum"] += 1
 
@@ -322,6 +349,16 @@ class GammaClient:
             log.info("Ingen krypto funnet. Eksempler på titler som kom inn:")
             for s in samples:
                 log.info("   · %s", s[:90])
+
+        if f["tidsvindu"] > 0 and f["volum"] == 0 and vol_samples:
+            log.warning("VOLUMFILTERET DREPER ALT — feltet er trolig borte fra Gamma.")
+            m = vol_samples[0]
+            found = {k: m.get(k) for k in VOLUME_FIELDS if m.get(k) not in (None, "")}
+            log.warning("Volumfelt funnet i svaret: %s", found or "ingen")
+            vol_like = [k for k in m if "volum" in k.lower() or "liquid" in k.lower()]
+            log.warning("Felt som ligner på volum: %s", vol_like)
+            log.warning("Alle nøkler: %s", sorted(m.keys()))
+
         return cands
 
 
