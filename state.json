@@ -2545,9 +2545,47 @@
       "resolved": true,
       "won": true,
       "pnl": 0.27805864509605627
+    },
+    {
+      "token_id": "87509140974409996526174947156630507214692610402846021242935492225982134932070",
+      "market_id": "4354842",
+      "question": "Will Bitcoin dip to $77,000 on September 8?",
+      "asset": "BTC",
+      "outcome": "No",
+      "resolution_day": "2026-09-09",
+      "entered_at": "2026-09-08T18:32:17.516872+00:00",
+      "price": 0.97,
+      "midpoint": 0.955,
+      "cost_cents": 0.7301587301587364,
+      "shares": 25.77319587628866,
+      "notional": 25.0,
+      "dry_run": true,
+      "relaxed_caps": false,
+      "resolved": false,
+      "won": null,
+      "pnl": 0.0
+    },
+    {
+      "token_id": "109816571162937276246335367467700158917111630353352116342409910592786021486702",
+      "market_id": "4354886",
+      "question": "Will Ethereum dip to $2,400 on September 8?",
+      "asset": "ETH",
+      "outcome": "No",
+      "resolution_day": "2026-09-09",
+      "entered_at": "2026-09-08T18:32:19.581903+00:00",
+      "price": 0.987,
+      "midpoint": 0.984,
+      "cost_cents": 0.30000000000000027,
+      "shares": 25.329280648429584,
+      "notional": 25.0,
+      "dry_run": true,
+      "relaxed_caps": false,
+      "resolved": false,
+      "won": null,
+      "pnl": 0.0
     }
   ],
   "halted": false,
   "halt_reason": "3 tap p\u00e5 rad (backtestens verste var 2)",
-  "updated": "2026-09-08T14:44:48.031983+00:00"
+  "updated": "2026-09-08T18:32:19.582796+00:00"
 }
