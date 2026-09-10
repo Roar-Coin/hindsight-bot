@@ -2602,9 +2602,28 @@
       "resolved": true,
       "won": true,
       "pnl": 0.8799171842650111
+    },
+    {
+      "token_id": "109235630045092822446110719312280573818550869557133053455127264063628607047162",
+      "market_id": "4199716",
+      "question": "Will Trump say \"Crypto\" or \"Cryptocurrency\" or \"Bitcoin\" during RNC Convention?",
+      "asset": "BTC",
+      "outcome": "No",
+      "resolution_day": "2026-09-10",
+      "entered_at": "2026-09-10T14:36:49.731262+00:00",
+      "price": 0.975,
+      "midpoint": 0.9675,
+      "cost_cents": 0.7301140567324116,
+      "shares": 25.641025641025642,
+      "notional": 25.0,
+      "dry_run": true,
+      "relaxed_caps": false,
+      "resolved": false,
+      "won": null,
+      "pnl": 0.0
     }
   ],
   "halted": false,
   "halt_reason": "3 tap p\u00e5 rad (backtestens verste var 2)",
-  "updated": "2026-09-10T10:00:07.119120+00:00"
+  "updated": "2026-09-10T14:36:49.731982+00:00"
 }

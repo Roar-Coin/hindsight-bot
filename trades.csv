@@ -136,3 +136,4 @@ timestamp,mode,asset,outcome,question,resolution_day,best_ask,midpoint,vwap,cost
 2026-09-08T18:32:17.516872+00:00,dry,BTC,No,"Will Bitcoin dip to $77,000 on September 8?",2026-09-09,0.9700,0.9550,0.9700,0.730,25.77,25.00,4354842
 2026-09-08T18:32:19.581903+00:00,dry,ETH,No,"Will Ethereum dip to $2,400 on September 8?",2026-09-09,0.9870,0.9840,0.9870,0.300,25.33,25.00,4354886
 2026-09-09T18:49:34.482920+00:00,dry,BTC,No,"Will Bitcoin dip to $77,000 on September 9?",2026-09-10,0.9660,0.9585,0.9660,0.750,25.88,25.00,4398658
+2026-09-10T14:36:49.731262+00:00,dry,BTC,No,"Will Trump say ""Crypto"" or ""Cryptocurrency"" or ""Bitcoin"" during RNC Convention?",2026-09-10,0.9750,0.9675,0.9750,0.730,25.64,25.00,4199716
