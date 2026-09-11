@@ -2618,9 +2618,9 @@
       "notional": 25.0,
       "dry_run": true,
       "relaxed_caps": false,
-      "resolved": false,
-      "won": null,
-      "pnl": 0.0
+      "resolved": true,
+      "won": true,
+      "pnl": 0.6410256410256423
     },
     {
       "token_id": "98013920757864301715540393086018729187816405538990974326835633695820393450378",
@@ -2637,9 +2637,9 @@
       "notional": 25.0,
       "dry_run": true,
       "relaxed_caps": false,
-      "resolved": false,
-      "won": null,
-      "pnl": 0.0
+      "resolved": true,
+      "won": true,
+      "pnl": 0.30364372469635725
     },
     {
       "token_id": "49700369030165364599407493476328150238556197038258952318915765428930525280556",
@@ -2656,6 +2656,44 @@
       "notional": 25.0,
       "dry_run": true,
       "relaxed_caps": false,
+      "resolved": true,
+      "won": true,
+      "pnl": 0.27805864509605627
+    },
+    {
+      "token_id": "113928053478505712529170670473175635099459417281426662226491466260744080443126",
+      "market_id": "4216755",
+      "question": "Will the price of Bitcoin be between $72,000 and $74,000 on September 11?",
+      "asset": "BTC",
+      "outcome": "No",
+      "resolution_day": "2026-09-11",
+      "entered_at": "2026-09-11T06:35:31.848215+00:00",
+      "price": 0.988,
+      "midpoint": 0.987,
+      "cost_cents": 0.10000000000000009,
+      "shares": 25.303643724696357,
+      "notional": 25.0,
+      "dry_run": true,
+      "relaxed_caps": false,
+      "resolved": false,
+      "won": null,
+      "pnl": 0.0
+    },
+    {
+      "token_id": "99968479606100811783169194235682463559368368897552399962867000378456852476053",
+      "market_id": "4216762",
+      "question": "Will the price of Ethereum be above $2,600 on September 11?",
+      "asset": "ETH",
+      "outcome": "No",
+      "resolution_day": "2026-09-11",
+      "entered_at": "2026-09-11T06:35:33.564830+00:00",
+      "price": 0.989,
+      "midpoint": 0.9844999999999999,
+      "cost_cents": 0.3709432454036876,
+      "shares": 25.278058645096056,
+      "notional": 25.0,
+      "dry_run": true,
+      "relaxed_caps": false,
       "resolved": false,
       "won": null,
       "pnl": 0.0
@@ -2663,5 +2701,5 @@
   ],
   "halted": false,
   "halt_reason": "3 tap p\u00e5 rad (backtestens verste var 2)",
-  "updated": "2026-09-11T01:24:06.944643+00:00"
+  "updated": "2026-09-11T06:35:33.565542+00:00"
 }
