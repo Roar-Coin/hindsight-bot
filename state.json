@@ -2697,9 +2697,28 @@
       "resolved": true,
       "won": true,
       "pnl": 0.27805864509605627
+    },
+    {
+      "token_id": "39078175144722517718318595557887979944599327503920120804672637134481116039049",
+      "market_id": "4489665",
+      "question": "Will Bitcoin reach $78,000 on September 12?",
+      "asset": "BTC",
+      "outcome": "No",
+      "resolution_day": "2026-09-13",
+      "entered_at": "2026-09-12T21:36:52.308394+00:00",
+      "price": 0.983,
+      "midpoint": 0.9724999999999999,
+      "cost_cents": 0.9500000000000175,
+      "shares": 25.4323499491353,
+      "notional": 25.0,
+      "dry_run": true,
+      "relaxed_caps": false,
+      "resolved": false,
+      "won": null,
+      "pnl": 0.0
     }
   ],
   "halted": false,
   "halt_reason": "3 tap p\u00e5 rad (backtestens verste var 2)",
-  "updated": "2026-09-12T19:37:05.193947+00:00"
+  "updated": "2026-09-12T21:36:52.309572+00:00"
 }
