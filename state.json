@@ -2713,12 +2713,12 @@
       "notional": 25.0,
       "dry_run": true,
       "relaxed_caps": false,
-      "resolved": false,
-      "won": null,
-      "pnl": 0.0
+      "resolved": true,
+      "won": true,
+      "pnl": 0.43234994913530045
     }
   ],
   "halted": false,
   "halt_reason": "3 tap p\u00e5 rad (backtestens verste var 2)",
-  "updated": "2026-09-13T01:22:13.400574+00:00"
+  "updated": "2026-09-13T06:43:09.155322+00:00"
 }
