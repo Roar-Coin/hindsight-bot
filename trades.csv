@@ -145,3 +145,4 @@ timestamp,mode,asset,outcome,question,resolution_day,best_ask,midpoint,vwap,cost
 2026-09-13T19:42:12.148797+00:00,dry,BTC,No,"Will Bitcoin dip to $76,000 September 7-13?",2026-09-14,0.9600,0.9550,0.9600,0.500,26.04,25.00,4319473
 2026-09-14T21:02:18.710744+00:00,dry,BTC,No,"Will Bitcoin reach $81,000 on September 14?",2026-09-15,0.9870,0.9840,0.9870,0.300,25.33,25.00,4545825
 2026-09-14T21:02:20.404266+00:00,dry,ETH,No,"Will Ethereum reach $2,750 on September 14?",2026-09-15,0.9890,0.9880,0.9890,0.100,25.28,25.00,4545861
+2026-09-15T19:09:58.757856+00:00,dry,BTC,No,"Will Bitcoin reach $80,000 on September 15?",2026-09-16,0.9830,0.9815,0.9830,0.150,25.43,25.00,4574333
