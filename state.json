@@ -2789,6 +2789,44 @@
       "notional": 25.0,
       "dry_run": true,
       "relaxed_caps": false,
+      "resolved": true,
+      "won": true,
+      "pnl": 0.43234994913530045
+    },
+    {
+      "token_id": "27900628719153356918406851911613993551989081618811957520321493202397572246322",
+      "market_id": "4412207",
+      "question": "Will the price of Bitcoin be between $72,000 and $74,000 on September 16?",
+      "asset": "BTC",
+      "outcome": "No",
+      "resolution_day": "2026-09-16",
+      "entered_at": "2026-09-16T06:38:43.472338+00:00",
+      "price": 0.968,
+      "midpoint": 0.9655,
+      "cost_cents": 0.24999999999999467,
+      "shares": 25.826446280991735,
+      "notional": 25.0,
+      "dry_run": true,
+      "relaxed_caps": false,
+      "resolved": false,
+      "won": null,
+      "pnl": 0.0
+    },
+    {
+      "token_id": "91599687509708918647065820091977057654635521808429188081259815974897403014826",
+      "market_id": "4412210",
+      "question": "Will the price of Ethereum be above $2,300 on September 16?",
+      "asset": "ETH",
+      "outcome": "Yes",
+      "resolution_day": "2026-09-16",
+      "entered_at": "2026-09-16T06:38:44.332325+00:00",
+      "price": 0.979,
+      "midpoint": 0.975,
+      "cost_cents": 0.40000000000000036,
+      "shares": 25.53626149131767,
+      "notional": 25.0,
+      "dry_run": true,
+      "relaxed_caps": false,
       "resolved": false,
       "won": null,
       "pnl": 0.0
@@ -2796,5 +2834,5 @@
   ],
   "halted": false,
   "halt_reason": "3 tap p\u00e5 rad (backtestens verste var 2)",
-  "updated": "2026-09-16T00:44:33.380606+00:00"
+  "updated": "2026-09-16T06:38:44.333408+00:00"
 }
