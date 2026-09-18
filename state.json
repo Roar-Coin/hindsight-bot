@@ -2960,6 +2960,25 @@
       "notional": 25.0,
       "dry_run": true,
       "relaxed_caps": false,
+      "resolved": true,
+      "won": true,
+      "pnl": 1.0688216892596465
+    },
+    {
+      "token_id": "2740824693256290203887178974916673344554421205443841745193848385893546132318",
+      "market_id": "4666413",
+      "question": "Will Ethereum reach $2,750 on September 18?",
+      "asset": "ETH",
+      "outcome": "No",
+      "resolution_day": "2026-09-19",
+      "entered_at": "2026-09-18T19:56:02.899630+00:00",
+      "price": 0.978,
+      "midpoint": 0.972,
+      "cost_cents": 0.5999999999999894,
+      "shares": 25.56237218813906,
+      "notional": 25.0,
+      "dry_run": true,
+      "relaxed_caps": false,
       "resolved": false,
       "won": null,
       "pnl": 0.0
@@ -2967,5 +2986,5 @@
   ],
   "halted": false,
   "halt_reason": "3 tap p\u00e5 rad (backtestens verste var 2)",
-  "updated": "2026-09-18T16:40:58.930528+00:00"
+  "updated": "2026-09-18T19:56:02.900489+00:00"
 }
