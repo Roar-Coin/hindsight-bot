@@ -2982,9 +2982,28 @@
       "resolved": true,
       "won": true,
       "pnl": 0.5623721881390615
+    },
+    {
+      "token_id": "67664948811564520900735095563844699385778155109401568771436675819076756964505",
+      "market_id": "4716400",
+      "question": "Will Bitcoin dip to $80,000 on September 19?",
+      "asset": "BTC",
+      "outcome": "No",
+      "resolution_day": "2026-09-20",
+      "entered_at": "2026-09-19T20:57:07.509124+00:00",
+      "price": 0.969,
+      "midpoint": 0.9635,
+      "cost_cents": 0.5499999999999949,
+      "shares": 25.79979360165119,
+      "notional": 25.0,
+      "dry_run": true,
+      "relaxed_caps": false,
+      "resolved": false,
+      "won": null,
+      "pnl": 0.0
     }
   ],
   "halted": false,
   "halt_reason": "3 tap p\u00e5 rad (backtestens verste var 2)",
-  "updated": "2026-09-19T18:11:30.617731+00:00"
+  "updated": "2026-09-19T20:57:07.510287+00:00"
 }
