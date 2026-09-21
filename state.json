@@ -3058,9 +3058,28 @@
       "resolved": false,
       "won": null,
       "pnl": 0.0
+    },
+    {
+      "token_id": "52241080257304093153787825855857651826470680932154644293592079022833876021524",
+      "market_id": "4781380",
+      "question": "Will Ethereum reach $2,950 on September 21?",
+      "asset": "ETH",
+      "outcome": "No",
+      "resolution_day": "2026-09-22",
+      "entered_at": "2026-09-21T21:13:03.698272+00:00",
+      "price": 0.989,
+      "midpoint": 0.9804999999999999,
+      "cost_cents": 0.8500000000000063,
+      "shares": 25.278058645096056,
+      "notional": 25.0,
+      "dry_run": true,
+      "relaxed_caps": false,
+      "resolved": false,
+      "won": null,
+      "pnl": 0.0
     }
   ],
   "halted": false,
   "halt_reason": "3 tap p\u00e5 rad (backtestens verste var 2)",
-  "updated": "2026-09-21T17:10:28.492006+00:00"
+  "updated": "2026-09-21T21:13:03.699409+00:00"
 }
