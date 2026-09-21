@@ -3039,9 +3039,28 @@
       "resolved": true,
       "won": true,
       "pnl": 0.30364372469635725
+    },
+    {
+      "token_id": "21490140879985402884248054169004294341148716703017824808395622073385262780234",
+      "market_id": "4781343",
+      "question": "Will Bitcoin reach $89,000 on September 21?",
+      "asset": "BTC",
+      "outcome": "No",
+      "resolution_day": "2026-09-22",
+      "entered_at": "2026-09-21T17:10:28.490924+00:00",
+      "price": 0.972,
+      "midpoint": 0.9635,
+      "cost_cents": 0.8499999999999952,
+      "shares": 25.720164609053498,
+      "notional": 25.0,
+      "dry_run": true,
+      "relaxed_caps": false,
+      "resolved": false,
+      "won": null,
+      "pnl": 0.0
     }
   ],
   "halted": false,
   "halt_reason": "3 tap p\u00e5 rad (backtestens verste var 2)",
-  "updated": "2026-09-21T11:02:24.776865+00:00"
+  "updated": "2026-09-21T17:10:28.492006+00:00"
 }
