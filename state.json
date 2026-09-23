@@ -3093,9 +3093,9 @@
       "notional": 25.0,
       "dry_run": true,
       "relaxed_caps": false,
-      "resolved": false,
-      "won": null,
-      "pnl": 0.0
+      "resolved": true,
+      "won": true,
+      "pnl": 0.5102040816326543
     },
     {
       "token_id": "83352566704450027697826433513447260686764349172723901259872973677893216498216",
@@ -3112,6 +3112,25 @@
       "notional": 25.0,
       "dry_run": true,
       "relaxed_caps": false,
+      "resolved": true,
+      "won": true,
+      "pnl": 0.27805864509605627
+    },
+    {
+      "token_id": "33153949423008351302936517284043752844635015837944709060360515459972094577475",
+      "market_id": "4617519",
+      "question": "Will the price of Bitcoin be between $82,000 and $84,000 on September 23?",
+      "asset": "BTC",
+      "outcome": "No",
+      "resolution_day": "2026-09-23",
+      "entered_at": "2026-09-23T06:35:54.112662+00:00",
+      "price": 0.978,
+      "midpoint": 0.9764999999999999,
+      "cost_cents": 0.0500000000000167,
+      "shares": 25.56237218813906,
+      "notional": 25.0,
+      "dry_run": true,
+      "relaxed_caps": false,
       "resolved": false,
       "won": null,
       "pnl": 0.0
@@ -3119,5 +3138,5 @@
   ],
   "halted": false,
   "halt_reason": "3 tap p\u00e5 rad (backtestens verste var 2)",
-  "updated": "2026-09-23T00:53:20.419615+00:00"
+  "updated": "2026-09-23T06:35:54.113689+00:00"
 }
