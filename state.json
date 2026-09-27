@@ -3248,9 +3248,47 @@
       "resolved": true,
       "won": true,
       "pnl": 0.2525252525252526
+    },
+    {
+      "token_id": "30814610248874485500470106378996351790357117297717161662953512380932592823496",
+      "market_id": "4761604",
+      "question": "Will the price of Bitcoin be between $82,000 and $84,000 on September 27?",
+      "asset": "BTC",
+      "outcome": "No",
+      "resolution_day": "2026-09-27",
+      "entered_at": "2026-09-27T08:31:30.204231+00:00",
+      "price": 0.96,
+      "midpoint": 0.955,
+      "cost_cents": 0.5000000000000004,
+      "shares": 26.041666666666668,
+      "notional": 25.0,
+      "dry_run": true,
+      "relaxed_caps": false,
+      "resolved": false,
+      "won": null,
+      "pnl": 0.0
+    },
+    {
+      "token_id": "36962260554822989773267498010357150053619595813914622074677145619560495836094",
+      "market_id": "4761607",
+      "question": "Will the price of Ethereum be above $2,800 on September 27?",
+      "asset": "ETH",
+      "outcome": "No",
+      "resolution_day": "2026-09-27",
+      "entered_at": "2026-09-27T08:31:30.956752+00:00",
+      "price": 0.986,
+      "midpoint": 0.9795,
+      "cost_cents": 0.550000000000006,
+      "shares": 25.354969574036513,
+      "notional": 25.0,
+      "dry_run": true,
+      "relaxed_caps": false,
+      "resolved": false,
+      "won": null,
+      "pnl": 0.0
     }
   ],
   "halted": false,
   "halt_reason": "3 tap p\u00e5 rad (backtestens verste var 2)",
-  "updated": "2026-09-27T01:43:23.840907+00:00"
+  "updated": "2026-09-27T08:31:30.957765+00:00"
 }
