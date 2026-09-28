@@ -3302,9 +3302,9 @@
       "notional": 25.0,
       "dry_run": true,
       "relaxed_caps": false,
-      "resolved": false,
-      "won": null,
-      "pnl": 0.0
+      "resolved": true,
+      "won": true,
+      "pnl": 0.3549695740365131
     },
     {
       "token_id": "22928788173062887638718182332807562986759921789438557302931053343345486654809",
@@ -3321,6 +3321,44 @@
       "notional": 25.0,
       "dry_run": true,
       "relaxed_caps": false,
+      "resolved": true,
+      "won": true,
+      "pnl": 0.43234994913530045
+    },
+    {
+      "token_id": "68074999498884108297439908117336488813450377668980513210339534113197419362634",
+      "market_id": "4797486",
+      "question": "Will the price of Ethereum be above $2,700 on September 28?",
+      "asset": "ETH",
+      "outcome": "No",
+      "resolution_day": "2026-09-28",
+      "entered_at": "2026-09-28T07:31:34.561306+00:00",
+      "price": 0.93,
+      "midpoint": 0.925,
+      "cost_cents": 0.5000000000000004,
+      "shares": 26.881720430107524,
+      "notional": 25.0,
+      "dry_run": true,
+      "relaxed_caps": false,
+      "resolved": false,
+      "won": null,
+      "pnl": 0.0
+    },
+    {
+      "token_id": "35125612063025780624096468507890657409010937129938246580460692031657128524018",
+      "market_id": "4797506",
+      "question": "Will the price of Bitcoin be above $80,000 on September 28?",
+      "asset": "BTC",
+      "outcome": "Yes",
+      "resolution_day": "2026-09-28",
+      "entered_at": "2026-09-28T07:31:39.255415+00:00",
+      "price": 0.983,
+      "midpoint": 0.982,
+      "cost_cents": 0.10000000000000009,
+      "shares": 25.4323499491353,
+      "notional": 25.0,
+      "dry_run": true,
+      "relaxed_caps": false,
       "resolved": false,
       "won": null,
       "pnl": 0.0
@@ -3328,5 +3366,5 @@
   ],
   "halted": false,
   "halt_reason": "3 tap p\u00e5 rad (backtestens verste var 2)",
-  "updated": "2026-09-28T01:06:45.204105+00:00"
+  "updated": "2026-09-28T07:31:39.256600+00:00"
 }
