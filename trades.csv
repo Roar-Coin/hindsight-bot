@@ -178,3 +178,5 @@ timestamp,mode,asset,outcome,question,resolution_day,best_ask,midpoint,vwap,cost
 2026-09-28T07:31:39.255415+00:00,dry,BTC,Yes,"Will the price of Bitcoin be above $80,000 on September 28?",2026-09-28,0.9830,0.9820,0.9830,0.100,25.43,25.00,4797506
 2026-09-29T08:58:38.588538+00:00,dry,BTC,No,"Will the price of Bitcoin be between $80,000 and $82,000 on September 29?",2026-09-29,0.9860,0.9830,0.9860,0.200,25.35,25.00,4841896
 2026-09-29T08:58:39.956534+00:00,dry,ETH,No,"Will the price of Ethereum be above $2,800 on September 29?",2026-09-29,0.9690,0.9680,0.9690,0.100,25.80,25.00,4841905
+2026-09-29T21:00:07.065814+00:00,dry,BTC,No,"Will Bitcoin reach $85,000 on September 29?",2026-09-30,0.9600,0.9555,0.9600,0.450,26.04,25.00,5114413
+2026-09-29T21:00:11.038323+00:00,dry,ETH,No,"Will Ethereum dip to $2,600 on September 29?",2026-09-30,0.9820,0.9755,0.9820,0.636,25.46,25.00,5114560

@@ -3378,9 +3378,9 @@
       "notional": 25.0,
       "dry_run": true,
       "relaxed_caps": false,
-      "resolved": false,
-      "won": null,
-      "pnl": 0.0
+      "resolved": true,
+      "won": true,
+      "pnl": 0.3549695740365131
     },
     {
       "token_id": "112964494785860699640239187141071200156659499799816832970024336464527551516370",
@@ -3397,6 +3397,44 @@
       "notional": 25.0,
       "dry_run": true,
       "relaxed_caps": false,
+      "resolved": true,
+      "won": true,
+      "pnl": 0.7997936016511886
+    },
+    {
+      "token_id": "47199261450711347237742482294812746205102937341158487875251850785744172565675",
+      "market_id": "5114413",
+      "question": "Will Bitcoin reach $85,000 on September 29?",
+      "asset": "BTC",
+      "outcome": "No",
+      "resolution_day": "2026-09-30",
+      "entered_at": "2026-09-29T21:00:07.065814+00:00",
+      "price": 0.96,
+      "midpoint": 0.9555,
+      "cost_cents": 0.44999999999999485,
+      "shares": 26.041666666666668,
+      "notional": 25.0,
+      "dry_run": true,
+      "relaxed_caps": false,
+      "resolved": false,
+      "won": null,
+      "pnl": 0.0
+    },
+    {
+      "token_id": "104924763757328454105988780342446880919773200683986511654883972869562655677368",
+      "market_id": "5114560",
+      "question": "Will Ethereum dip to $2,600 on September 29?",
+      "asset": "ETH",
+      "outcome": "No",
+      "resolution_day": "2026-09-30",
+      "entered_at": "2026-09-29T21:00:11.038323+00:00",
+      "price": 0.982,
+      "midpoint": 0.9755,
+      "cost_cents": 0.6358054226475174,
+      "shares": 25.45824847250509,
+      "notional": 25.0,
+      "dry_run": true,
+      "relaxed_caps": false,
       "resolved": false,
       "won": null,
       "pnl": 0.0
@@ -3404,5 +3442,5 @@
   ],
   "halted": false,
   "halt_reason": "3 tap p\u00e5 rad (backtestens verste var 2)",
-  "updated": "2026-09-29T16:06:05.237332+00:00"
+  "updated": "2026-09-29T21:00:11.039626+00:00"
 }
