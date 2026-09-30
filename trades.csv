@@ -183,3 +183,5 @@ timestamp,mode,asset,outcome,question,resolution_day,best_ask,midpoint,vwap,cost
 2026-09-30T07:18:47.223676+00:00,dry,BTC,No,"Will the price of Bitcoin be between $78,000 and $80,000 on September 30?",2026-09-30,0.9890,0.9870,0.9890,0.200,25.28,25.00,4882956
 2026-09-30T07:18:47.401252+00:00,dry,ETH,Yes,"Will the price of Ethereum be above $2,600 on September 30?",2026-09-30,0.9490,0.9415,0.9490,0.707,26.34,25.00,4882957
 2026-09-30T07:18:56.867541+00:00,dry,SOL,No,Will the price of Solana be above $125 on September 30?,2026-09-30,0.9750,0.9670,0.9750,0.744,25.64,25.00,4883013
+2026-09-30T19:36:44.408247+00:00,dry,ETH,No,"Will Ethereum dip to $2,600 in September?",2026-10-01,0.9740,0.9690,0.9740,0.500,25.67,25.00,4761842
+2026-09-30T19:36:44.765990+00:00,dry,BTC,No,"Will Bitcoin dip to $82,500 in September?",2026-10-01,0.9300,0.9290,0.9300,0.100,26.88,25.00,4797724
