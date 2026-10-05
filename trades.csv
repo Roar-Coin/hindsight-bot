@@ -192,3 +192,6 @@ timestamp,mode,asset,outcome,question,resolution_day,best_ask,midpoint,vwap,cost
 2026-10-02T08:55:04.514256+00:00,dry,BTC,No,"Will the price of Bitcoin be between $82,000 and $84,000 on October 2?",2026-10-02,0.9700,0.9665,0.9700,0.350,25.77,25.00,4950465
 2026-10-02T20:55:57.602292+00:00,dry,BTC,No,"Will Bitcoin dip to $83,000 on October 2?",2026-10-03,0.9540,0.9465,0.9540,0.750,26.21,25.00,5197058
 2026-10-03T20:09:36.625682+00:00,dry,BTC,No,"Will Bitcoin reach $86,000 on October 3?",2026-10-04,0.9830,0.9810,0.9830,0.200,25.43,25.00,5223453
+2026-10-05T07:38:41.052065+00:00,dry,BTC,No,"Will the price of Bitcoin be between $82,000 and $84,000 on October 5?",2026-10-05,0.9820,0.9790,0.9820,0.225,25.46,25.00,5081749
+2026-10-05T07:38:41.347507+00:00,dry,ETH,No,"Will the price of Ethereum be above $2,800 on October 5?",2026-10-05,0.9590,0.9505,0.9590,0.850,26.07,25.00,5081750
+2026-10-05T07:38:48.076700+00:00,dry,SOL,No,Will the price of Solana be above $130 on October 5?,2026-10-05,0.9880,0.9840,0.9880,0.400,25.30,25.00,5081855
