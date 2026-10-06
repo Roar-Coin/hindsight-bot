@@ -3723,9 +3723,28 @@
       "resolved": true,
       "won": true,
       "pnl": 0.30364372469635725
+    },
+    {
+      "token_id": "108070389066937993935249297573978833806242148999376353257101479917883357497814",
+      "market_id": "5362477",
+      "question": "Will Bitcoin reach $87,000 on October 6?",
+      "asset": "BTC",
+      "outcome": "No",
+      "resolution_day": "2026-10-07",
+      "entered_at": "2026-10-06T21:52:22.636089+00:00",
+      "price": 0.959,
+      "midpoint": 0.9504999999999999,
+      "cost_cents": 0.8500000000000063,
+      "shares": 26.068821689259646,
+      "notional": 25.0,
+      "dry_run": true,
+      "relaxed_caps": false,
+      "resolved": false,
+      "won": null,
+      "pnl": 0.0
     }
   ],
   "halted": false,
   "halt_reason": "3 tap p\u00e5 rad (backtestens verste var 2)",
-  "updated": "2026-10-06T17:23:22.786180+00:00"
+  "updated": "2026-10-06T21:52:22.637173+00:00"
 }
