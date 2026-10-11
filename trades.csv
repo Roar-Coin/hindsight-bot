@@ -206,3 +206,5 @@ timestamp,mode,asset,outcome,question,resolution_day,best_ask,midpoint,vwap,cost
 2026-10-09T21:11:36.925537+00:00,dry,BTC,No,"Will Bitcoin dip to $81,000 on October 9?",2026-10-10,0.9600,0.9550,0.9600,0.500,26.04,25.00,5448254
 2026-10-09T21:11:39.996159+00:00,dry,ETH,No,"Will Ethereum dip to $2,400 on October 9?",2026-10-10,0.9800,0.9715,0.9800,0.830,25.51,25.00,5448272
 2026-10-11T09:15:29.221590+00:00,dry,BTC,No,"Will the price of Bitcoin be between $80,000 and $82,000 on October 11?",2026-10-11,0.9720,0.9710,0.9720,0.100,25.72,25.00,5286466
+2026-10-11T20:31:57.848605+00:00,dry,BTC,No,"Will Bitcoin reach $86,000 October 5-11?",2026-10-12,0.9740,0.9720,0.9740,0.142,25.67,25.00,5379787
+2026-10-11T20:31:58.168862+00:00,dry,ETH,No,"Will Ethereum reach $2,600 October 5-11?",2026-10-12,0.9820,0.9725,0.9820,0.947,25.46,25.00,5408258
