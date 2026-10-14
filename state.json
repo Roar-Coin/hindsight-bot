@@ -4043,9 +4043,9 @@
       "notional": 25.0,
       "dry_run": true,
       "relaxed_caps": false,
-      "resolved": false,
-      "won": null,
-      "pnl": 0.0
+      "resolved": true,
+      "won": true,
+      "pnl": 0.38071065989847597
     },
     {
       "token_id": "51789221879802734441872369062498193113733027126333654571495195120797013864055",
@@ -4062,6 +4062,44 @@
       "notional": 25.0,
       "dry_run": true,
       "relaxed_caps": false,
+      "resolved": true,
+      "won": true,
+      "pnl": 0.38071065989847597
+    },
+    {
+      "token_id": "12530574220847937632247175933749400659239359001092326785437529251085958570730",
+      "market_id": "5677952",
+      "question": "Will Bitcoin dip to $79,000 on October 14?",
+      "asset": "BTC",
+      "outcome": "No",
+      "resolution_day": "2026-10-15",
+      "entered_at": "2026-10-14T18:51:00.041352+00:00",
+      "price": 0.974,
+      "midpoint": 0.9704999999999999,
+      "cost_cents": 0.35000000000000586,
+      "shares": 25.66735112936345,
+      "notional": 25.0,
+      "dry_run": true,
+      "relaxed_caps": false,
+      "resolved": false,
+      "won": null,
+      "pnl": 0.0
+    },
+    {
+      "token_id": "23130869449631794445495314472905068895223901134316978105306121778097524003545",
+      "market_id": "5677978",
+      "question": "Will Ethereum reach $2,550 on October 14?",
+      "asset": "ETH",
+      "outcome": "No",
+      "resolution_day": "2026-10-15",
+      "entered_at": "2026-10-14T18:51:02.533467+00:00",
+      "price": 0.989,
+      "midpoint": 0.984,
+      "cost_cents": 0.5000000000000004,
+      "shares": 25.278058645096056,
+      "notional": 25.0,
+      "dry_run": true,
+      "relaxed_caps": false,
       "resolved": false,
       "won": null,
       "pnl": 0.0
@@ -4069,5 +4107,5 @@
   ],
   "halted": false,
   "halt_reason": "3 tap p\u00e5 rad (backtestens verste var 2)",
-  "updated": "2026-10-14T13:59:43.148042+00:00"
+  "updated": "2026-10-14T18:51:02.535037+00:00"
 }
