@@ -4024,6 +4024,44 @@
       "notional": 25.0,
       "dry_run": true,
       "relaxed_caps": false,
+      "resolved": true,
+      "won": true,
+      "pnl": 0.27805864509605627
+    },
+    {
+      "token_id": "18227594273941237919515659573070855965806744774125375659500866454000537247923",
+      "market_id": "5407327",
+      "question": "Will the price of Bitcoin be between $86,000 and $88,000 on October 14?",
+      "asset": "BTC",
+      "outcome": "No",
+      "resolution_day": "2026-10-14",
+      "entered_at": "2026-10-14T07:59:05.939743+00:00",
+      "price": 0.985,
+      "midpoint": 0.98,
+      "cost_cents": 0.42126298960831754,
+      "shares": 25.380710659898476,
+      "notional": 25.0,
+      "dry_run": true,
+      "relaxed_caps": false,
+      "resolved": false,
+      "won": null,
+      "pnl": 0.0
+    },
+    {
+      "token_id": "51789221879802734441872369062498193113733027126333654571495195120797013864055",
+      "market_id": "5407371",
+      "question": "Will the price of Solana be above $115 on October 14?",
+      "asset": "SOL",
+      "outcome": "No",
+      "resolution_day": "2026-10-14",
+      "entered_at": "2026-10-14T07:59:10.846208+00:00",
+      "price": 0.985,
+      "midpoint": 0.976,
+      "cost_cents": 0.8797131790850954,
+      "shares": 25.380710659898476,
+      "notional": 25.0,
+      "dry_run": true,
+      "relaxed_caps": false,
       "resolved": false,
       "won": null,
       "pnl": 0.0
@@ -4031,5 +4069,5 @@
   ],
   "halted": false,
   "halt_reason": "3 tap p\u00e5 rad (backtestens verste var 2)",
-  "updated": "2026-10-14T02:07:52.716257+00:00"
+  "updated": "2026-10-14T07:59:10.847530+00:00"
 }
