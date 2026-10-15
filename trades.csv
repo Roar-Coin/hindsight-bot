@@ -215,3 +215,5 @@ timestamp,mode,asset,outcome,question,resolution_day,best_ask,midpoint,vwap,cost
 2026-10-14T07:59:10.846208+00:00,dry,SOL,No,Will the price of Solana be above $115 on October 14?,2026-10-14,0.9850,0.9760,0.9850,0.880,25.38,25.00,5407371
 2026-10-14T18:51:00.041352+00:00,dry,BTC,No,"Will Bitcoin dip to $79,000 on October 14?",2026-10-15,0.9740,0.9705,0.9740,0.350,25.67,25.00,5677952
 2026-10-14T18:51:02.533467+00:00,dry,ETH,No,"Will Ethereum reach $2,550 on October 14?",2026-10-15,0.9890,0.9840,0.9890,0.500,25.28,25.00,5677978
+2026-10-15T06:22:18.907892+00:00,dry,ETH,Yes,"Will the price of Ethereum be above $2,200 on October 15?",2026-10-15,0.9840,0.9825,0.9840,0.130,25.41,25.00,5432685
+2026-10-15T06:22:19.226720+00:00,dry,BTC,No,"Will the price of Bitcoin be between $76,000 and $78,000 on October 15?",2026-10-15,0.9720,0.9675,0.9720,0.450,25.72,25.00,5432686
