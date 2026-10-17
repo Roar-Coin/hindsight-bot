@@ -4160,9 +4160,28 @@
       "resolved": true,
       "won": true,
       "pnl": 0.8264462809917354
+    },
+    {
+      "token_id": "10827659136705353607686534262849412896934100315766220326656066386496212800288",
+      "market_id": "5763870",
+      "question": "Will Trump say \"Bitcoin\" or \"Crypto\" or \"Cryptocurrency\" during his Midterm Rally in Kentucky?",
+      "asset": "BTC",
+      "outcome": "No",
+      "resolution_day": "2026-10-17",
+      "entered_at": "2026-10-17T11:08:03.350893+00:00",
+      "price": 0.986,
+      "midpoint": 0.9784999999999999,
+      "cost_cents": 0.6500000000000172,
+      "shares": 25.354969574036513,
+      "notional": 25.0,
+      "dry_run": true,
+      "relaxed_caps": false,
+      "resolved": false,
+      "won": null,
+      "pnl": 0.0
     }
   ],
   "halted": false,
   "halt_reason": "3 tap p\u00e5 rad (backtestens verste var 2)",
-  "updated": "2026-10-17T06:05:02.475326+00:00"
+  "updated": "2026-10-17T11:08:03.351934+00:00"
 }

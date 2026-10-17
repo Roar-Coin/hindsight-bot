@@ -218,3 +218,4 @@ timestamp,mode,asset,outcome,question,resolution_day,best_ask,midpoint,vwap,cost
 2026-10-15T06:22:18.907892+00:00,dry,ETH,Yes,"Will the price of Ethereum be above $2,200 on October 15?",2026-10-15,0.9840,0.9825,0.9840,0.130,25.41,25.00,5432685
 2026-10-15T06:22:19.226720+00:00,dry,BTC,No,"Will the price of Bitcoin be between $76,000 and $78,000 on October 15?",2026-10-15,0.9720,0.9675,0.9720,0.450,25.72,25.00,5432686
 2026-10-16T20:03:49.810273+00:00,dry,BTC,No,"Will Bitcoin reach $83,000 on October 16?",2026-10-17,0.9680,0.9620,0.9680,0.600,25.83,25.00,5766177
+2026-10-17T11:08:03.350893+00:00,dry,BTC,No,"Will Trump say ""Bitcoin"" or ""Crypto"" or ""Cryptocurrency"" during his Midterm Rally in Kentucky?",2026-10-17,0.9860,0.9785,0.9860,0.650,25.35,25.00,5763870
