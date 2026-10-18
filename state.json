@@ -4179,9 +4179,28 @@
       "resolved": true,
       "won": true,
       "pnl": 0.3549695740365131
+    },
+    {
+      "token_id": "21232939688333458231394488549765573804633166173555036996050770943527246484665",
+      "market_id": "5777065",
+      "question": "Bitcoin Up or Down on October 18?",
+      "asset": "BTC",
+      "outcome": "Up",
+      "resolution_day": "2026-10-18",
+      "entered_at": "2026-10-18T09:51:18.734266+00:00",
+      "price": 0.93,
+      "midpoint": 0.925,
+      "cost_cents": 0.5000000000000004,
+      "shares": 26.881720430107524,
+      "notional": 25.0,
+      "dry_run": true,
+      "relaxed_caps": false,
+      "resolved": false,
+      "won": null,
+      "pnl": 0.0
     }
   ],
   "halted": false,
   "halt_reason": "3 tap p\u00e5 rad (backtestens verste var 2)",
-  "updated": "2026-10-18T05:03:15.421795+00:00"
+  "updated": "2026-10-18T09:51:18.735578+00:00"
 }
