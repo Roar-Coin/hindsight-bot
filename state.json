@@ -4290,9 +4290,9 @@
       "notional": 25.0,
       "dry_run": true,
       "relaxed_caps": false,
-      "resolved": false,
-      "won": null,
-      "pnl": 0.0
+      "resolved": true,
+      "won": true,
+      "pnl": 0.48419979612640063
     },
     {
       "token_id": "100321583270114024682355207455560051963242728451958141026714954615835915139132",
@@ -4309,9 +4309,9 @@
       "notional": 25.0,
       "dry_run": true,
       "relaxed_caps": false,
-      "resolved": false,
-      "won": null,
-      "pnl": 0.0
+      "resolved": true,
+      "won": true,
+      "pnl": 0.746652935118437
     },
     {
       "token_id": "47367374173502371743117100990972463505893926412463718920277465998043317698936",
@@ -4328,6 +4328,25 @@
       "notional": 25.0,
       "dry_run": true,
       "relaxed_caps": false,
+      "resolved": true,
+      "won": true,
+      "pnl": 0.48419979612640063
+    },
+    {
+      "token_id": "110500181962448008900157726629114977928881703621293396767286067518972315658864",
+      "market_id": "5957156",
+      "question": "Will Bitcoin reach $85,000 on October 20?",
+      "asset": "BTC",
+      "outcome": "No",
+      "resolution_day": "2026-10-21",
+      "entered_at": "2026-10-20T17:30:08.267548+00:00",
+      "price": 0.981,
+      "midpoint": 0.9755,
+      "cost_cents": 0.45199800199798856,
+      "shares": 25.4841997961264,
+      "notional": 25.0,
+      "dry_run": true,
+      "relaxed_caps": false,
       "resolved": false,
       "won": null,
       "pnl": 0.0
@@ -4335,5 +4354,5 @@
   ],
   "halted": false,
   "halt_reason": "3 tap p\u00e5 rad (backtestens verste var 2)",
-  "updated": "2026-10-20T12:01:34.571239+00:00"
+  "updated": "2026-10-20T17:30:08.269159+00:00"
 }

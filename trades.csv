@@ -227,3 +227,4 @@ timestamp,mode,asset,outcome,question,resolution_day,best_ask,midpoint,vwap,cost
 2026-10-20T06:31:16.449952+00:00,dry,ETH,Yes,"Will the price of Ethereum be above $2,300 on October 20?",2026-10-20,0.9810,0.9775,0.9810,0.291,25.48,25.00,5653744
 2026-10-20T06:31:16.789123+00:00,dry,BTC,No,"Will the price of Bitcoin be between $78,000 and $80,000 on October 20?",2026-10-20,0.9710,0.9635,0.9710,0.714,25.75,25.00,5653746
 2026-10-20T06:31:26.032839+00:00,dry,SOL,Yes,Will the price of Solana be above $100 on October 20?,2026-10-20,0.9810,0.9770,0.9810,0.380,25.48,25.00,5653837
+2026-10-20T17:30:08.267548+00:00,dry,BTC,No,"Will Bitcoin reach $85,000 on October 20?",2026-10-21,0.9810,0.9755,0.9810,0.452,25.48,25.00,5957156
