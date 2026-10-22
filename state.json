@@ -4366,9 +4366,9 @@
       "notional": 25.0,
       "dry_run": true,
       "relaxed_caps": false,
-      "resolved": false,
-      "won": null,
-      "pnl": 0.0
+      "resolved": true,
+      "won": true,
+      "pnl": 0.38071065989847597
     },
     {
       "token_id": "113910375979222527840601849710749414607546848316701710450252250513502902940567",
@@ -4385,6 +4385,63 @@
       "notional": 25.0,
       "dry_run": true,
       "relaxed_caps": false,
+      "resolved": true,
+      "won": true,
+      "pnl": 0.7201646090534979
+    },
+    {
+      "token_id": "103323607399336019813517678199869322846938444984189246437210857235353500702510",
+      "market_id": "5739555",
+      "question": "Will the price of Bitcoin be between $78,000 and $80,000 on October 22?",
+      "asset": "BTC",
+      "outcome": "No",
+      "resolution_day": "2026-10-22",
+      "entered_at": "2026-10-22T07:55:29.463589+00:00",
+      "price": 0.967,
+      "midpoint": 0.966,
+      "cost_cents": 0.09999999999998899,
+      "shares": 25.853154084798348,
+      "notional": 25.0,
+      "dry_run": true,
+      "relaxed_caps": false,
+      "resolved": false,
+      "won": null,
+      "pnl": 0.0
+    },
+    {
+      "token_id": "14853396503432389165259610205912822232660025337917523159308193107760532662047",
+      "market_id": "5739568",
+      "question": "Will the price of Ethereum be above $2,500 on October 22?",
+      "asset": "ETH",
+      "outcome": "No",
+      "resolution_day": "2026-10-22",
+      "entered_at": "2026-10-22T07:55:30.835168+00:00",
+      "price": 0.963,
+      "midpoint": 0.957,
+      "cost_cents": 0.6000000000000005,
+      "shares": 25.96053997923157,
+      "notional": 25.0,
+      "dry_run": true,
+      "relaxed_caps": false,
+      "resolved": false,
+      "won": null,
+      "pnl": 0.0
+    },
+    {
+      "token_id": "26139744241704918712283962409323510164083308229814197937030959916448816284760",
+      "market_id": "5739745",
+      "question": "Will the price of Solana be above $100 on October 22?",
+      "asset": "SOL",
+      "outcome": "Yes",
+      "resolution_day": "2026-10-22",
+      "entered_at": "2026-10-22T07:55:35.662232+00:00",
+      "price": 0.987,
+      "midpoint": 0.9855,
+      "cost_cents": 0.13026394721055157,
+      "shares": 25.329280648429584,
+      "notional": 25.0,
+      "dry_run": true,
+      "relaxed_caps": false,
       "resolved": false,
       "won": null,
       "pnl": 0.0
@@ -4392,5 +4449,5 @@
   ],
   "halted": false,
   "halt_reason": "3 tap p\u00e5 rad (backtestens verste var 2)",
-  "updated": "2026-10-22T01:46:38.749454+00:00"
+  "updated": "2026-10-22T07:55:35.663719+00:00"
 }

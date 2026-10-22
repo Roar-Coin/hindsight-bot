@@ -230,3 +230,6 @@ timestamp,mode,asset,outcome,question,resolution_day,best_ask,midpoint,vwap,cost
 2026-10-20T17:30:08.267548+00:00,dry,BTC,No,"Will Bitcoin reach $85,000 on October 20?",2026-10-21,0.9810,0.9755,0.9810,0.452,25.48,25.00,5957156
 2026-10-21T19:33:30.826956+00:00,dry,BTC,No,"Will Bitcoin reach $87,000 on October 21?",2026-10-22,0.9850,0.9795,0.9850,0.508,25.38,25.00,6002416
 2026-10-21T19:33:35.044519+00:00,dry,ETH,No,"Will Ethereum dip to $2,400 on October 21?",2026-10-22,0.9720,0.9685,0.9720,0.350,25.72,25.00,6002441
+2026-10-22T07:55:29.463589+00:00,dry,BTC,No,"Will the price of Bitcoin be between $78,000 and $80,000 on October 22?",2026-10-22,0.9670,0.9660,0.9670,0.100,25.85,25.00,5739555
+2026-10-22T07:55:30.835168+00:00,dry,ETH,No,"Will the price of Ethereum be above $2,500 on October 22?",2026-10-22,0.9630,0.9570,0.9630,0.600,25.96,25.00,5739568
+2026-10-22T07:55:35.662232+00:00,dry,SOL,Yes,Will the price of Solana be above $100 on October 22?,2026-10-22,0.9870,0.9855,0.9870,0.130,25.33,25.00,5739745
