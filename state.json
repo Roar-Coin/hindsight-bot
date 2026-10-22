@@ -4404,9 +4404,9 @@
       "notional": 25.0,
       "dry_run": true,
       "relaxed_caps": false,
-      "resolved": false,
-      "won": null,
-      "pnl": 0.0
+      "resolved": true,
+      "won": true,
+      "pnl": 0.8531540847983479
     },
     {
       "token_id": "14853396503432389165259610205912822232660025337917523159308193107760532662047",
@@ -4423,9 +4423,9 @@
       "notional": 25.0,
       "dry_run": true,
       "relaxed_caps": false,
-      "resolved": false,
-      "won": null,
-      "pnl": 0.0
+      "resolved": true,
+      "won": true,
+      "pnl": 0.9605399792315694
     },
     {
       "token_id": "26139744241704918712283962409323510164083308229814197937030959916448816284760",
@@ -4442,6 +4442,44 @@
       "notional": 25.0,
       "dry_run": true,
       "relaxed_caps": false,
+      "resolved": true,
+      "won": true,
+      "pnl": 0.3292806484295845
+    },
+    {
+      "token_id": "107943445540083488000326982588597569989009086469734893545878577495801361290006",
+      "market_id": "6034717",
+      "question": "Will Bitcoin reach $84,000 on October 22?",
+      "asset": "BTC",
+      "outcome": "No",
+      "resolution_day": "2026-10-23",
+      "entered_at": "2026-10-22T18:46:41.346562+00:00",
+      "price": 0.987,
+      "midpoint": 0.9864999999999999,
+      "cost_cents": 0.050000000000005596,
+      "shares": 25.329280648429584,
+      "notional": 25.0,
+      "dry_run": true,
+      "relaxed_caps": false,
+      "resolved": false,
+      "won": null,
+      "pnl": 0.0
+    },
+    {
+      "token_id": "107012028509532880699815898842644113038946130030927268532003390660388673077547",
+      "market_id": "6034734",
+      "question": "Will Ethereum reach $2,500 on October 22?",
+      "asset": "ETH",
+      "outcome": "No",
+      "resolution_day": "2026-10-23",
+      "entered_at": "2026-10-22T18:46:44.443102+00:00",
+      "price": 0.989,
+      "midpoint": 0.985,
+      "cost_cents": 0.40000000000000036,
+      "shares": 25.278058645096056,
+      "notional": 25.0,
+      "dry_run": true,
+      "relaxed_caps": false,
       "resolved": false,
       "won": null,
       "pnl": 0.0
@@ -4449,5 +4487,5 @@
   ],
   "halted": false,
   "halt_reason": "3 tap p\u00e5 rad (backtestens verste var 2)",
-  "updated": "2026-10-22T14:04:32.525549+00:00"
+  "updated": "2026-10-22T18:46:44.444814+00:00"
 }
