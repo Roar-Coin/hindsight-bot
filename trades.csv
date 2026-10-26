@@ -241,3 +241,5 @@ timestamp,mode,asset,outcome,question,resolution_day,best_ask,midpoint,vwap,cost
 2026-10-24T21:08:30.558201+00:00,dry,ETH,No,"Will Ethereum reach $2,450 on October 24?",2026-10-25,0.9860,0.9800,0.9860,0.500,25.35,25.00,6104840
 2026-10-25T19:55:52.607054+00:00,dry,BTC,No,"Will Bitcoin dip to $78,000 October 19-25?",2026-10-26,0.9860,0.9845,0.9860,0.093,25.35,25.00,5912695
 2026-10-25T19:55:56.436511+00:00,dry,ETH,No,"Will Ethereum dip to $2,200 October 19-25?",2026-10-26,0.9890,0.9885,0.9890,0.050,25.28,25.00,5912729
+2026-10-26T06:54:53.112383+00:00,dry,ETH,Yes,"Will the price of Ethereum be above $2,200 on October 26?",2026-10-26,0.9890,0.9885,0.9890,0.050,25.28,25.00,5929038
+2026-10-26T06:54:53.329421+00:00,dry,BTC,No,"Will the price of Bitcoin be between $76,000 and $78,000 on October 26?",2026-10-26,0.9670,0.9655,0.9670,0.150,25.85,25.00,5929039
