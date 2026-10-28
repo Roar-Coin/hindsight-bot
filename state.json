@@ -4670,6 +4670,44 @@
       "notional": 25.0,
       "dry_run": true,
       "relaxed_caps": false,
+      "resolved": true,
+      "won": true,
+      "pnl": 0.5623721881390615
+    },
+    {
+      "token_id": "108569749611002318471345994785160494143709208152884280955680510707343628995305",
+      "market_id": "6015116",
+      "question": "Will the price of Bitcoin be between $76,000 and $78,000 on October 28?",
+      "asset": "BTC",
+      "outcome": "No",
+      "resolution_day": "2026-10-28",
+      "entered_at": "2026-10-28T07:19:28.876585+00:00",
+      "price": 0.989,
+      "midpoint": 0.9884999999999999,
+      "cost_cents": 0.050000000000005596,
+      "shares": 25.278058645096056,
+      "notional": 25.0,
+      "dry_run": true,
+      "relaxed_caps": false,
+      "resolved": false,
+      "won": null,
+      "pnl": 0.0
+    },
+    {
+      "token_id": "26564350134259169229453598307266611186318521072230018593894595544526830619010",
+      "market_id": "6015123",
+      "question": "Will the price of Ethereum be above $2,300 on October 28?",
+      "asset": "ETH",
+      "outcome": "Yes",
+      "resolution_day": "2026-10-28",
+      "entered_at": "2026-10-28T07:19:29.557496+00:00",
+      "price": 0.93,
+      "midpoint": 0.925,
+      "cost_cents": 0.5000000000000004,
+      "shares": 26.881720430107524,
+      "notional": 25.0,
+      "dry_run": true,
+      "relaxed_caps": false,
       "resolved": false,
       "won": null,
       "pnl": 0.0
@@ -4677,5 +4715,5 @@
   ],
   "halted": false,
   "halt_reason": "3 tap p\u00e5 rad (backtestens verste var 2)",
-  "updated": "2026-10-28T00:42:20.007781+00:00"
+  "updated": "2026-10-28T07:19:29.559125+00:00"
 }
