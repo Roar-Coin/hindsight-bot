@@ -4765,6 +4765,44 @@
       "notional": 25.0,
       "dry_run": true,
       "relaxed_caps": false,
+      "resolved": true,
+      "won": true,
+      "pnl": 0.4065040650406502
+    },
+    {
+      "token_id": "36309806303165428332097603117522531752171450136813281125846592104100315953179",
+      "market_id": "6377721",
+      "question": "Will Bitcoin reach $84,000 on October 29?",
+      "asset": "BTC",
+      "outcome": "No",
+      "resolution_day": "2026-10-30",
+      "entered_at": "2026-10-29T19:12:45.526474+00:00",
+      "price": 0.988,
+      "midpoint": 0.9875,
+      "cost_cents": 0.04999999999999449,
+      "shares": 25.303643724696357,
+      "notional": 25.0,
+      "dry_run": true,
+      "relaxed_caps": false,
+      "resolved": false,
+      "won": null,
+      "pnl": 0.0
+    },
+    {
+      "token_id": "52753365517270015346689764290589962085757995392276531176312074079063473162822",
+      "market_id": "6377742",
+      "question": "Will Ethereum reach $2,400 on October 29?",
+      "asset": "ETH",
+      "outcome": "No",
+      "resolution_day": "2026-10-30",
+      "entered_at": "2026-10-29T19:12:48.925964+00:00",
+      "price": 0.985,
+      "midpoint": 0.977,
+      "cost_cents": 0.7212629896083178,
+      "shares": 25.380710659898476,
+      "notional": 25.0,
+      "dry_run": true,
+      "relaxed_caps": false,
       "resolved": false,
       "won": null,
       "pnl": 0.0
@@ -4772,5 +4810,5 @@
   ],
   "halted": false,
   "halt_reason": "3 tap p\u00e5 rad (backtestens verste var 2)",
-  "updated": "2026-10-29T13:38:24.377496+00:00"
+  "updated": "2026-10-29T19:12:48.927601+00:00"
 }
