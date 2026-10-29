@@ -4727,9 +4727,9 @@
       "notional": 25.0,
       "dry_run": true,
       "relaxed_caps": false,
-      "resolved": false,
-      "won": null,
-      "pnl": 0.0
+      "resolved": true,
+      "won": true,
+      "pnl": 0.43234994913530045
     },
     {
       "token_id": "64679835650577208941135547799772509729749913823859446082002734563274220749806",
@@ -4746,6 +4746,25 @@
       "notional": 25.0,
       "dry_run": true,
       "relaxed_caps": false,
+      "resolved": true,
+      "won": true,
+      "pnl": 0.3549695740365131
+    },
+    {
+      "token_id": "85417004625016889579960489487497721301632582913639371181673575791593380700796",
+      "market_id": "6044802",
+      "question": "Will the price of Bitcoin be between $76,000 and $78,000 on October 29?",
+      "asset": "BTC",
+      "outcome": "No",
+      "resolution_day": "2026-10-29",
+      "entered_at": "2026-10-29T06:23:02.132676+00:00",
+      "price": 0.984,
+      "midpoint": 0.9755,
+      "cost_cents": 0.8499999999999952,
+      "shares": 25.40650406504065,
+      "notional": 25.0,
+      "dry_run": true,
+      "relaxed_caps": false,
       "resolved": false,
       "won": null,
       "pnl": 0.0
@@ -4753,5 +4772,5 @@
   ],
   "halted": false,
   "halt_reason": "3 tap p\u00e5 rad (backtestens verste var 2)",
-  "updated": "2026-10-29T00:20:19.275998+00:00"
+  "updated": "2026-10-29T06:23:02.133813+00:00"
 }
