@@ -252,3 +252,4 @@ timestamp,mode,asset,outcome,question,resolution_day,best_ask,midpoint,vwap,cost
 2026-10-29T06:23:02.132676+00:00,dry,BTC,No,"Will the price of Bitcoin be between $76,000 and $78,000 on October 29?",2026-10-29,0.9840,0.9755,0.9840,0.850,25.41,25.00,6044802
 2026-10-29T19:12:45.526474+00:00,dry,BTC,No,"Will Bitcoin reach $84,000 on October 29?",2026-10-30,0.9880,0.9875,0.9880,0.050,25.30,25.00,6377721
 2026-10-29T19:12:48.925964+00:00,dry,ETH,No,"Will Ethereum reach $2,400 on October 29?",2026-10-30,0.9850,0.9770,0.9850,0.721,25.38,25.00,6377742
+2026-10-30T16:49:34.588625+00:00,dry,BTC,No,"Will Trump say ""Bitcoin"" or ""Crypto"" or ""Cryptocurrency"" during his Midterm Rally in Florida?",2026-10-30,0.9870,0.9820,0.9870,0.500,25.33,25.00,6366924
