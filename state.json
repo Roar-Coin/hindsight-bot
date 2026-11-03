@@ -4939,9 +4939,28 @@
       "resolved": true,
       "won": true,
       "pnl": 0.3549695740365131
+    },
+    {
+      "token_id": "22615814464983604808086526758332737554967054165054828880391745373637299958743",
+      "market_id": "6301248",
+      "question": "Will the price of Bitcoin be between $72,000 and $74,000 on November 3?",
+      "asset": "BTC",
+      "outcome": "No",
+      "resolution_day": "2026-11-03",
+      "entered_at": "2026-11-03T09:59:00.563875+00:00",
+      "price": 0.989,
+      "midpoint": 0.987,
+      "cost_cents": 0.20000000000000018,
+      "shares": 25.278058645096056,
+      "notional": 25.0,
+      "dry_run": true,
+      "relaxed_caps": false,
+      "resolved": false,
+      "won": null,
+      "pnl": 0.0
     }
   ],
   "halted": false,
   "halt_reason": "3 tap p\u00e5 rad (backtestens verste var 2)",
-  "updated": "2026-11-03T01:46:17.752399+00:00"
+  "updated": "2026-11-03T09:59:00.564938+00:00"
 }
