@@ -262,3 +262,5 @@ timestamp,mode,asset,outcome,question,resolution_day,best_ask,midpoint,vwap,cost
 2026-11-03T09:59:00.563875+00:00,dry,BTC,No,"Will the price of Bitcoin be between $72,000 and $74,000 on November 3?",2026-11-03,0.9890,0.9870,0.9890,0.200,25.28,25.00,6301248
 2026-11-05T07:18:42.942941+00:00,dry,BTC,No,"Will the price of Bitcoin be between $76,000 and $78,000 on November 5?",2026-11-05,0.9890,0.9865,0.9890,0.171,25.28,25.00,6389910
 2026-11-05T07:18:45.151898+00:00,dry,ETH,No,"Will the price of Ethereum be above $2,500 on November 5?",2026-11-05,0.9510,0.9430,0.9510,0.781,26.29,25.00,6389926
+2026-11-05T22:14:46.860572+00:00,dry,BTC,No,"Will Bitcoin dip to $74,000 on November 5?",2026-11-06,0.9380,0.9355,0.9380,0.250,26.65,25.00,6705226
+2026-11-05T22:14:49.009900+00:00,dry,ETH,No,"Will Ethereum dip to $2,100 on November 5?",2026-11-06,0.9720,0.9625,0.9720,0.950,25.72,25.00,6705243
