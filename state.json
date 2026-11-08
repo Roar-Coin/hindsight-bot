@@ -5034,9 +5034,47 @@
       "resolved": true,
       "won": true,
       "pnl": 0.7201646090534979
+    },
+    {
+      "token_id": "39173770363159289241733599559618538832923095616479792728184701875764003239774",
+      "market_id": "6563867",
+      "question": "Will Bitcoin dip to $74,000 November 2-8?",
+      "asset": "BTC",
+      "outcome": "No",
+      "resolution_day": "2026-11-09",
+      "entered_at": "2026-11-08T19:56:21.230934+00:00",
+      "price": 0.945,
+      "midpoint": 0.9444999999999999,
+      "cost_cents": 0.050000000000005596,
+      "shares": 26.455026455026456,
+      "notional": 25.0,
+      "dry_run": true,
+      "relaxed_caps": false,
+      "resolved": false,
+      "won": null,
+      "pnl": 0.0
+    },
+    {
+      "token_id": "83011755905090100470699401700962349762889159332351496352004149887855221606239",
+      "market_id": "6563898",
+      "question": "Will Ethereum dip to $2,100 November 2-8?",
+      "asset": "ETH",
+      "outcome": "No",
+      "resolution_day": "2026-11-09",
+      "entered_at": "2026-11-08T19:56:25.566412+00:00",
+      "price": 0.986,
+      "midpoint": 0.983,
+      "cost_cents": 0.29999999999998916,
+      "shares": 25.354969574036513,
+      "notional": 25.0,
+      "dry_run": true,
+      "relaxed_caps": false,
+      "resolved": false,
+      "won": null,
+      "pnl": 0.0
     }
   ],
   "halted": false,
   "halt_reason": "3 tap p\u00e5 rad (backtestens verste var 2)",
-  "updated": "2026-11-08T15:32:50.521819+00:00"
+  "updated": "2026-11-08T19:56:25.568462+00:00"
 }
