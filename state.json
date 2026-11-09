@@ -5072,9 +5072,47 @@
       "resolved": true,
       "won": false,
       "pnl": -25.0
+    },
+    {
+      "token_id": "42906753541260583046946974600382686481545174913330289319968716039838383379889",
+      "market_id": "6587442",
+      "question": "Will the price of Ethereum be above $2,000 on November 9?",
+      "asset": "ETH",
+      "outcome": "Yes",
+      "resolution_day": "2026-11-09",
+      "entered_at": "2026-11-09T07:07:04.944743+00:00",
+      "price": 0.959,
+      "midpoint": 0.9535,
+      "cost_cents": 0.4833333333333356,
+      "shares": 26.068821689259646,
+      "notional": 25.0,
+      "dry_run": true,
+      "relaxed_caps": false,
+      "resolved": false,
+      "won": null,
+      "pnl": 0.0
+    },
+    {
+      "token_id": "106085395343414005868495430045179959529232032285192550567275621691858290902504",
+      "market_id": "6587497",
+      "question": "Will the price of Bitcoin be above $72,000 on November 9?",
+      "asset": "BTC",
+      "outcome": "Yes",
+      "resolution_day": "2026-11-09",
+      "entered_at": "2026-11-09T07:07:10.659704+00:00",
+      "price": 0.94,
+      "midpoint": 0.938,
+      "cost_cents": 0.20000000000000018,
+      "shares": 26.595744680851066,
+      "notional": 25.0,
+      "dry_run": true,
+      "relaxed_caps": false,
+      "resolved": false,
+      "won": null,
+      "pnl": 0.0
     }
   ],
   "halted": false,
   "halt_reason": "3 tap p\u00e5 rad (backtestens verste var 2)",
-  "updated": "2026-11-08T23:59:02.633560+00:00"
+  "updated": "2026-11-09T07:07:10.661586+00:00"
 }
