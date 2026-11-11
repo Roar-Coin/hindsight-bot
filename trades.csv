@@ -270,3 +270,5 @@ timestamp,mode,asset,outcome,question,resolution_day,best_ask,midpoint,vwap,cost
 2026-11-09T07:07:10.659704+00:00,dry,BTC,Yes,"Will the price of Bitcoin be above $72,000 on November 9?",2026-11-09,0.9400,0.9380,0.9400,0.200,26.60,25.00,6587497
 2026-11-10T10:19:08.199650+00:00,dry,ETH,Yes,"Will the price of Ethereum be above $2,000 on November 10?",2026-11-10,0.9630,0.9615,0.9630,0.150,25.96,25.00,6639389
 2026-11-10T10:19:09.974023+00:00,dry,BTC,No,"Will the price of Bitcoin be between $76,000 and $78,000 on November 10?",2026-11-10,0.9400,0.9350,0.9400,0.500,26.60,25.00,6639408
+2026-11-11T07:01:10.457959+00:00,dry,BTC,No,"Will the price of Bitcoin be less than $72,000 on November 11?",2026-11-11,0.9470,0.9370,0.9470,0.943,26.40,25.00,6683239
+2026-11-11T07:01:21.351923+00:00,dry,XRP,Yes,Will the price of XRP be above $1.00 on November 11?,2026-11-11,0.9800,0.9695,0.9800,0.996,25.51,25.00,6683350
