@@ -274,3 +274,4 @@ timestamp,mode,asset,outcome,question,resolution_day,best_ask,midpoint,vwap,cost
 2026-11-11T07:01:21.351923+00:00,dry,XRP,Yes,Will the price of XRP be above $1.00 on November 11?,2026-11-11,0.9800,0.9695,0.9800,0.996,25.51,25.00,6683350
 2026-11-11T22:14:53.721057+00:00,dry,BTC,No,"Will Bitcoin reach $77,000 on November 11?",2026-11-12,0.9860,0.9840,0.9860,0.100,25.35,25.00,6953470
 2026-11-11T22:14:57.620476+00:00,dry,ETH,No,"Will Ethereum dip to $2,000 on November 11?",2026-11-12,0.9690,0.9645,0.9690,0.450,25.80,25.00,6953496
+2026-11-12T20:22:47.190591+00:00,dry,BTC,No,"Will Bitcoin reach $74,000 on November 12?",2026-11-13,0.9870,0.9850,0.9870,0.200,25.33,25.00,6979951
