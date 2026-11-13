@@ -5281,9 +5281,28 @@
       "resolved": true,
       "won": true,
       "pnl": 0.8799171842650111
+    },
+    {
+      "token_id": "106343842702182109641389656211398988241207617125240314386579466206792668230135",
+      "market_id": "7006268",
+      "question": "Will Bitcoin reach $71,000 on November 13?",
+      "asset": "BTC",
+      "outcome": "No",
+      "resolution_day": "2026-11-14",
+      "entered_at": "2026-11-13T22:50:43.584486+00:00",
+      "price": 0.989,
+      "midpoint": 0.9864999999999999,
+      "cost_cents": 0.2500000000000058,
+      "shares": 25.278058645096056,
+      "notional": 25.0,
+      "dry_run": true,
+      "relaxed_caps": false,
+      "resolved": false,
+      "won": null,
+      "pnl": 0.0
     }
   ],
   "halted": false,
   "halt_reason": "3 tap p\u00e5 rad (backtestens verste var 2)",
-  "updated": "2026-11-13T17:22:37.484099+00:00"
+  "updated": "2026-11-13T22:50:43.585885+00:00"
 }
