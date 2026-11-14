@@ -278,3 +278,4 @@ timestamp,mode,asset,outcome,question,resolution_day,best_ask,midpoint,vwap,cost
 2026-11-13T08:43:15.303008+00:00,dry,ETH,Yes,"Will the price of Ethereum be above $1,800 on November 13?",2026-11-13,0.9900,0.9835,0.9900,0.551,25.25,25.00,6753088
 2026-11-13T08:43:20.737508+00:00,dry,BTC,Yes,"Will the price of Bitcoin be above $66,000 on November 13?",2026-11-13,0.9660,0.9635,0.9660,0.250,25.88,25.00,6753147
 2026-11-13T22:50:43.584486+00:00,dry,BTC,No,"Will Bitcoin reach $71,000 on November 13?",2026-11-14,0.9890,0.9865,0.9890,0.250,25.28,25.00,7006268
+2026-11-14T21:41:04.583506+00:00,dry,BTC,No,"Will Bitcoin reach $68,000 on November 14?",2026-11-15,0.9810,0.9785,0.9810,0.250,25.48,25.00,7030537
