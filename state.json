@@ -5316,6 +5316,44 @@
       "notional": 25.0,
       "dry_run": true,
       "relaxed_caps": false,
+      "resolved": true,
+      "won": true,
+      "pnl": 0.48419979612640063
+    },
+    {
+      "token_id": "54650925410085396764433945346832868361455739673457800009278527757886070871643",
+      "market_id": "6873117",
+      "question": "Will the price of Ethereum be above $1,700 on November 15?",
+      "asset": "ETH",
+      "outcome": "Yes",
+      "resolution_day": "2026-11-15",
+      "entered_at": "2026-11-15T09:51:18.838204+00:00",
+      "price": 0.99,
+      "midpoint": 0.987,
+      "cost_cents": 0.28020395920815844,
+      "shares": 25.252525252525253,
+      "notional": 25.0,
+      "dry_run": true,
+      "relaxed_caps": false,
+      "resolved": false,
+      "won": null,
+      "pnl": 0.0
+    },
+    {
+      "token_id": "115788046920454574815568981456515981172424832050259338559608277614458673268821",
+      "market_id": "6873186",
+      "question": "Will the price of Bitcoin be above $68,000 on November 15?",
+      "asset": "BTC",
+      "outcome": "No",
+      "resolution_day": "2026-11-15",
+      "entered_at": "2026-11-15T09:51:21.363888+00:00",
+      "price": 0.976,
+      "midpoint": 0.9684999999999999,
+      "cost_cents": 0.7500000000000062,
+      "shares": 25.614754098360656,
+      "notional": 25.0,
+      "dry_run": true,
+      "relaxed_caps": false,
       "resolved": false,
       "won": null,
       "pnl": 0.0
@@ -5323,5 +5361,5 @@
   ],
   "halted": false,
   "halt_reason": "3 tap p\u00e5 rad (backtestens verste var 2)",
-  "updated": "2026-11-15T02:06:42.480376+00:00"
+  "updated": "2026-11-15T09:51:21.365440+00:00"
 }
