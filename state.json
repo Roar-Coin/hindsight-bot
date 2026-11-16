@@ -5411,9 +5411,9 @@
       "notional": 25.0,
       "dry_run": true,
       "relaxed_caps": false,
-      "resolved": false,
-      "won": null,
-      "pnl": 0.0
+      "resolved": true,
+      "won": true,
+      "pnl": 1.766595289079227
     },
     {
       "token_id": "107647777952428710899094433473656345286964580038824191443043027927035611304007",
@@ -5430,6 +5430,44 @@
       "notional": 25.0,
       "dry_run": true,
       "relaxed_caps": false,
+      "resolved": true,
+      "won": true,
+      "pnl": 0.8531540847983479
+    },
+    {
+      "token_id": "19303349107912195610316049474572906942540101971988473735947317636361791637894",
+      "market_id": "7085156",
+      "question": "Will Bitcoin reach $68,000 on November 16?",
+      "asset": "BTC",
+      "outcome": "No",
+      "resolution_day": "2026-11-17",
+      "entered_at": "2026-11-16T20:40:45.782725+00:00",
+      "price": 0.986,
+      "midpoint": 0.9844999999999999,
+      "cost_cents": 0.0500000000000167,
+      "shares": 25.354969574036513,
+      "notional": 25.0,
+      "dry_run": true,
+      "relaxed_caps": false,
+      "resolved": false,
+      "won": null,
+      "pnl": 0.0
+    },
+    {
+      "token_id": "9889847368074999486842405474693811950508674756944701215267801597727187292554",
+      "market_id": "7085199",
+      "question": "Will Ethereum reach $1,900 on November 16?",
+      "asset": "ETH",
+      "outcome": "No",
+      "resolution_day": "2026-11-17",
+      "entered_at": "2026-11-16T20:40:50.002099+00:00",
+      "price": 0.975,
+      "midpoint": 0.9744999999999999,
+      "cost_cents": 0.050000000000005596,
+      "shares": 25.641025641025642,
+      "notional": 25.0,
+      "dry_run": true,
+      "relaxed_caps": false,
       "resolved": false,
       "won": null,
       "pnl": 0.0
@@ -5437,5 +5475,5 @@
   ],
   "halted": false,
   "halt_reason": "3 tap p\u00e5 rad (backtestens verste var 2)",
-  "updated": "2026-11-16T10:08:25.979028+00:00"
+  "updated": "2026-11-16T20:40:50.003814+00:00"
 }
