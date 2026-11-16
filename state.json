@@ -5373,9 +5373,9 @@
       "notional": 25.0,
       "dry_run": true,
       "relaxed_caps": false,
-      "resolved": false,
-      "won": null,
-      "pnl": 0.0
+      "resolved": true,
+      "won": true,
+      "pnl": 1.6524520255863564
     },
     {
       "token_id": "14206901594498430916601371238019026271542605871409402748183453279794482965726",
@@ -5392,6 +5392,44 @@
       "notional": 25.0,
       "dry_run": true,
       "relaxed_caps": false,
+      "resolved": true,
+      "won": true,
+      "pnl": 1.3157894736842124
+    },
+    {
+      "token_id": "78538251822371308979648872959362831606057609242191125722240752746531033495965",
+      "market_id": "6909141",
+      "question": "Will the price of Bitcoin be less than $66,000 on November 16?",
+      "asset": "BTC",
+      "outcome": "Yes",
+      "resolution_day": "2026-11-16",
+      "entered_at": "2026-11-16T10:08:25.338754+00:00",
+      "price": 0.934,
+      "midpoint": 0.9335,
+      "cost_cents": 0.050000000000005596,
+      "shares": 26.766595289079227,
+      "notional": 25.0,
+      "dry_run": true,
+      "relaxed_caps": false,
+      "resolved": false,
+      "won": null,
+      "pnl": 0.0
+    },
+    {
+      "token_id": "107647777952428710899094433473656345286964580038824191443043027927035611304007",
+      "market_id": "6909146",
+      "question": "Will the price of Ethereum be above $1,700 on November 16?",
+      "asset": "ETH",
+      "outcome": "Yes",
+      "resolution_day": "2026-11-16",
+      "entered_at": "2026-11-16T10:08:25.977663+00:00",
+      "price": 0.967,
+      "midpoint": 0.962,
+      "cost_cents": 0.4806638672265495,
+      "shares": 25.853154084798348,
+      "notional": 25.0,
+      "dry_run": true,
+      "relaxed_caps": false,
       "resolved": false,
       "won": null,
       "pnl": 0.0
@@ -5399,5 +5437,5 @@
   ],
   "halted": false,
   "halt_reason": "3 tap p\u00e5 rad (backtestens verste var 2)",
-  "updated": "2026-11-16T02:23:01.556554+00:00"
+  "updated": "2026-11-16T10:08:25.979028+00:00"
 }
