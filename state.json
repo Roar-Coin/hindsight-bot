@@ -5547,9 +5547,28 @@
       "resolved": true,
       "won": true,
       "pnl": 0.5623721881390615
+    },
+    {
+      "token_id": "107063155159975879540640246396977002862057716345824421200280427811856302787168",
+      "market_id": "7165503",
+      "question": "Will Bitcoin reach $65,000 on November 19?",
+      "asset": "BTC",
+      "outcome": "No",
+      "resolution_day": "2026-11-20",
+      "entered_at": "2026-11-19T20:57:45.422828+00:00",
+      "price": 0.984,
+      "midpoint": 0.9815,
+      "cost_cents": 0.24999999999999467,
+      "shares": 25.40650406504065,
+      "notional": 25.0,
+      "dry_run": true,
+      "relaxed_caps": false,
+      "resolved": false,
+      "won": null,
+      "pnl": 0.0
     }
   ],
   "halted": false,
   "halt_reason": "3 tap p\u00e5 rad (backtestens verste var 2)",
-  "updated": "2026-11-19T12:04:44.542799+00:00"
+  "updated": "2026-11-19T20:57:45.424169+00:00"
 }
