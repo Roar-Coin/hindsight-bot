@@ -5604,9 +5604,47 @@
       "resolved": true,
       "won": true,
       "pnl": 1.8817204301075243
+    },
+    {
+      "token_id": "37769259365718149937092195597693592379877266290735064714400385446775809122097",
+      "market_id": "7217499",
+      "question": "Will Bitcoin reach $63,000 on November 21?",
+      "asset": "BTC",
+      "outcome": "No",
+      "resolution_day": "2026-11-22",
+      "entered_at": "2026-11-21T22:20:06.962425+00:00",
+      "price": 0.98,
+      "midpoint": 0.979,
+      "cost_cents": 0.10000000000000009,
+      "shares": 25.510204081632654,
+      "notional": 25.0,
+      "dry_run": true,
+      "relaxed_caps": false,
+      "resolved": false,
+      "won": null,
+      "pnl": 0.0
+    },
+    {
+      "token_id": "77191497010838527262911834289248819048792411963321886883883173851549423533304",
+      "market_id": "7217553",
+      "question": "Will Ethereum reach $1,750 on November 21?",
+      "asset": "ETH",
+      "outcome": "No",
+      "resolution_day": "2026-11-22",
+      "entered_at": "2026-11-21T22:20:10.922516+00:00",
+      "price": 0.949,
+      "midpoint": 0.9484999999999999,
+      "cost_cents": 0.050000000000005596,
+      "shares": 26.343519494204426,
+      "notional": 25.0,
+      "dry_run": true,
+      "relaxed_caps": false,
+      "resolved": false,
+      "won": null,
+      "pnl": 0.0
     }
   ],
   "halted": false,
   "halt_reason": "3 tap p\u00e5 rad (backtestens verste var 2)",
-  "updated": "2026-11-21T16:56:38.103909+00:00"
+  "updated": "2026-11-21T22:20:10.923879+00:00"
 }
