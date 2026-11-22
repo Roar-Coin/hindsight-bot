@@ -5620,9 +5620,9 @@
       "notional": 25.0,
       "dry_run": true,
       "relaxed_caps": false,
-      "resolved": false,
-      "won": null,
-      "pnl": 0.0
+      "resolved": true,
+      "won": true,
+      "pnl": 0.5102040816326543
     },
     {
       "token_id": "77191497010838527262911834289248819048792411963321886883883173851549423533304",
@@ -5639,6 +5639,44 @@
       "notional": 25.0,
       "dry_run": true,
       "relaxed_caps": false,
+      "resolved": true,
+      "won": true,
+      "pnl": 1.3435194942044255
+    },
+    {
+      "token_id": "106387536034657678234157779349037302277452930252168257259496031546254422293915",
+      "market_id": "7073681",
+      "question": "Will the price of Bitcoin be between $56,000 and $58,000 on November 22?",
+      "asset": "BTC",
+      "outcome": "No",
+      "resolution_day": "2026-11-22",
+      "entered_at": "2026-11-22T10:15:02.561975+00:00",
+      "price": 0.99,
+      "midpoint": 0.9844999999999999,
+      "cost_cents": 0.4708633093525205,
+      "shares": 25.252525252525253,
+      "notional": 25.0,
+      "dry_run": true,
+      "relaxed_caps": false,
+      "resolved": false,
+      "won": null,
+      "pnl": 0.0
+    },
+    {
+      "token_id": "110991755241589801097091152869728213786656154144193224102477060530852456030156",
+      "market_id": "7073844",
+      "question": "Will the price of Solana be above $75 on November 22?",
+      "asset": "SOL",
+      "outcome": "No",
+      "resolution_day": "2026-11-22",
+      "entered_at": "2026-11-22T10:15:11.981612+00:00",
+      "price": 0.989,
+      "midpoint": 0.98,
+      "cost_cents": 0.8680012517964575,
+      "shares": 25.278058645096056,
+      "notional": 25.0,
+      "dry_run": true,
+      "relaxed_caps": false,
       "resolved": false,
       "won": null,
       "pnl": 0.0
@@ -5646,5 +5684,5 @@
   ],
   "halted": false,
   "halt_reason": "3 tap p\u00e5 rad (backtestens verste var 2)",
-  "updated": "2026-11-22T02:36:41.582474+00:00"
+  "updated": "2026-11-22T10:15:11.982972+00:00"
 }
