@@ -5696,9 +5696,9 @@
       "notional": 25.0,
       "dry_run": true,
       "relaxed_caps": false,
-      "resolved": false,
-      "won": null,
-      "pnl": 0.0
+      "resolved": true,
+      "won": true,
+      "pnl": 0.2525252525252526
     },
     {
       "token_id": "10658523559314934617360732722094145230564578596269001092300826205386157426372",
@@ -5715,6 +5715,25 @@
       "notional": 25.0,
       "dry_run": true,
       "relaxed_caps": false,
+      "resolved": true,
+      "won": true,
+      "pnl": 1.0416666666666679
+    },
+    {
+      "token_id": "66366078398535045043787392384496732022495783702829603476467665750829671569075",
+      "market_id": "7279397",
+      "question": "Will Bitcoin reach $65,000 on November 23?",
+      "asset": "BTC",
+      "outcome": "No",
+      "resolution_day": "2026-11-24",
+      "entered_at": "2026-11-23T20:31:34.169077+00:00",
+      "price": 0.987,
+      "midpoint": 0.984,
+      "cost_cents": 0.30000000000000027,
+      "shares": 25.329280648429584,
+      "notional": 25.0,
+      "dry_run": true,
+      "relaxed_caps": false,
       "resolved": false,
       "won": null,
       "pnl": 0.0
@@ -5722,5 +5741,5 @@
   ],
   "halted": false,
   "halt_reason": "3 tap p\u00e5 rad (backtestens verste var 2)",
-  "updated": "2026-11-23T08:07:22.489377+00:00"
+  "updated": "2026-11-23T20:31:34.170358+00:00"
 }
