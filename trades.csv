@@ -298,3 +298,5 @@ timestamp,mode,asset,outcome,question,resolution_day,best_ask,midpoint,vwap,cost
 2026-11-21T22:20:10.922516+00:00,dry,ETH,No,"Will Ethereum reach $1,750 on November 21?",2026-11-22,0.9490,0.9485,0.9490,0.050,26.34,25.00,7217553
 2026-11-22T10:15:02.561975+00:00,dry,BTC,No,"Will the price of Bitcoin be between $56,000 and $58,000 on November 22?",2026-11-22,0.9900,0.9845,0.9900,0.471,25.25,25.00,7073681
 2026-11-22T10:15:11.981612+00:00,dry,SOL,No,Will the price of Solana be above $75 on November 22?,2026-11-22,0.9890,0.9800,0.9890,0.868,25.28,25.00,7073844
+2026-11-23T08:07:20.729711+00:00,dry,BTC,No,"Will the price of Bitcoin be between $56,000 and $58,000 on November 23?",2026-11-23,0.9900,0.9865,0.9900,0.271,25.25,25.00,7097114
+2026-11-23T08:07:22.487820+00:00,dry,ETH,No,"Will the price of Ethereum be above $1,800 on November 23?",2026-11-23,0.9600,0.9510,0.9600,0.900,26.04,25.00,7097135
