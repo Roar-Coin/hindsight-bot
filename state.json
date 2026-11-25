@@ -5753,6 +5753,44 @@
       "notional": 25.0,
       "dry_run": true,
       "relaxed_caps": false,
+      "resolved": true,
+      "won": true,
+      "pnl": 0.746652935118437
+    },
+    {
+      "token_id": "32423834111571756690400368363353224881965357522555944226307784326895163915733",
+      "market_id": "7335781",
+      "question": "Will Bitcoin dip to $57,000 on November 25?",
+      "asset": "BTC",
+      "outcome": "No",
+      "resolution_day": "2026-11-26",
+      "entered_at": "2026-11-25T20:08:28.999108+00:00",
+      "price": 0.972,
+      "midpoint": 0.968,
+      "cost_cents": 0.40000000000000036,
+      "shares": 25.720164609053498,
+      "notional": 25.0,
+      "dry_run": true,
+      "relaxed_caps": false,
+      "resolved": false,
+      "won": null,
+      "pnl": 0.0
+    },
+    {
+      "token_id": "49310825364758083563170118110425104263350132027327935967286372644324507892488",
+      "market_id": "7335826",
+      "question": "Will Solana dip to $65 on November 25?",
+      "asset": "SOL",
+      "outcome": "No",
+      "resolution_day": "2026-11-26",
+      "entered_at": "2026-11-25T20:08:31.928200+00:00",
+      "price": 0.94,
+      "midpoint": 0.935,
+      "cost_cents": 0.49999999999998934,
+      "shares": 26.595744680851066,
+      "notional": 25.0,
+      "dry_run": true,
+      "relaxed_caps": false,
       "resolved": false,
       "won": null,
       "pnl": 0.0
@@ -5760,5 +5798,5 @@
   ],
   "halted": false,
   "halt_reason": "3 tap p\u00e5 rad (backtestens verste var 2)",
-  "updated": "2026-11-25T10:23:50.476808+00:00"
+  "updated": "2026-11-25T20:08:31.929657+00:00"
 }
