@@ -5737,9 +5737,28 @@
       "resolved": true,
       "won": true,
       "pnl": 0.3292806484295845
+    },
+    {
+      "token_id": "22582280655174782522143811777715261258174577246061651340197561523604492064839",
+      "market_id": "7150124",
+      "question": "Will the price of Bitcoin be between $54,000 and $56,000 on November 25?",
+      "asset": "BTC",
+      "outcome": "No",
+      "resolution_day": "2026-11-25",
+      "entered_at": "2026-11-25T10:23:50.474908+00:00",
+      "price": 0.971,
+      "midpoint": 0.966,
+      "cost_cents": 0.49999999999998934,
+      "shares": 25.746652935118437,
+      "notional": 25.0,
+      "dry_run": true,
+      "relaxed_caps": false,
+      "resolved": false,
+      "won": null,
+      "pnl": 0.0
     }
   ],
   "halted": false,
   "halt_reason": "3 tap p\u00e5 rad (backtestens verste var 2)",
-  "updated": "2026-11-25T01:02:10.496683+00:00"
+  "updated": "2026-11-25T10:23:50.476808+00:00"
 }

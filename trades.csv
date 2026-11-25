@@ -301,3 +301,4 @@ timestamp,mode,asset,outcome,question,resolution_day,best_ask,midpoint,vwap,cost
 2026-11-23T08:07:20.729711+00:00,dry,BTC,No,"Will the price of Bitcoin be between $56,000 and $58,000 on November 23?",2026-11-23,0.9900,0.9865,0.9900,0.271,25.25,25.00,7097114
 2026-11-23T08:07:22.487820+00:00,dry,ETH,No,"Will the price of Ethereum be above $1,800 on November 23?",2026-11-23,0.9600,0.9510,0.9600,0.900,26.04,25.00,7097135
 2026-11-23T20:31:34.169077+00:00,dry,BTC,No,"Will Bitcoin reach $65,000 on November 23?",2026-11-24,0.9870,0.9840,0.9870,0.300,25.33,25.00,7279397
+2026-11-25T10:23:50.474908+00:00,dry,BTC,No,"Will the price of Bitcoin be between $54,000 and $56,000 on November 25?",2026-11-25,0.9710,0.9660,0.9710,0.500,25.75,25.00,7150124
